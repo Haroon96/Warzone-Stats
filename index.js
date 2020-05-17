@@ -1,11 +1,10 @@
 const discord = require('discord.js');
 const bot = new discord.Client();
 
-const config = require('./config');
 const util = require('./util');
 const stats = require('./daily-stats');
 
-bot.login(config["bot-token"]);
+bot.login(process.env.TOKEN);
 
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}`);
