@@ -1,15 +1,16 @@
 module.exports = {
     tokenize: tokenize,
     pprint: pprint,
-    escapeMarkdown: escapeMarkdown
+    escapeMarkdown: escapeMarkdown,
+    parseDuration: parseDuration
 };
 
 function tokenize(msg) {
     return msg.toLowerCase().split(/ +/);
 }
 
-function pprint(username, stats) {
-    let msg = `Stats for **${username}** over the last 24 hours\n`;
+function pprint(username, stats, duration) {
+    let msg = `Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)\n`;
     for (let stat in stats) {
         msg += `> ${stat}: ${stats[stat]}\n`;
     }
@@ -19,3 +20,23 @@ function pprint(username, stats) {
 function escapeMarkdown(text) {
     return text.replace(/([_*])/, '\\$1');
 }
+
+function parseDuration(d) {
+    if (!d) {
+        return {value: 1, unit: 'day'};
+    }
+    let rx = /([0-9]+)([h|d|w|mo])/;
+    let match = d.match(rx);
+    return {
+        value: match[1],
+        unit: function getUnit(x) {
+            switch(x) {
+                case 'h': return 'hour';
+                case 'd': return 'day';
+                case 'w': return 'week';
+                case 'mo': return 'month';
+            }
+        }(match[2])
+    }
+}
+
