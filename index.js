@@ -1,32 +1,33 @@
 const discord = require('discord.js');
 const bot = new discord.Client();
 
-const util = require('./util');
-const stats = require('./daily-stats');
+const db = require('./db');
+const controller = require('./controller');
 
-bot.login(process.env.TOKEN);
 
-bot.on('ready', () => {
-    console.info(`Logged in as ${bot.user.tag}`);
-});
+// run all setup tasks and then start discord bot
+Promise
+    .all([db.init()])
+    .then(initBot);
 
-bot.on('message', async(msg) => {
-    // only respond to messages starting with !cds
-    if (!msg.content.startsWith('!cds')) {
-        return;
-    }
+async function initBot() {
+    // login to bot
+    bot.login(process.env.TOKEN);
 
-    let tokens = util.tokenize(msg.content);
-    try {
-        if (tokens.length === 3) {
-            let platform = tokens[1];
-            let username = tokens[2];
-            let playerStats = await stats.getDailyStats(platform, username);
-            msg.channel.send(util.pprint(playerStats.username, playerStats.stats));
-        } else {
-            throw "Invalid syntax! Proper: `!cds <platform> <username>`";
+    // run when ready
+    bot.on('ready', () => {
+        console.info(`Logged in as ${bot.user.tag}`);
+    });
+    
+    // run when message received
+    bot.on('message', async(msg) => {
+        // only respond to messages starting with !cds
+        if (!msg.content.startsWith('!cds')) {
+            return;
         }
-    } catch (e) {
-        msg.channel.send(e);
-    }
-});
+        
+        // forward to controller
+        controller(msg);
+    });    
+}
+

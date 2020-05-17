@@ -1,10 +1,11 @@
 module.exports = {
     tokenize: tokenize,
-    pprint: pprint
+    pprint: pprint,
+    escapeMarkdown: escapeMarkdown
 };
 
 function tokenize(msg) {
-    return msg.toLowerCase().split(' ').filter(x => x != '');
+    return msg.toLowerCase().split(/ +/);
 }
 
 function pprint(username, stats) {
@@ -13,4 +14,8 @@ function pprint(username, stats) {
         msg += `> ${stat}: ${stats[stat]}\n`;
     }
     return msg;
+}
+
+function escapeMarkdown(text) {
+    return text.replace(/([_*])/, '\\$1');
 }
