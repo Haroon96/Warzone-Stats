@@ -7,9 +7,9 @@ const util = require('./util');
 const commands = {
     'stats': { 
         method: allStats, 
-        syntax: 'stats', 
+        syntax: 'stats [time:3h|3d|1w|2mo:1d]',
         help: 'Display stats of all users',
-        rx: /!cds stats/
+        rx: /!cds stats( ([0-9]+)([h|d|w|mo]))?/
     },
     'users': { 
         method: getUsers,
@@ -31,9 +31,9 @@ const commands = {
     },
     'mine': { 
         method: meStats, 
-        syntax: 'mine <psn|atvi> <username>', 
+        syntax: 'mine <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
         help: 'Display solo stats',
-        rx: /!cds mine (psn|atvi) [0-9A-Za-z#_]+/
+        rx: /!cds mine (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?/
     },
     'help': {
         method: help,
@@ -44,6 +44,10 @@ const commands = {
 };
 
 async function controller(msg) {
+    // trim unnecessary spaces
+    msg.content = msg.content.replace(/ +/g, ' ').trim();
+    
+    // extract command name
     let cmd = util.tokenize(msg.content)[1];
 
     try {
@@ -67,6 +71,7 @@ async function controller(msg) {
 }
 
 async function allStats(msg) {
+    let tokens = util.tokenize(msg.content);
     let users = await db.getAllUsers(msg.channel.id);
 
     // check if any users registered
@@ -80,8 +85,9 @@ async function allStats(msg) {
     let errors = [];
     for (let u of users) {
         try {
-            let pStats = await stats.getDailyStats(u.platform, u.username);
-            replies.push(util.pprint(util.escapeMarkdown(pStats.username), pStats.stats));
+            let duration = util.parseDuration(tokens[2]);
+            let pStats = await stats.getStats(u.platform, u.username, duration);
+            replies.push(util.pprint(util.escapeMarkdown(u.username), pStats, duration));
         } catch (e) {
             u.error = e;
             errors.push(u);
@@ -92,7 +98,7 @@ async function allStats(msg) {
     }
     if (errors.length > 0) {
         msg.reply('\nEncountered errors while fetching for: \n' + 
-            errors.map(x => `${x.username} (${x.platform}): \`${x.error}\``).join('\n'));
+            errors.map(x => `${util.escapeMarkdown(x.username)} (${x.platform}): \`${x.error}\``).join('\n'));
     }
 }
 
@@ -116,8 +122,9 @@ async function unregisterUser(msg) {
 
 async function meStats(msg) {
     let tokens = util.tokenize(msg.content);
-    let pStats = await stats.getDailyStats(tokens[2], tokens[3]);
-    msg.reply('\n' + util.pprint(util.escapeMarkdown(pStats.username), pStats.stats));
+    let duration = util.parseDuration(tokens[4]);
+    let pStats = await stats.getStats(tokens[2], tokens[3], duration);
+    msg.reply('\n' + util.pprint(util.escapeMarkdown(tokens[3]), pStats, duration));
 }
 
 async function help(msg) {
