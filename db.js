@@ -37,8 +37,7 @@ async function isUserAdded(channelId, username, platform) {
 async function addUserToChannel(channelId, username, platform) {
 
     if (await isUserAdded(channelId, username, platform)) {
-        console.log('user already added');
-        return;
+        throw 'User already added!';
     }
 
     await _db.collection('channels').updateOne({ channelId: channelId }, {
