@@ -4,6 +4,8 @@ module.exports = {
 
 const getRecentMatches = require('./cod-api').getRecentMatches;
 const moment = require('moment');
+// load moment-duration
+require("moment-duration-format");
 
 function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
@@ -13,7 +15,7 @@ function calculateStats(matches) {
         'Kills': stats.map(x => x.kills.value).reduce(sum, 0),
         'Deaths': stats.map(x => x.deaths.value).reduce(sum, 0),
         'Score': stats.map(x => x.score.value).reduce(sum, 0),
-        'Time Played': moment.utc(stats.map(x => x.timePlayed.value).reduce(sum, 0) * 1000).format('HH:mm:ss'),
+        'Time Played': moment.duration(stats.map(x => x.timePlayed.value).reduce(sum, 0), 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"}),
         'Headshots': stats.map(x => x.headshots.value).reduce(sum, 0),
         'Assists': stats.map(x => x.assists.value).reduce(sum, 0),
         'Executions': stats.map(x => x.executions.value).reduce(sum, 0),
