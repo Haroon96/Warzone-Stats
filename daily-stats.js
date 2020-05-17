@@ -16,12 +16,18 @@ function calculateStats(matches) {
         'Time Played': moment.utc(stats.map(x => x.timePlayed.value).reduce(sum) * 1000).format('HH:mm:ss'),
         'Headshots': stats.map(x => x.headshots.value).reduce(sum),
         'Assists': stats.map(x => x.assists.value).reduce(sum),
-        'Executions': stats.map(x => x.executions.value).reduce(sum)
+        'Executions': stats.map(x => x.executions.value).reduce(sum),
+        'Vehicles Destroyed': stats.map(x => x.objectiveDestroyedVehicleMedium ? x.objectiveDestroyedVehicleMedium.value : 0).reduce(sum),
+        'Team Wipes': stats.map(x => x.objectiveTeamWiped ? x.objectiveTeamWiped.value : 0).reduce(sum),
+        'Total XP': stats.map(x => x.totalXp.value).reduce(sum)
     }
     statValues['K/D'] = statValues.Kills / statValues.Deaths;
     statValues['K/D'] = statValues['K/D'].toFixed(2);
 
-    return statValues;
+    return {
+        username: matches[0].segments[0].metadata.platformUserHandle,
+        stats: statValues,
+    }
 }
 
 async function getDailyStats(platform, username) {

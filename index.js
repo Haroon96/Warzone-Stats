@@ -22,7 +22,7 @@ bot.on('message', async(msg) => {
             let platform = tokens[1];
             let username = tokens[2];
             let playerStats = await stats.getDailyStats(platform, username);
-            msg.channel.send(util.pprint(username, playerStats));
+            msg.channel.send(util.pprint(playerStats.username, playerStats.stats));
         } else {
             throw "Invalid syntax! Proper: `!cds <platform> <username>`";
         }
