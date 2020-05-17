@@ -29,11 +29,11 @@ const commands = {
         help: 'Unregisters a user',
         rx: /!cds unregister (psn|atvi) [0-9A-Za-z#_]+/ 
     },
-    'mine': { 
-        method: meStats, 
-        syntax: 'mine <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
+    'single': { 
+        method: singleStats, 
+        syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
         help: 'Display solo stats',
-        rx: /!cds mine (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?/
+        rx: /!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?/
     },
     'help': {
         method: help,
@@ -120,7 +120,7 @@ async function unregisterUser(msg) {
     msg.reply(`**${util.escapeMarkdown(tokens[3])}** *(${tokens[2]})* has been unregistered!`);
 }
 
-async function meStats(msg) {
+async function singleStats(msg) {
     let tokens = util.tokenize(msg.content);
     let duration = util.parseDuration(tokens[4]);
     let pStats = await stats.getStats(tokens[2], tokens[3], duration);

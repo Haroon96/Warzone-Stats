@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 
 async function getRecentMatches(platform, username, duration) {
     let now = moment();
-    let todaysMatches = [];
+    let recentMatches = [];
 
     let next = 'null';
 
@@ -19,13 +19,9 @@ async function getRecentMatches(platform, username, duration) {
         let res = await fetch(url, {
             "credentials": "include",
             "headers": {
-                "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0",
                 "Accept": "application/json, text/plain, */*",
-                "Accept-Language": "en",        "Pragma": "no-cache",
-                "Cache-Control": "no-cache"
-        
+                "Accept-Language": "en"
             },
-            "referrer": "https://cod.tracker.gg/warzone/profile/psn/botmun_/matches",
             "method": "GET",
             "mode": "cors"
         }).then(res => res.json());
@@ -45,7 +41,7 @@ async function getRecentMatches(platform, username, duration) {
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);
         
         // append filtered matches to todays list
-        todaysMatches.push(...filteredMatches);
+        recentMatches.push(...filteredMatches);
 
         // stop if reached duration limit
         if (filteredMatches.length < matches.length) {
@@ -56,5 +52,5 @@ async function getRecentMatches(platform, username, duration) {
         next = res.data.metadata.next;
     }
 
-    return todaysMatches;
+    return recentMatches;
 }
