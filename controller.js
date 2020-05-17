@@ -56,6 +56,7 @@ async function controller(msg) {
         // check if syntax is okay
         if (!command.rx.test(msg.content)) {
             msg.reply(`Invalid syntax, use \`${command.syntax}\` instead.`);
+            return;
         }
         // run command
         await command.method(msg);
@@ -75,12 +76,24 @@ async function allStats(msg) {
     }
  
     // prepare reply
-    let reply = '\n';
+    let replies = [];
+    let errors = [];
     for (let u of users) {
-        let pStats = await stats.getDailyStats(u.platform, u.username);
-        reply += util.pprint(util.escapeMarkdown(pStats.username), pStats.stats);
+        try {
+            let pStats = await stats.getDailyStats(u.platform, u.username);
+            replies.push(util.pprint(util.escapeMarkdown(pStats.username), pStats.stats));
+        } catch (e) {
+            u.error = e;
+            errors.push(u);
+        }
     }
-    msg.reply(reply);
+    if (replies.length > 0) {
+        msg.reply('\n' + replies.join('\n'));
+    }
+    if (errors.length > 0) {
+        msg.reply('\nEncountered errors while fetching for: \n' + 
+            errors.map(x => `${x.username} (${x.platform}): \`${x.error}\``).join('\n'));
+    }
 }
 
 async function getUsers(msg) {
