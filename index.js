@@ -10,7 +10,7 @@ bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}`);
 });
 
-bot.on('message', async msg => {
+bot.on('message', async(msg) => {
     // only respond to messages starting with !cds
     if (!msg.content.startsWith('!cds')) {
         return;
@@ -21,10 +21,10 @@ bot.on('message', async msg => {
         if (tokens.length === 3) {
             let platform = tokens[1];
             let username = tokens[2];
-            let reply = await stats.getDailyStats(platform, username);
-            msg.channel.send(reply);
+            let playerStats = await stats.getDailyStats(platform, username);
+            msg.channel.send(util.pprint(username, playerStats));
         } else {
-            throw "Invalid format! !cds <platform> <username>";
+            throw "Invalid syntax! Proper: `!cds <platform> <username>`";
         }
     } catch (e) {
         msg.channel.send(e);

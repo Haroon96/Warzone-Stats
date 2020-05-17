@@ -16,7 +16,8 @@ async function getTodaysMatches(platform, username) {
     while (!last24h) {
 
         // get matches from tracker.gg api
-        let res = await fetch(`https://api.tracker.gg/api/v1/warzone/matches/${platform}/${username}?type=wz&next=${next}`, {
+        let url = `https://api.tracker.gg/api/v1/warzone/matches/${platform}/${encodeURIComponent(username)}?type=wz&next=${next}`;
+        let res = await fetch(url, {
             "credentials": "include",
             "headers": {
                 "Accept": "application/json, text/plain, */*",
@@ -26,7 +27,7 @@ async function getTodaysMatches(platform, username) {
         }).then(res => res.json());
 
         if (res.errors) {
-            throw 'API limit exhausted!';
+            throw res.errors[0].message;
         }
 
         let matches = res.data.matches;

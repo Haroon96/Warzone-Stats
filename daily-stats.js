@@ -9,31 +9,22 @@ function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
     let sum = (a, b) => a + b;
     let statValues = {
-        matches: stats.length,
-        kills: stats.map(x => x.kills.value).reduce(sum),
-        deaths: stats.map(x => x.deaths.value).reduce(sum)
+        'Matches': stats.length,
+        'Kills': stats.map(x => x.kills.value).reduce(sum),
+        'Deaths': stats.map(x => x.deaths.value).reduce(sum),
+        'Score': stats.map(x => x.score.value).reduce(sum),
+        'Time Played': moment.utc(stats.map(x => x.timePlayed.value).reduce(sum) * 1000).format('HH:mm:ss'),
+        'Headshots': stats.map(x => x.headshots.value).reduce(sum),
+        'Assists': stats.map(x => x.assists.value).reduce(sum),
+        'Executions': stats.map(x => x.executions.value).reduce(sum)
     }
-    statValues.kdratio = statValues.kills / statValues.deaths;
-    statValues.kdratio = statValues.kdratio.toFixed(2);
+    statValues['K/D'] = statValues.Kills / statValues.Deaths;
+    statValues['K/D'] = statValues['K/D'].toFixed(2);
 
     return statValues;
 }
 
-function prettify(username, stats) {
-    return `> Stats for **${username}** on ${moment().format('DD MMM, YYYY')}\n` + 
-        `> Matches: \`${stats.matches}\`\n` + 
-        `> Kills: \`${stats.kills}\`\n` + 
-        `> Deaths: \`${stats.deaths}\`\n` + 
-        `> K/D Ratio: \`${stats.kdratio}\`\n`;
-}
-
 async function getDailyStats(platform, username) {
-    try {
-        let matches = await codApi.getTodaysMatches(platform, username);
-        let stats = calculateStats(matches);
-        return prettify(username, stats);
-    } catch(e) {
-        console.error(e);
-        throw 'Invalid platform/username!';
-    }
+    let matches = await codApi.getTodaysMatches(platform, username);
+    return calculateStats(matches);
 }
