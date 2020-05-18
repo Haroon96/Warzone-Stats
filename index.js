@@ -3,12 +3,16 @@ const bot = new discord.Client();
 
 const db = require('./db');
 const controller = require('./controller');
+const scheduler = require('./scheduler');
 
+init();
 
 // run all setup tasks and then start discord bot
-Promise
-    .all([db.init()])
-    .then(initBot);
+async function init() {
+    await db.init();
+    await scheduler.init(bot);
+    await initBot();    
+}
 
 async function initBot() {
     // login to bot

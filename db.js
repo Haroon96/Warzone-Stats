@@ -1,7 +1,10 @@
 module.exports = {
     addUserToChannel: addUserToChannel,
     removeUserFromChannel: removeUserFromChannel,
+    schedule: schedule,
+    unschedule: unschedule,
     getAllUsers: getAllUsers,
+    getAllSchedules: getAllSchedules,
     init: init
 };
 
@@ -22,11 +25,6 @@ async function findChannel(channelId) {
         await _db.collection('channels').insertOne(channel);
     }
     return channel;
-}
-
-async function getAllUsers(channelId) {
-    let channel = await findChannel(channelId);
-    return channel.users;
 }
 
 async function isUserAdded(channelId, username, platform) {
@@ -55,4 +53,28 @@ async function removeUserFromChannel(channelId, username, platform) {
             users: { username: username, platform: platform }
         }
     });
+}
+
+async function getAllUsers(channelId) {
+    let channel = await findChannel(channelId);
+    return channel.users;
+}
+
+async function schedule(channelId, cron, time) {
+    await _db.collection('schedules').updateOne({ channelId: channelId }, {
+        $set: {
+            cron: cron,
+            time: time
+        }
+    }, {
+        upsert: true
+    });
+}
+
+async function unschedule(channelId) {
+    await _db.collection('schedules').deleteOne({ channelId: channelId });
+}
+
+async function getAllSchedules() {
+    return await _db.collection('schedules').find({});
 }

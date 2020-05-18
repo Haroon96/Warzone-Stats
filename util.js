@@ -2,7 +2,9 @@ module.exports = {
     tokenize: tokenize,
     pprint: pprint,
     escapeMarkdown: escapeMarkdown,
-    parseDuration: parseDuration
+    parseDuration: parseDuration,
+    verifyCron: verifyCron,
+    isValidCron: require('cron-validator').isValidCron
 };
 
 function tokenize(msg) {
@@ -29,7 +31,7 @@ function parseDuration(d) {
     let match = d.match(rx);
     return {
         value: match[1],
-        unit: function getUnit(x) {
+        unit: function(x) {
             switch(x) {
                 case 'h': return 'hour';
                 case 'd': return 'day';
@@ -40,3 +42,10 @@ function parseDuration(d) {
     }
 }
 
+function verifyCron(cron) {
+    try {
+        parseExpression(cron);
+    } catch (e) {
+        throw 'Invalid cron expression!';
+    }
+}

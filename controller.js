@@ -3,6 +3,7 @@ module.exports = controller;
 const db = require('./db');
 const stats = require('./stats');
 const util = require('./util');
+const scheduler = require('./scheduler');
 
 const commands = {
     'stats': { 
@@ -34,6 +35,18 @@ const commands = {
         syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
         help: 'Display solo stats',
         rx: /!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?/
+    },
+    'schedule': {
+        method: scheduleStats,
+        syntax: 'schedule \'<cronjob>\' [time:3h|3d|1w|2mo:1d]',
+        help: 'Schedule automatic stats posting',
+        rx: /!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|mo]))?/
+    },
+    'unschedule': {
+        method: unscheduleStats,
+        syntax: 'unschedule',
+        help: 'Unschedule automatic stats posting',
+        rx: /!cds unschedule/
     },
     'help': {
         method: help,
@@ -125,6 +138,30 @@ async function singleStats(msg) {
     let duration = util.parseDuration(tokens[4]);
     let pStats = await stats.getStats(tokens[2], tokens[3], duration);
     msg.reply('\n' + util.pprint(util.escapeMarkdown(tokens[3]), pStats, duration));
+}
+
+async function scheduleStats(msg) {
+    let rx = /!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|mo]))?/;
+    let match = msg.content.match(rx);
+    let cron = match[1], time = match[2].trim();
+    
+    try {
+        // check if cron is valid
+        if (!util.isValidCron(cron)) {
+            msg.reply('Invalid cron syntax!');
+            return;
+        }
+
+        // schedule message
+        await scheduler.schedule(msg.channel.id, cron, time);
+        msg.reply('Stats scheduled!')
+    } catch (e) {
+        msg.reply(e);
+    }
+}
+
+async function unscheduleStats(msg) {
+    await scheduler.unschedule(msg.channel.id);
 }
 
 async function help(msg) {
