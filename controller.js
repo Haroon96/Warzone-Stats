@@ -108,6 +108,7 @@ function sendStats(u, tryn, msg, duration) {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
             msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform})`);
+            return;
         };
         try {
             // try and send stats
