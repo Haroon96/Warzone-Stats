@@ -94,24 +94,23 @@ async function allStats(msg) {
     }
  
     // prepare reply
-    let replies = [];
-    let errors = [];
-    for (let u of users) {
+    let duration = util.parseDuration(tokens[2]);
+    users.forEach(u => sendStats(u, 0, msg, duration)());
+}
+
+function sendStats(u, tryn, msg, duration) {
+    let tryWaits = [5000, 15000, 30000, 60000, 120000];
+    return async function() {
+        if (tryn >= tryWaits.length) {
+            msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform})`);
+        };
         try {
-            let duration = util.parseDuration(tokens[2]);
-            let pStats = await stats.getStats(u.platform, u.username, duration);
-            replies.push(util.pprint(util.escapeMarkdown(u.username), pStats, duration));
-        } catch (e) {
-            u.error = e;
-            errors.push(u);
+            let m = await stats.getStats(u.platform, u.username, duration);
+            msg.channel.send(m);
+            return;
+        } catch(e) {
+            setTimeout(sendStats(u, tryn + 1, msg, duration), tryWaits[tryn]);
         }
-    }
-    if (replies.length > 0) {
-        msg.reply('\n' + replies.join('\n'));
-    }
-    if (errors.length > 0) {
-        msg.reply('\nEncountered errors while fetching for: \n' + 
-            errors.map(x => `${util.escapeMarkdown(x.username)} (${x.platform}): \`${x.error}\``).join('\n'));
     }
 }
 
@@ -136,8 +135,7 @@ async function unregisterUser(msg) {
 async function singleStats(msg) {
     let tokens = util.tokenize(msg.content);
     let duration = util.parseDuration(tokens[4]);
-    let pStats = await stats.getStats(tokens[2], tokens[3], duration);
-    msg.reply('\n' + util.pprint(util.escapeMarkdown(tokens[3]), pStats, duration));
+    sendStats({ platform: tokens[2], username: tokens[3] }, 0, msg, duration)();
 }
 
 async function scheduleStats(msg) {

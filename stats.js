@@ -3,6 +3,8 @@ module.exports = {
 };
 
 const getRecentMatches = require('./cod-api').getRecentMatches;
+const util = require('./util');
+
 const moment = require('moment');
 // load moment-duration
 require("moment-duration-format");
@@ -31,5 +33,6 @@ function calculateStats(matches) {
 
 async function getStats(platform, username, duration) {
     let matches = await getRecentMatches(platform, username, duration);
-    return calculateStats(matches);
+    let stats = calculateStats(matches);
+    return util.pprint(util.escapeMarkdown(username), stats, duration);
 }
