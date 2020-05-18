@@ -98,17 +98,24 @@ async function allStats(msg) {
     users.forEach(u => sendStats(u, 0, msg, duration)());
 }
 
+// timed-recursive function
 function sendStats(u, tryn, msg, duration) {
+    // timeout durations for each retry
     let tryWaits = [5000, 15000, 30000, 60000, 120000];
+
+    // returns a function that can be passed to setTimeout
     return async function() {
+        // if retried max times, just stop
         if (tryn >= tryWaits.length) {
             msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform})`);
         };
         try {
+            // try and send stats
             let m = await stats.getStats(u.platform, u.username, duration);
             msg.channel.send(m);
             return;
         } catch(e) {
+            // API down, retry after tryWaits[tryn]
             setTimeout(sendStats(u, tryn + 1, msg, duration), tryWaits[tryn]);
         }
     }
