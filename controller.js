@@ -109,7 +109,8 @@ function sendStats(u, tryn, msg, duration) {
         if (tryn >= tryWaits.length) {
             msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform})`);
             return;
-        };
+        }
+
         try {
             // try and send stats
             let m = await stats.getStats(u.platform, u.username, duration);
@@ -119,6 +120,7 @@ function sendStats(u, tryn, msg, duration) {
             // API down, retry after tryWaits[tryn]
             setTimeout(sendStats(u, tryn + 1, msg, duration), tryWaits[tryn]);
         }
+
     }
 }
 
@@ -168,6 +170,7 @@ async function scheduleStats(msg) {
 
 async function unscheduleStats(msg) {
     await scheduler.unschedule(msg.channel.id);
+    msg.reply('Stats unscheduled!');
 }
 
 async function help(msg) {
