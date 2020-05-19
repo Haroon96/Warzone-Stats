@@ -3,7 +3,6 @@ module.exports = {
     pprint: pprint,
     escapeMarkdown: escapeMarkdown,
     parseDuration: parseDuration,
-    verifyCron: verifyCron,
     isValidCron: require('cron-validator').isValidCron
 };
 
@@ -39,13 +38,5 @@ function parseDuration(d) {
                 case 'mo': return 'month';
             }
         }(match[2])
-    }
-}
-
-function verifyCron(cron) {
-    try {
-        parseExpression(cron);
-    } catch (e) {
-        throw 'Invalid cron expression!';
     }
 }
