@@ -99,7 +99,7 @@ async function allStats(msg) {
 }
 
 // timed-recursive function
-function sendStats(u, tryn, msg, duration) {
+function sendStats(u, tryn, msg, duration, err='') {
     // timeout durations for each retry
     let tryWaits = [5000, 30000, 60000, 90000, 120000];
 
@@ -107,7 +107,7 @@ function sendStats(u, tryn, msg, duration) {
     return async function() {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
-            msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform})`);
+            msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform}): ${err}`);
             return;
         }
 
