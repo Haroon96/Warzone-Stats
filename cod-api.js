@@ -32,6 +32,9 @@ async function getRecentMatches(platform, username, duration) {
 
         let matches = res.data.matches;
 
+        // only select battle royale
+        matches = matches.filter(x => ['br_89', 'br_25'].includes(x.attributes.modeId));
+
         // stop if no matches left
         if (matches.length == 0) {
             break;
