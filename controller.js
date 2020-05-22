@@ -53,6 +53,12 @@ const commands = {
         syntax: 'help',
         help: 'Shows this help',
         rx: /!cds help/
+    },
+    'teams': {
+        method: teamSplit,
+        syntax: 'teams <players-per-team>',
+        help: 'Randomly splits users into teams',
+        rx: /!cds teams [0-9]+/
     }
 };
 
@@ -180,4 +186,24 @@ async function help(msg) {
         help += `\`${commands[cmd].syntax}\`: *${commands[cmd].help}*\n`;
     }
     msg.reply(help);
+}
+
+async function teamSplit(msg) {
+    let perTeam = parseInt(util.tokenize(msg.content)[2]);
+    let users = await db.getAllUsers(msg.channel.id);
+    users = util.shuffle(users);
+    try {
+        let reply = [];
+        let teamNum = 1;
+        for (let i = 0; i < users.length; ++i) {
+            if (i % perTeam == 0) {
+                reply.push(`\nTeam ${teamNum}`);
+                teamNum++;
+            }
+            reply.push(`> ${util.escapeMarkdown(users[i].username)} (${users[i].platform})`);
+        }
+        msg.reply(reply.join('\n'));
+    } catch (e) { 
+        msg.reply(`Failed to split teams! ${e}`);
+    }
 }

@@ -3,7 +3,8 @@ module.exports = {
     pprint: pprint,
     escapeMarkdown: escapeMarkdown,
     parseDuration: parseDuration,
-    isValidCron: require('cron-validator').isValidCron
+    isValidCron: require('cron-validator').isValidCron,
+    shuffle: shuffle
 };
 
 function tokenize(msg) {
@@ -39,4 +40,10 @@ function parseDuration(d) {
             }
         }(match[2])
     }
+}
+
+function shuffle(arr) {
+    return arr.map(x => ({ key: Math.random(), val: x }))
+        .sort((a, b) => a.key - b.key)
+        .map(x => x.val);
 }
