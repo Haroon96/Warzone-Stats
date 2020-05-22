@@ -134,7 +134,7 @@ function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
         } catch(e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${util.escapeMarkdown(u.username)}** (${u.platform}). Retry ${tryn + 1}/${tryWaits.length}.\n> ${e}`;
+                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
 
             if (msgObj) {
                 msgObj.edit(errMsg);
