@@ -117,7 +117,7 @@ function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
     return async function() {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
-            msg.channel.send(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}): ${err}`);
+            msgObj.edit(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}): ${err}`);
             return;
         }
 
