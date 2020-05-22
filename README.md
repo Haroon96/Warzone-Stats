@@ -23,4 +23,5 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 - For team splits, send `!cds teams <people-per-team>` to get a random list of teams
 
 ### Example
+- Example response from the bot on Discord
 ![Example bot response](https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/example.png)
