@@ -125,7 +125,7 @@ function sendStats(u, tryn, msg, duration, err='') {
             return;
         } catch(e) {
             // API down, retry after tryWaits[tryn]
-            setTimeout(sendStats(u, tryn + 1, msg, duration), tryWaits[tryn]);
+            setTimeout(sendStats(u, tryn + 1, msg, duration, e), tryWaits[tryn]);
         }
 
     }
