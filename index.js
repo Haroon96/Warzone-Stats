@@ -29,6 +29,8 @@ async function initBot() {
         if (!msg.content.startsWith('!cds')) {
             return;
         }
+
+        console.log(`[${new Date().toISOString()}] ${msg.content}`);
         
         // forward to controller
         controller(msg);
