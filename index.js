@@ -30,7 +30,7 @@ async function initBot() {
             return;
         }
 
-        console.log(`[${new Date().toISOString()}] ${msg.content}`);
+        console.log(`[${new Date().toISOString()}] [${msg.author.username}] ${msg.content}`);
         
         // forward to controller
         controller(msg);
