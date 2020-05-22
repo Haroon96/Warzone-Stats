@@ -31,14 +31,10 @@ async function getRecentMatches(platform, username, duration) {
         }
 
         let matches = res.data.matches;
+        let apiLength = matches.length;
 
         // only select battle royale
         matches = matches.filter(x => ['br_89', 'br_25'].includes(x.attributes.modeId));
-
-        // stop if no matches left
-        if (matches.length == 0) {
-            break;
-        }
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);
@@ -46,8 +42,8 @@ async function getRecentMatches(platform, username, duration) {
         // append filtered matches to todays list
         recentMatches.push(...filteredMatches);
 
-        // stop if reached duration limit
-        if (filteredMatches.length < matches.length) {
+        // stop if reached duration limit or all matches
+        if (filteredMatches.length < matches.length || apiLength < 20) {
             break;
         }
 
