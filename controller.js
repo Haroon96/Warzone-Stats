@@ -101,7 +101,8 @@ async function allStats(msg) {
 // timed-recursive function
 function sendStats(u, tryn, msg, duration, err='') {
     // timeout durations for each retry
-    let tryWaits = [5000, 30000, 60000, 90000, 120000];
+    // 9 retries for each call
+    let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
 
     // returns a function that can be passed to setTimeout
     return async function() {
