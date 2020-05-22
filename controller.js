@@ -105,7 +105,7 @@ async function allStats(msg) {
 }
 
 // timed-recursive function
-function sendStats(u, tryn, msg, duration, err='') {
+function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
     // timeout durations for each retry
     // 9 retries for each call
     let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
@@ -114,18 +114,32 @@ function sendStats(u, tryn, msg, duration, err='') {
     return async function() {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
-            msg.channel.send(`Failed to fetch stats for ${u.username} (${u.platform}): ${err}`);
+            msg.channel.send(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}): ${err}`);
             return;
         }
 
         try {
             // try and send stats
             let m = await stats.getStats(u.platform, u.username, duration);
-            msg.channel.send(m);
+            // if this was a retry, edit original message
+            if (msgObj) {
+                msgObj.edit(m);
+            } else {
+                msg.channel.send(m);
+            }
             return;
         } catch(e) {
-            // API down, retry after tryWaits[tryn]
-            setTimeout(sendStats(u, tryn + 1, msg, duration, e), tryWaits[tryn]);
+            // an issue with the API, configure a retry and notify the user
+            let errMsg = `Encountered an issue while fetching ` + 
+                `for ${util.escapeMarkdown(u.username)} (${u.platform}). Retry ${tryn + 1}/${tryWaits.length}.\n> ${e}`;
+
+            if (msgObj) {
+                msgObj.edit(errMsg);
+            } else {
+                msgObj = await msg.channel.send(errMsg);
+            }
+
+            setTimeout(sendStats(u, tryn + 1, msg, duration, msgObj, e), tryWaits[tryn]);
         }
 
     }
