@@ -9,21 +9,34 @@ const moment = require('moment');
 // load moment-duration
 require("moment-duration-format");
 
+
+function aggregate(stats, field) {
+    try {
+        // select field values
+        let values = stats.map(x => x[field] ? x[field].value : 0);
+        // sum all these values and return
+        return values.reduce((a, b) => a + b, 0);
+    } catch (e) {
+        // something went wrong, possibly a change in the API
+        console.error("Couldn't aggregate field", field);
+        return NaN;
+    }
+}
+
 function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
-    let sum = (a, b) => a + b;
     let statValues = {
         'Matches': stats.length,
-        'Kills': stats.map(x => x.kills.value).reduce(sum, 0),
-        'Deaths': stats.map(x => x.deaths.value).reduce(sum, 0),
-        'Score': stats.map(x => x.score.value).reduce(sum, 0),
-        'Time Played': moment.duration(stats.map(x => x.timePlayed.value).reduce(sum, 0), 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"}),
-        'Headshots': stats.map(x => x.headshots.value).reduce(sum, 0),
-        'Assists': stats.map(x => x.assists.value).reduce(sum, 0),
-        'Executions': stats.map(x => x.executions.value).reduce(sum, 0),
-        'Vehicles Destroyed': stats.map(x => x.objectiveDestroyedVehicleMedium ? x.objectiveDestroyedVehicleMedium.value : 0).reduce(sum, 0),
-        'Team Wipes': stats.map(x => x.objectiveTeamWiped ? x.objectiveTeamWiped.value : 0).reduce(sum, 0),
-        'Total XP': stats.map(x => x.totalXp.value).reduce(sum, 0)
+        'Kills': aggregate(stats, 'kills'),
+        'Deaths': aggregate(stats, 'deaths'),
+        'Score': aggregate(stats, 'score'),
+        'Time Played': moment.duration(aggregate(stats, 'timePlayed'), 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"}),
+        'Headshots': aggregate(stats, 'headshots'),
+        'Assists': aggregate(stats, 'assists'),
+        'Executions': aggregate(stats, 'executions'),
+        'Vehicles Destroyed': aggregate(stats, 'objectiveDestroyedVehicleMedium'),
+        'Team Wipes': aggregate(stats, 'objectiveTeamWiped'),
+        'Total XP': aggregate(stats, 'totalXp')
     }
     statValues['K/D'] = statValues.Kills / statValues.Deaths;
     statValues['K/D'] = statValues['K/D'].toFixed(2);
