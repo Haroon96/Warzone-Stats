@@ -21,3 +21,6 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
   - Unregister users using `!cds unregister <platform> <username>`
 - For scheduling stats posting, send `!cds schedule '<cronjob>' 8h`. For example, `!cds schedule '30 19 * * *' 8h` posts stats everyday at 19:30 UTC
 - For team splits, send `!cds teams <people-per-team>` to get a random list of teams
+
+### Example
+![Example bot response](https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/example.png)
