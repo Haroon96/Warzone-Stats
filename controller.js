@@ -101,7 +101,10 @@ async function allStats(msg) {
  
     // prepare reply
     let duration = util.parseDuration(tokens[2]);
-    users.forEach(u => sendStats(u, 0, msg, duration)());
+
+    let i = 0;
+    // for each user, call the sendStats function with a 3s delay to prevent API exhaustion
+    users.forEach(u => setTimeout(sendStats(u, 0, msg, duration), i++ * 3000));
 }
 
 // timed-recursive function
@@ -130,8 +133,8 @@ function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
             return;
         } catch(e) {
             // an issue with the API, configure a retry and notify the user
-            let errMsg = `Encountered an issue while fetching ` + 
-                `for ${util.escapeMarkdown(u.username)} (${u.platform}). Retry ${tryn + 1}/${tryWaits.length}.\n> ${e}`;
+            let errMsg = `Encountered the following issue while fetching stats ` + 
+                `for **${util.escapeMarkdown(u.username)}** (${u.platform}). Retry ${tryn + 1}/${tryWaits.length}.\n> ${e}`;
 
             if (msgObj) {
                 msgObj.edit(errMsg);
