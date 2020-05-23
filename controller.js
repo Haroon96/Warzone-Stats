@@ -4,6 +4,7 @@ const db = require('./db');
 const { sendStats } = require('./stats');
 const util = require('./util');
 const scheduler = require('./scheduler');
+const { validateUser } = require('./validators');
 
 const commands = {
     'stats': { 
@@ -119,8 +120,19 @@ async function getUsers(msg) {
 
 async function registerUser(msg) {
     let tokens = util.tokenize(msg.content);
-    await db.addUserToChannel(msg.channel.id, tokens[3], tokens[2]);
-    msg.reply(`**${tokens[3]}** *(${tokens[2]})* has been registered!`);
+    let u = {
+        username: tokens[3],
+        platform: tokens[2]
+    }
+
+    try {
+        validateUser(u);
+        await db.addUserToChannel(msg.channel.id, u.username, u.platform);
+        msg.reply(`**${u.username}** *(${u.platform})* has been registered!`);    
+    } catch (e) {
+        msg.reply(e);
+    }
+
 }
 
 async function unregisterUser(msg) {
@@ -172,6 +184,7 @@ async function help(msg) {
     for (let cmd in commands) {
         help += `\`${commands[cmd].syntax}\`: *${commands[cmd].help}*\n`;
     }
+    help += '\nIf you\'re facing issues, feel free to report them here https://github.com/Haroon96/cod-daily-stats/issues'
     msg.reply(help);
 }
 
