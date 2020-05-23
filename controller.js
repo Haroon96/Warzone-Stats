@@ -104,11 +104,15 @@ async function allStats(msg) {
 
     let i = 0;
     // for each user, call the sendStats function with a 3s delay to prevent API exhaustion
-    users.forEach(u => setTimeout(sendStats(u, 0, msg, duration), i++ * 3000));
+    users.forEach(async(u) => { 
+        // send initial message for further editing
+        let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
+        setTimeout(sendStats(u, 0, msgObj, duration), i++ * 3000)
+    });
 }
 
 // timed-recursive function
-function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
+function sendStats(u, tryn, msgObj, duration, err='') {
     // timeout durations for each retry
     // 9 retries for each call
     let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
@@ -117,32 +121,26 @@ function sendStats(u, tryn, msg, duration, msgObj=null, err='') {
     return async function() {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
-            msgObj.edit(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}): ${err}`);
+            await msgObj.edit(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}):\n> ${err}`);
             return;
         }
 
         try {
             // try and send stats
             let m = await stats.getStats(u.platform, u.username, duration);
-            // if this was a retry, edit original message
-            if (msgObj) {
-                msgObj.edit(m);
-            } else {
-                msg.channel.send(m);
-            }
-            return;
-        } catch(e) {
+
+            // edit original message
+            await msgObj.edit(m);
+        } catch (e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
                 `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
 
-            if (msgObj) {
-                msgObj.edit(errMsg);
-            } else {
-                msgObj = await msg.channel.send(errMsg);
-            }
+            // edit message with error
+            await msgObj.edit(errMsg);
 
-            setTimeout(sendStats(u, tryn + 1, msg, duration, msgObj, e), tryWaits[tryn]);
+            // edit original message
+            setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
         }
 
     }
@@ -169,7 +167,14 @@ async function unregisterUser(msg) {
 async function singleStats(msg) {
     let tokens = util.tokenize(msg.content);
     let duration = util.parseDuration(tokens[4]);
-    sendStats({ platform: tokens[2], username: tokens[3] }, 0, msg, duration)();
+    
+    let u = {
+        username: util.escapeMarkdown(tokens[3]),
+        platform: tokens[2]
+    };
+
+    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
+    await sendStats(u, 0, msgObj, duration)(); 
 }
 
 async function scheduleStats(msg) {
