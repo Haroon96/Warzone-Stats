@@ -79,7 +79,7 @@ async function controller(msg) {
         }
         // check if syntax is okay
         if (!command.rx.test(msg.content)) {
-            msg.reply(`Invalid syntax, use \`!cds ${command.syntax}\` instead.`);
+            msg.reply(`Invalid syntax, use \`!cds ${command.syntax}\` instead.\nSend \`!cds help\` for more information.`);
             return;
         }
         // run command
