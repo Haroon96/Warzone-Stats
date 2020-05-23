@@ -9,7 +9,7 @@ const commands = {
     'stats': { 
         method: allStats, 
         syntax: 'stats [time:3h|3d|1w|2mo:1d]',
-        help: 'Display stats of all users',
+        help: 'Display stats of all registered users',
         rx: /^!cds stats( ([0-9]+)([h|d|w|mo]))?$/
     },
     'users': { 
