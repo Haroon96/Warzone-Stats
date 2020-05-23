@@ -10,55 +10,55 @@ const commands = {
         method: allStats, 
         syntax: 'stats [time:3h|3d|1w|2mo:1d]',
         help: 'Display stats of all users',
-        rx: /!cds stats( ([0-9]+)([h|d|w|mo]))?/
+        rx: /^!cds stats( ([0-9]+)([h|d|w|mo]))?$/
     },
     'users': { 
         method: getUsers,
         syntax: 'users',
         help: 'Prints list of all registered users',
-        rx: /!cds users/
+        rx: /^!cds users$/
     },
     'register': {
         method: registerUser,
         syntax: 'register <psn|atvi> <username>',
         help: 'Registers a new user',
-        rx: /!cds register (psn|atvi) [0-9A-Za-z#_]+/ 
+        rx: /^!cds register (psn|atvi) [0-9A-Za-z#_]+$/
     },
     'unregister': { 
         method: unregisterUser, 
         syntax: 'unregister <psn|atvi> <username>', 
         help: 'Unregisters a user',
-        rx: /!cds unregister (psn|atvi) [0-9A-Za-z#_]+/ 
+        rx: /^!cds unregister (psn|atvi) [0-9A-Za-z#_]+$/ 
     },
     'single': { 
         method: singleStats, 
         syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
         help: 'Display solo stats',
-        rx: /!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?/
+        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?$/
     },
     'schedule': {
         method: scheduleStats,
         syntax: 'schedule \'<cronjob>\' [time:3h|3d|1w|2mo:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|mo]))?/
+        rx: /^!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|mo]))?$/
     },
     'unschedule': {
         method: unscheduleStats,
         syntax: 'unschedule',
         help: 'Unschedule automatic stats posting',
-        rx: /!cds unschedule/
+        rx: /^!cds unschedule$/
     },
     'help': {
         method: help,
         syntax: 'help',
         help: 'Shows this help',
-        rx: /!cds help/
+        rx: /^!cds help$/
     },
     'teams': {
         method: teamSplit,
         syntax: 'teams <players-per-team>',
         help: 'Randomly splits users into teams',
-        rx: /!cds teams [0-9]+/
+        rx: /^!cds teams [0-9]+$/
     }
 };
 
@@ -78,7 +78,7 @@ async function controller(msg) {
         }
         // check if syntax is okay
         if (!command.rx.test(msg.content)) {
-            msg.reply(`Invalid syntax, use \`${command.syntax}\` instead.`);
+            msg.reply(`Invalid syntax, use \`!cds ${command.syntax}\` instead.`);
             return;
         }
         // run command
@@ -178,7 +178,7 @@ async function singleStats(msg) {
 }
 
 async function scheduleStats(msg) {
-    let rx = /!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|mo]))?/;
+    let rx = /^!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|mo]))?/;
     let match = msg.content.match(rx);
     let cron = match[1], time = match[2].trim();
     
