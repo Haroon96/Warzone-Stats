@@ -4,7 +4,6 @@ const db = require('./db');
 const { sendStats } = require('./stats');
 const util = require('./util');
 const scheduler = require('./scheduler');
-const { validateUser } = require('./validators');
 
 const commands = {
     'stats': { 
@@ -125,14 +124,8 @@ async function registerUser(msg) {
         platform: tokens[2]
     }
 
-    try {
-        validateUser(u);
-        await db.addUserToChannel(msg.channel.id, u.username, u.platform);
-        msg.reply(`**${u.username}** *(${u.platform})* has been registered!`);    
-    } catch (e) {
-        msg.reply(e);
-    }
-
+    await db.addUserToChannel(msg.channel.id, u.username, u.platform);
+    msg.reply(`**${u.username}** *(${u.platform})* has been registered!`);    
 }
 
 async function unregisterUser(msg) {

@@ -4,7 +4,6 @@ module.exports = {
 
 const getRecentMatches = require('./cod-api').getRecentMatches;
 const util = require('./util');
-const { validateUser } = require('./validators');
 
 const moment = require('moment');
 // load moment-duration
@@ -56,13 +55,6 @@ function sendStats(u, tryn, msgObj, duration, err='') {
     // timeout durations for each retry
     let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
     
-    try {
-        validateUser(u);
-    } catch (err) {
-        msgObj.edit(`Failed to fetch stats for **${util.escapeMarkdown(u.username)}** (${u.platform}):\n> ${err}`);
-        return ()=>{};
-    }
-
     // returns a function that can be passed to setTimeout
     return async function() {
         // if retried max times, just stop
