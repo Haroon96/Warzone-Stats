@@ -177,7 +177,7 @@ async function help(msg) {
     for (let cmd in commands) {
         help += `\`${commands[cmd].syntax}\`: *${commands[cmd].help}*\n`;
     }
-    help += '\nIf you\'re facing issues, feel free to report them here https://github.com/Haroon96/cod-daily-stats/issues'
+    help += 'For issues or feedback, feel free to report here https://github.com/Haroon96/cod-daily-stats/issues'
     msg.reply(help);
 }
 
