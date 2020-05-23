@@ -1,7 +1,7 @@
 module.exports = controller;
 
 const db = require('./db');
-const stats = require('./stats');
+const { sendStats } = require('./stats');
 const util = require('./util');
 const scheduler = require('./scheduler');
 
@@ -109,41 +109,6 @@ async function allStats(msg) {
         let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
         setTimeout(sendStats(u, 0, msgObj, duration), i++ * 3000)
     });
-}
-
-// timed-recursive function
-function sendStats(u, tryn, msgObj, duration, err='') {
-    // timeout durations for each retry
-    // 9 retries for each call
-    let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
-
-    // returns a function that can be passed to setTimeout
-    return async function() {
-        // if retried max times, just stop
-        if (tryn >= tryWaits.length) {
-            await msgObj.edit(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}):\n> ${err}`);
-            return;
-        }
-
-        try {
-            // try and send stats
-            let m = await stats.getStats(u.platform, u.username, duration);
-
-            // edit original message
-            await msgObj.edit(m);
-        } catch (e) {
-            // an issue with the API, configure a retry and notify the user
-            let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
-
-            // edit message with error
-            await msgObj.edit(errMsg);
-
-            // edit original message
-            setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
-        }
-
-    }
 }
 
 async function getUsers(msg) {

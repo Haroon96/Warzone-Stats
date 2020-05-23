@@ -1,5 +1,5 @@
 module.exports = {
-    getStats: getStats
+    sendStats: sendStats
 };
 
 const getRecentMatches = require('./cod-api').getRecentMatches;
@@ -48,4 +48,44 @@ async function getStats(platform, username, duration) {
     let matches = await getRecentMatches(platform, username, duration);
     let stats = calculateStats(matches);
     return util.pprint(util.escapeMarkdown(username), stats, duration);
+}
+
+// timed-recursive function
+function sendStats(u, tryn, msgObj, duration, err='') {
+    // timeout durations for each retry
+    let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
+    
+    if (u.platform == 'atvi' && !u.username.includes('#')) {
+        return async function() {
+            await msgObj.edit('For Activision ID, also append your profile hash (e.g., username#12345)');            
+        };
+    }
+
+    // returns a function that can be passed to setTimeout
+    return async function() {
+        // if retried max times, just stop
+        if (tryn >= tryWaits.length) {
+            await msgObj.edit(`Failed to fetch stats for ${util.escapeMarkdown(u.username)} (${u.platform}):\n> ${err}`);
+            return;
+        }
+
+        try {
+            // try and send stats
+            let m = await getStats(u.platform, u.username, duration);
+
+            // edit original message
+            await msgObj.edit(m);
+        } catch (e) {
+            // an issue with the API, configure a retry and notify the user
+            let errMsg = `Encountered the following issue while fetching stats ` + 
+                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
+
+            // edit message with error
+            await msgObj.edit(errMsg);
+
+            // edit original message
+            setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
+        }
+
+    }
 }
