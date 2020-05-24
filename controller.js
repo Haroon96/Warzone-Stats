@@ -8,9 +8,9 @@ const scheduler = require('./scheduler');
 const commands = {
     'stats': { 
         method: allStats, 
-        syntax: 'stats [time:3h|3d|1w|2mo:1d]',
+        syntax: 'stats [time:3h|3d|1w|2m:1d]',
         help: 'Display stats of all registered users',
-        rx: /^!cds stats( ([0-9]+)([h|d|w|mo]))?$/
+        rx: /^!cds stats( ([0-9]+)([h|d|w|m]))?$/
     },
     'users': { 
         method: getUsers,
@@ -32,15 +32,15 @@ const commands = {
     },
     'single': { 
         method: singleStats, 
-        syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2mo:1d]',
+        syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|mo]))?$/
+        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
-        syntax: 'schedule \'<cronjob>\' [time:3h|3d|1w|2mo:1d]',
+        syntax: 'schedule \'<cronjob>\' [time:3h|3d|1w|2m:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /^!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|mo]))?$/
+        rx: /^!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|m]))?$/
     },
     'unschedule': {
         method: unscheduleStats,
@@ -148,7 +148,7 @@ async function singleStats(msg) {
 }
 
 async function scheduleStats(msg) {
-    let rx = /^!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|mo]))?/;
+    let rx = /^!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|m]))?/;
     let match = msg.content.match(rx);
     let cron = match[1], time = match[2].trim();
     

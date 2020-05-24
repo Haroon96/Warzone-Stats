@@ -36,7 +36,7 @@ function parseDuration(d) {
                 case 'h': return 'hour';
                 case 'd': return 'day';
                 case 'w': return 'week';
-                case 'mo': return 'month';
+                case 'm': return 'month';
             }
         }(match[2])
     }
