@@ -31,7 +31,6 @@ async function getRecentMatches(platform, username, duration) {
         }
 
         let matches = res.data.matches;
-        let apiLength = matches.length;
 
         // only select battle royale
         matches = matches.filter(x => ['br_89', 'br_25'].includes(x.attributes.modeId));
@@ -43,7 +42,7 @@ async function getRecentMatches(platform, username, duration) {
         recentMatches.push(...filteredMatches);
 
         // stop if reached duration limit or all matches
-        if (filteredMatches.length < matches.length || apiLength < 20) {
+        if (filteredMatches.length < matches.length) {
             break;
         }
 
