@@ -22,19 +22,19 @@ const commands = {
         method: registerUser,
         syntax: 'register <psn|atvi> <username>',
         help: 'Registers a new user',
-        rx: /^!cds register (psn|atvi) [0-9A-Za-z#_]+$/
+        rx: /^!cds register (psn|atvi) [0-9A-Za-z#_-]+$/
     },
     'unregister': { 
         method: unregisterUser, 
         syntax: 'unregister <psn|atvi> <username>', 
         help: 'Unregisters a user',
-        rx: /^!cds unregister (psn|atvi) [0-9A-Za-z#_]+$/ 
+        rx: /^!cds unregister (psn|atvi) [0-9A-Za-z#_-]+$/ 
     },
     'single': { 
         method: singleStats, 
         syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
