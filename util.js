@@ -1,10 +1,10 @@
 module.exports = {
-    tokenize: tokenize,
-    pprint: pprint,
-    escapeMarkdown: escapeMarkdown,
-    parseDuration: parseDuration,
+    tokenize,
+    pprint,
+    escapeMarkdown,
+    parseDuration,
     isValidCron: require('cron-validator').isValidCron,
-    shuffle: shuffle
+    shuffle
 };
 
 function tokenize(msg) {

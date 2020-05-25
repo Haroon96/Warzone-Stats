@@ -1,5 +1,5 @@
 module.exports = {
-    sendStats: sendStats
+    sendStats
 };
 
 const getRecentMatches = require('./cod-api').getRecentMatches;

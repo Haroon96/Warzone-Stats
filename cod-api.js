@@ -1,5 +1,5 @@
 module.exports = {
-    getRecentMatches: getRecentMatches
+    getRecentMatches
 };
 
 const moment = require('moment');
