@@ -1,11 +1,11 @@
 module.exports = {
-    addUserToChannel: addUserToChannel,
-    removeUserFromChannel: removeUserFromChannel,
-    schedule: schedule,
-    unschedule: unschedule,
-    getAllUsers: getAllUsers,
-    getAllSchedules: getAllSchedules,
-    init: init
+    addUserToChannel,
+    removeUserFromChannel,
+    schedule,
+    unschedule,
+    getAllUsers,
+    getAllSchedules,
+    init
 };
 
 const MongoClient = require('mongodb').MongoClient;

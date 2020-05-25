@@ -139,7 +139,7 @@ async function singleStats(msg) {
     let duration = util.parseDuration(tokens[4]);
     
     let u = {
-        username: util.escapeMarkdown(tokens[3]),
+        username: tokens[3],
         platform: tokens[2]
     };
 
