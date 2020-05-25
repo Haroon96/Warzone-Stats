@@ -34,7 +34,7 @@ async function getRecentMatches(platform, username, duration) {
             }
             // if there are no matches saved from previous calls,
             // throw the error
-            throw res.errors[0].message;
+            throw {msg: res.errors[0].message, code: res.errors[0].code};
         }
 
         let matches = res.data.matches;

@@ -72,13 +72,17 @@ function sendStats(u, tryn, msgObj, duration, err='') {
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
+                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
 
+            if(e.code == "WzMatchService::NoAccount") {
+                //truncate the retry part and the /n
+                errMsg = errMsg.slice(0, errMsg.indexOf("*Retry") - 1);
+            } else {
+                // schedule retry
+                setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
+            }
             // edit message with error
             await msgObj.edit(errMsg);
-
-            // edit original message
-            setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
         }
 
     }
