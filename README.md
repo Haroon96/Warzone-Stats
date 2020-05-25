@@ -30,6 +30,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 </p>
 
 ### Issues
+- Please note that this is an early stage project and is bound to have some issues that I will continue to work on and fix whenever I can make time for it. Meanwhile, please feel free to report or fix them and create a Pull Request.
 - If you encounter issues with your profile not loading, check if you can access it on the [COD Warzone Stats Tracker Site](https://cod.tracker.gg/warzone) whose awesome API is used by the bot. Your might be set to private.
 - For Activision ID, also suffix the hash for your profile (username#12345).
 
