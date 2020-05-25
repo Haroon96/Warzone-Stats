@@ -1,7 +1,7 @@
 module.exports = {
-    init: init,
-    schedule: schedule,
-    unschedule: unschedule
+    init,
+    schedule,
+    unschedule
 };
 
 const { scheduleJob } = require('node-schedule');
