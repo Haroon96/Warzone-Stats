@@ -34,7 +34,7 @@ function createJob(channelId, cron, time) {
     let job = scheduleJob(cron, () => {
         let channel = client.channels.cache.get(channelId);
         if (channel) {
-            channel.send(`!cds stats ${time}`);
+            channel.send(`!cds stats ${time ? time : '1d'}`);
         }
     });
     jobs[channelId] = job;
