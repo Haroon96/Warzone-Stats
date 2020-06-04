@@ -40,7 +40,7 @@ async function getRecentMatches(platform, username, duration) {
         let matches = res.data.matches;
 
         // only select battle royale
-        matches = matches.filter(x => ['br_89', 'br_25'].includes(x.attributes.modeId));
+        matches = matches.filter(x => x.metadata.modeName ? x.metadata.modeName.startsWith('BR') : false);
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);
