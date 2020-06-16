@@ -1,6 +1,7 @@
 module.exports = {
     addUserToChannel,
     removeUserFromChannel,
+    getUserFromChannel,
     schedule,
     unschedule,
     getAllUsers,
@@ -45,6 +46,22 @@ async function addUserToChannel(channelId, username, platform) {
     }, {
         upsert: true
     });
+}
+
+async function getUserFromChannel(channelId, username, platform) {
+    let r = await _db.collection('channels').findOne({ 
+        channelId: channelId,
+        users: {
+            $elemMatch: {
+                username: new RegExp(username, 'i'),
+                platform: platform
+            }
+        }
+    }, {
+        // only select matching user
+        projection: {'users.$': 1}
+    });
+    return r ? r.users[0] : null;
 }
 
 async function removeUserFromChannel(channelId, username, platform) {

@@ -2,6 +2,7 @@ module.exports = controller;
 
 const db = require('./db');
 const { sendStats } = require('./stats');
+const { getPlayerProfile } = require('./cod-api');
 const util = require('./util');
 const scheduler = require('./scheduler');
 
@@ -119,31 +120,40 @@ async function getUsers(msg) {
 
 async function registerUser(msg) {
     let tokens = util.tokenize(msg.content);
-    let u = {
-        username: tokens[3],
-        platform: tokens[2]
-    }
+    let username = tokens[3];
+    let platform = tokens[2];
+    let player = await getPlayerProfile(platform, username);
 
-    await db.addUserToChannel(msg.channel.id, u.username, u.platform);
-    msg.reply(`**${u.username}** *(${u.platform})* has been registered!`);    
+    if (player) {
+        await db.addUserToChannel(msg.channel.id, player.username, player.platform);
+        msg.reply(`**${player.username}** (${player.platform}) has been registered!`);        
+    } else {
+        msg.reply(`**${username}** (${platform}) does not exist!`);    
+    }
 }
 
 async function unregisterUser(msg) {
     let tokens = util.tokenize(msg.content);
-    await db.removeUserFromChannel(msg.channel.id, tokens[3], tokens[2]);
-    msg.reply(`**${util.escapeMarkdown(tokens[3])}** *(${tokens[2]})* has been unregistered!`);
+    let username = tokens[3];
+    let platform = tokens[2];
+
+    let player = await db.getUserFromChannel(msg.channel.id, username, platform)
+
+    if (player) {
+        await db.removeUserFromChannel(msg.channel.id, player.username, player.platform);
+        msg.reply(`**${util.escapeMarkdown(player.username)}** (${player.platform}) has been unregistered!`);            
+    } else {
+        msg.reply(`**${util.escapeMarkdown(username)}** (${platform}) has not been registered!`); 
+    }
 }
 
 async function singleStats(msg) {
-    let tokens = util.tokenize(msg.content);
+    let tokens = util.tokenize(msg.content);   
+    let username = tokens[3];
+    let platform = tokens[2];
     let duration = util.parseDuration(tokens[4]);
-    
-    let u = {
-        username: tokens[3],
-        platform: tokens[2]
-    };
 
-    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
+    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(username)}** (${platform})...`);
     await sendStats(u, 0, msgObj, duration)(); 
 }
 
