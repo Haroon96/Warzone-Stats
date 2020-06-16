@@ -150,7 +150,8 @@ async function singleStats(msg) {
 async function scheduleStats(msg) {
     let rx = /^!wz schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|m]))?/;
     let match = msg.content.match(rx);
-    let cron = match[1], time = match[2].trim();
+    let cron = match[1];
+    let time = match[2] ? match[2].trim() : '1d';
     
     try {
         // check if cron is valid
