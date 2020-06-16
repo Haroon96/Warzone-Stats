@@ -114,8 +114,12 @@ async function allStats(msg) {
 
 async function getUsers(msg) {
     let users = await db.getAllUsers(msg.channel.id);
-    users = users.map(x => `${util.escapeMarkdown(x.username)} (${x.platform})`);
-    msg.reply(`\nRegistered users:\n${users.join('\n')}`);
+    if (users.length > 0) {
+        users = users.map(x => `${util.escapeMarkdown(x.username)} (${x.platform})`);
+        msg.reply(`\nRegistered users:\n${users.join('\n')}`);    
+    } else {
+        msg.reply('No users have been registered.');
+    }
 }
 
 async function registerUser(msg) {
