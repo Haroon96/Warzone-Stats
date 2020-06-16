@@ -5,7 +5,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 - Register players for combined stats
 - Scheduled stats posting using cronjob syntax
 - View single player stats
-- Supports PlayStation Network (`psn`) and Activision ID (`atvi`) platforms
+- Supports PlayStation Network (`psn`), Xbox Live (`xbl`) and Activision ID (`atvi`) platforms
 - Supports `[time]` parameter to only show stats from  specific times, e.g., last 8 hours (`8h`) or past 3 days (`3d`). Default value: `24h`
   - Hours: `h`
   - Days: `d`

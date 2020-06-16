@@ -20,21 +20,21 @@ const commands = {
     },
     'register': {
         method: registerUser,
-        syntax: 'register <psn|atvi> <username>',
+        syntax: 'register <psn|xbl|atvi> <username>',
         help: 'Registers a new user',
-        rx: /^!wz register (psn|atvi) [0-9A-Za-z#_-]+$/
+        rx: /^!wz register (psn|xbl|atvi) [0-9A-Za-z#_-]+$/
     },
     'unregister': { 
         method: unregisterUser, 
-        syntax: 'unregister <psn|atvi> <username>', 
+        syntax: 'unregister <psn|xbl|atvi> <username>', 
         help: 'Unregisters a user',
-        rx: /^!wz unregister (psn|atvi) [0-9A-Za-z#_-]+$/ 
+        rx: /^!wz unregister (psn|xbl|atvi) [0-9A-Za-z#_-]+$/ 
     },
     'single': { 
         method: singleStats, 
-        syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2m:1d]',
+        syntax: 'single <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!wz single (psn|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz single (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
