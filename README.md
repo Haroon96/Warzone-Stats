@@ -26,7 +26,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 - Example response from the bot on Discord
 
 <p align="center">
- <img src="https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/example.png" alt="Example bot response">
+ <img src="https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/response-example.png" alt="Example bot response">
 </p>
 
 ### Issues
