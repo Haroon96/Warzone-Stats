@@ -1,4 +1,4 @@
-## COD Warzone Daily Stats
+## COD Warzone Stats
 Discord bot for calculating aggregate player stats for Call of Duty Warzone Battle Royale.
 
 ### Features
