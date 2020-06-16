@@ -14,7 +14,7 @@ let _db = null;
 
 async function init() {
     const client = await MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-    _db = client.db('cod-daily-stats');
+    _db = client.db(process.env.MONGO_DBNAME);
 }
 
 async function findChannel(channelId) {
