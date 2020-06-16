@@ -10,55 +10,55 @@ const commands = {
         method: allStats, 
         syntax: 'stats [time:3h|3d|1w|2m:1d]',
         help: 'Display stats of all registered users',
-        rx: /^!cds stats( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz stats( ([0-9]+)([h|d|w|m]))?$/
     },
     'users': { 
         method: getUsers,
         syntax: 'users',
         help: 'Prints list of all registered users',
-        rx: /^!cds users$/
+        rx: /^!wz users$/
     },
     'register': {
         method: registerUser,
         syntax: 'register <psn|atvi> <username>',
         help: 'Registers a new user',
-        rx: /^!cds register (psn|atvi) [0-9A-Za-z#_-]+$/
+        rx: /^!wz register (psn|atvi) [0-9A-Za-z#_-]+$/
     },
     'unregister': { 
         method: unregisterUser, 
         syntax: 'unregister <psn|atvi> <username>', 
         help: 'Unregisters a user',
-        rx: /^!cds unregister (psn|atvi) [0-9A-Za-z#_-]+$/ 
+        rx: /^!wz unregister (psn|atvi) [0-9A-Za-z#_-]+$/ 
     },
     'single': { 
         method: singleStats, 
         syntax: 'single <psn|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!cds single (psn|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz single (psn|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
         syntax: 'schedule \'<cronjob>\' [time:3h|3d|1w|2m:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /^!cds schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz schedule '[*\//0-9- ]+'( ([0-9]+)([h|d|w|m]))?$/
     },
     'unschedule': {
         method: unscheduleStats,
         syntax: 'unschedule',
         help: 'Unschedule automatic stats posting',
-        rx: /^!cds unschedule$/
+        rx: /^!wz unschedule$/
     },
     'help': {
         method: help,
         syntax: 'help',
         help: 'Shows this help',
-        rx: /^!cds help$/
+        rx: /^!wz help$/
     },
     'teams': {
         method: teamSplit,
         syntax: 'teams <players-per-team>',
         help: 'Randomly splits users into teams',
-        rx: /^!cds teams [0-9]+$/
+        rx: /^!wz teams [0-9]+$/
     }
 };
 
@@ -78,7 +78,7 @@ async function controller(msg) {
         }
         // check if syntax is okay
         if (!command.rx.test(msg.content)) {
-            msg.reply(`Invalid syntax, use \`!cds ${command.syntax}\` instead.\nSend \`!cds help\` for more information.`);
+            msg.reply(`Invalid syntax, use \`!wz ${command.syntax}\` instead.\nSend \`!wz help\` for more information.`);
             return;
         }
         // run command
@@ -148,7 +148,7 @@ async function singleStats(msg) {
 }
 
 async function scheduleStats(msg) {
-    let rx = /^!cds schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|m]))?/;
+    let rx = /^!wz schedule '([*\//0-9- ]+)'( ([0-9]+)([h|d|w|m]))?/;
     let match = msg.content.match(rx);
     let cron = match[1], time = match[2].trim();
     
@@ -173,11 +173,11 @@ async function unscheduleStats(msg) {
 }
 
 async function help(msg) {
-    let help = '\n**COD-Daily-Stats Guide:**\n';
+    let help = '\n**Warzone Stats Guide:**\n';
     for (let cmd in commands) {
         help += `\`${commands[cmd].syntax}\`: *${commands[cmd].help}*\n`;
     }
-    help += 'For issues or feedback, feel free to report here https://github.com/Haroon96/cod-daily-stats/issues'
+    help += 'For issues or feedback, feel free to report here https://github.com/Haroon96/warzone-stats/issues'
     msg.reply(help);
 }
 
