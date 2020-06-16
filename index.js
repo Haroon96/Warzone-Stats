@@ -25,8 +25,8 @@ async function initBot() {
     
     // run when message received
     bot.on('message', async(msg) => {
-        // only respond to messages starting with !cds
-        if (!msg.content.startsWith('!cds')) {
+        // only respond to messages starting with !wz
+        if (!msg.content.startsWith('!wz')) {
             return;
         }
 

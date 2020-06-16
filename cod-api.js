@@ -4,6 +4,7 @@ module.exports = {
 
 const moment = require('moment');
 const fetch = require('node-fetch');
+const brModeIds = ['br_87', 'br_88', 'br_25', 'br_89']; // solos, duos, trios, quads
 
 async function getRecentMatches(platform, username, duration) {
     let now = moment();
@@ -40,7 +41,7 @@ async function getRecentMatches(platform, username, duration) {
         let matches = res.data.matches;
 
         // only select battle royale
-        matches = matches.filter(x => x.metadata.modeName ? x.metadata.modeName.startsWith('BR') : false);
+        matches = matches.filter(x => brModeIds.includes(x.attributes.modeId));
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);

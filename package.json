@@ -1,7 +1,7 @@
 {
-  "name": "cod-daily-stats",
-  "version": "1.0.0",
-  "description": "Displays daily COD stats",
+  "name": "warzone-stats",
+  "version": "1.1.0",
+  "description": "Warzone Battle Royale stats calculator",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
