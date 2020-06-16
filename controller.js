@@ -158,7 +158,7 @@ async function singleStats(msg) {
     let duration = util.parseDuration(tokens[4]);
 
     let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(username)}** (${platform})...`);
-    await sendStats(u, 0, msgObj, duration)(); 
+    await sendStats({ username, platform }, 0, msgObj, duration)(); 
 }
 
 async function scheduleStats(msg) {
