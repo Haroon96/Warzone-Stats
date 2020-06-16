@@ -20,7 +20,7 @@ async function initBot() {
 
     // run when ready
     bot.on('ready', () => {
-        bot.user.setActivity({name: "for !wz commands", type: "WATCHING"});
+        bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
         console.info(`Logged in as ${bot.user.tag}`);
     });
     
