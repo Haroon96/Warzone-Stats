@@ -4,8 +4,13 @@ module.exports = {
     escapeMarkdown,
     parseDuration,
     isValidCron: require('cron-validator').isValidCron,
-    shuffle
+    shuffle,
+    formatDuration
 };
+
+const moment = require('moment');
+// load moment-duration
+require("moment-duration-format");
 
 function tokenize(msg) {
     return msg.toLowerCase().split(/ +/);
@@ -46,4 +51,8 @@ function shuffle(arr) {
     return arr.map(x => ({ key: Math.random(), val: x }))
         .sort((a, b) => a.key - b.key)
         .map(x => x.val);
+}
+
+function formatDuration(s) {
+    return moment.duration(s, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"});
 }

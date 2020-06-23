@@ -3,12 +3,7 @@ module.exports = {
 };
 
 const { getRecentMatches } = require('./cod-api');
-const util = require('./util');
-
-const moment = require('moment');
-// load moment-duration
-require("moment-duration-format");
-
+const { pprint, escapeMarkdown, formatDuration } = require('./util');
 
 function aggregate(stats, field) {
     try {
@@ -30,7 +25,7 @@ function calculateStats(matches) {
         'Kills': aggregate(stats, 'kills'),
         'Deaths': aggregate(stats, 'deaths'),
         'Score': aggregate(stats, 'score'),
-        'Time Played': moment.duration(aggregate(stats, 'timePlayed'), 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"}),
+        'Time Played': formatDuration(aggregate(stats, 'timePlayed')),
         'Headshots': aggregate(stats, 'headshots'),
         'Assists': aggregate(stats, 'assists'),
         'Executions': aggregate(stats, 'executions'),
@@ -44,12 +39,6 @@ function calculateStats(matches) {
     return statValues;
 }
 
-async function getStats(platform, username, duration) {
-    let matches = await getRecentMatches(platform, username, duration);
-    let stats = calculateStats(matches);
-    return util.pprint(util.escapeMarkdown(username), stats, duration);
-}
-
 // timed-recursive function
 function sendStats(u, tryn, msgObj, duration, err='') {
     // timeout durations for each retry
@@ -59,20 +48,22 @@ function sendStats(u, tryn, msgObj, duration, err='') {
     return async function() {
         // if retried max times, just stop
         if (tryn >= tryWaits.length) {
-            await msgObj.edit(`Failed to fetch stats for **${util.escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg}`);
+            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg}`);
             return;
         }
 
         try {
             // try and send stats
-            let m = await getStats(u.platform, u.username, duration);
-
+            let matches = await getRecentMatches(u.platform, u.username, duration);
+            let stats = calculateStats(matches);
+            let msg = pprint(escapeMarkdown(u.username), stats, duration);
+         
             // edit original message
-            await msgObj.edit(m);
+            await msgObj.edit(msg);
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${util.escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
+                `for **${escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
 
             if(e.code == "WzMatchService::NoAccount") {
                 //truncate the retry part and the /n
