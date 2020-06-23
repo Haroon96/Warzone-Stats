@@ -5,7 +5,7 @@ module.exports = {
 const { getRecentMatches } = require('./cod-api');
 const { pprint, escapeMarkdown, formatDuration } = require('./util');
 
-function aggregate(stats, field) {
+function sum(stats, field) {
     try {
         // select field values
         let values = stats.map(x => x[field] ? x[field].value : 0);
@@ -13,7 +13,7 @@ function aggregate(stats, field) {
         return values.reduce((a, b) => a + b, 0);
     } catch (e) {
         // something went wrong, possibly a change in the API
-        console.error("Couldn't aggregate field", field);
+        console.error("Couldn't sum field", field);
         return NaN;
     }
 }
@@ -22,16 +22,16 @@ function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
     let statValues = {
         'Matches': stats.length,
-        'Kills': aggregate(stats, 'kills'),
-        'Deaths': aggregate(stats, 'deaths'),
-        'Score': aggregate(stats, 'score'),
-        'Time Played': formatDuration(aggregate(stats, 'timePlayed')),
-        'Headshots': aggregate(stats, 'headshots'),
-        'Assists': aggregate(stats, 'assists'),
-        'Executions': aggregate(stats, 'executions'),
-        'Vehicles Destroyed': aggregate(stats, 'objectiveDestroyedVehicleMedium'),
-        'Team Wipes': aggregate(stats, 'objectiveTeamWiped'),
-        'Total XP': aggregate(stats, 'totalXp')
+        'Kills': sum(stats, 'kills'),
+        'Deaths': sum(stats, 'deaths'),
+        'Score': sum(stats, 'score'),
+        'Time Played': formatDuration(sum(stats, 'timePlayed')),
+        'Headshots': sum(stats, 'headshots'),
+        'Assists': sum(stats, 'assists'),
+        'Executions': sum(stats, 'executions'),
+        'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleMedium'),
+        'Team Wipes': sum(stats, 'objectiveTeamWiped'),
+        'Total XP': sum(stats, 'totalXp')
     }
     statValues['K/D'] = statValues.Kills / Math.max(statValues.Deaths, 1);
     statValues['K/D'] = statValues['K/D'].toFixed(2);
