@@ -26,6 +26,7 @@ function calculateStats(matches) {
         'Deaths': sum(stats, 'deaths'),
         'Score': sum(stats, 'score'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
+        'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Headshots': sum(stats, 'headshots'),
         'Assists': sum(stats, 'assists'),
         'Executions': sum(stats, 'executions'),
