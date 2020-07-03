@@ -24,16 +24,16 @@ function calculateStats(matches) {
         'Matches': stats.length,
         'Kills': sum(stats, 'kills'),
         'Deaths': sum(stats, 'deaths'),
-        'Score': sum(stats, 'score'),
+        'Gulag Kills': sum(stats, 'gulagKills'),
+        'Gulag Deaths': sum(stats, 'gulagDeaths'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Headshots': sum(stats, 'headshots'),
-        'Assists': sum(stats, 'assists'),
         'Executions': sum(stats, 'executions'),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleMedium'),
-        'Team Wipes': sum(stats, 'objectiveTeamWiped'),
-        'Total XP': sum(stats, 'totalXp')
+        'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
+
     statValues['K/D'] = statValues.Kills / Math.max(statValues.Deaths, 1);
     statValues['K/D'] = statValues['K/D'].toFixed(2);
 
