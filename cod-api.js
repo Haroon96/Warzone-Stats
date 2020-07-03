@@ -6,7 +6,7 @@ module.exports = {
 const moment = require('moment');
 const fetch = require('node-fetch');
 // supported game modes
-const brModeIds = ['br_br_real', 'br_brthquad', 'br_brquads', 'br_brtrios', 'br_brduos', 'br_brsolos'];
+const brModeIds = ['br_br_real', 'br_brthquad', 'br_brquads', 'br_jugg_brtriojugr', 'br_brtrios', 'br_brduos', 'br_brsolos'];
 
 async function request(url) {
     return await fetch(url, {
