@@ -40,6 +40,9 @@ function calculateStats(matches) {
     statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
     statValues['K/D (gulag)'] = statValues['K/D (gulag)'].toFixed(2);
 
+    statValues['K/D (overall)'] = sum(stats, 'kills') / Math.max(sum(stats, 'deaths'), 1);
+    statValues['K/D (overall)'] = statValues['K/D (overall)'].toFixed(2);
+
     return statValues;
 }
 
