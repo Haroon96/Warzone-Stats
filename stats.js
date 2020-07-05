@@ -34,7 +34,7 @@ function calculateStats(matches) {
         'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
-    statValues['K/D (match)'] = statValues.Kills / Math.max(statValues.Deaths, 1);
+    statValues['K/D (match)'] = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
     statValues['K/D (match)'] = statValues['K/D (match)'].toFixed(2);
 
     statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
