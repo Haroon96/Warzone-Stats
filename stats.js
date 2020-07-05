@@ -30,7 +30,7 @@ function calculateStats(matches) {
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
-        'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleMedium'),
+        'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
         'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
