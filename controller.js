@@ -9,9 +9,9 @@ const scheduler = require('./scheduler');
 const commands = {
     'stats': { 
         method: allStats, 
-        syntax: 'stats <br|rmbl|plnd> [time:3h|3d|1w|2m:1d]',
+        syntax: 'stats <br|rmbl|plndr> [time:3h|3d|1w|2m:1d]',
         help: 'Display stats of all registered users',
-        rx: /^!wz stats (br|rmbl|plnd)( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz stats (br|rmbl|plndr)( ([0-9]+)([h|d|w|m]))?$/
     },
     'users': { 
         method: getUsers,
@@ -33,15 +33,15 @@ const commands = {
     },
     'single': { 
         method: singleStats, 
-        syntax: 'single <br|rmbl|plnd> <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
+        syntax: 'single <br|rmbl|plndr> <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!wz single (br|rmbl|plnd) (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz single (br|rmbl|plndr) (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
-        syntax: 'schedule \'<cronjob>\' <br|rmbl|plnd> [time:3h|3d|1w|2m:1d]',
+        syntax: 'schedule \'<cronjob>\' <br|rmbl|plndr> [time:3h|3d|1w|2m:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /^!wz schedule '([*\//0-9- ]+)' (br|rmbl|plnd)( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz schedule '([*\//0-9- ]+)' (br|rmbl|plndr)( ([0-9]+)([h|d|w|m]))?$/
     },
     'unschedule': {
         method: unscheduleStats,

@@ -8,7 +8,7 @@ const fetch = require('node-fetch');
 // supported game modes
 const modeIds = {
     'br': ['br_br_real', 'br_brthquad', 'br_brquads', 'br_jugg_brtriojugr', 'br_brtrios', 'br_brduos', 'br_brsolos', 'br_brtriostim_name2'],
-    'plnd': ['br_dmz_plndtrios'],
+    'plndr': ['br_dmz_plndtrios'],
     'rmbl': ['brtdm_rmbl']
 };
 
