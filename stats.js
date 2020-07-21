@@ -18,7 +18,7 @@ function sum(stats, field) {
     }
 }
 
-function calculateStats(matches, mode) {
+function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
     let statValues = {
         'Matches': stats.length,
@@ -63,7 +63,7 @@ function sendStats(u, tryn, msgObj, duration, mode, err='') {
         try {
             // try and send stats
             let matches = await getRecentMatches(u.platform, u.username, duration, mode);
-            let stats = calculateStats(matches, mode);
+            let stats = calculateStats(matches);
             let msg = pprint(escapeMarkdown(u.username), stats, duration);
          
             // edit original message
