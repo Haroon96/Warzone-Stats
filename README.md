@@ -5,8 +5,12 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 - Register players for combined stats
 - Scheduled stats posting using cronjob syntax
 - View single player stats
+- Supports `[mode]` parameter to show stats for different game modes.
+  - Battle Royale: `br`
+  - Warzone Rumble: `rmbl`
+  - Plunder: `plndr`
 - Supports PlayStation Network (`psn`), Xbox Live (`xbl`) and Activision ID (`atvi`) platforms
-- Supports `[time]` parameter to only show stats from  specific times, e.g., last 8 hours (`8h`) or past 3 days (`3d`). Default value: `24h`
+- Supports `[time]` parameter to only show stats from specific times, e.g., last 8 hours (`8h`) or past 3 days (`3d`). Default value: `24h`
   - Hours: `h`
   - Days: `d`
   - Weeks: `w`
@@ -20,7 +24,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
   - Register users using `!wz register <platform> <username>`
   - Unregister users using `!wz unregister <platform> <username>`
 - For scheduling stats posting, send `!wz schedule '<cronjob>' 8h`. For example, `!wz schedule '30 19 * * *' 8h` posts stats everyday at 19:30 UTC.
-- For team splits, send `!wz teams <people-per-team>` to get a random list of teams.
+- For team splits, send `!wz teams <people-per-team>` to get a random list of teams from registered users.
 
 ### Example
 - Example response from the bot on Discord
@@ -30,9 +34,8 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 </p>
 
 ### Issues
-- Please note that this is an early stage project and is bound to have some issues that I will continue to work on and fix whenever I can make time for it. Meanwhile, please feel free to report or fix them and create a Pull Request.
 - If you encounter issues with your profile not loading, check if you can access it on the [COD Warzone Stats Tracker Site](https://cod.tracker.gg/warzone) whose awesome API is used by the bot. Your might be set to private.
-- For Activision ID, also suffix the hash for your profile (username#12345).
+- For Activision ID, it may be necessary to suffix the hash for your profile (username#12345).
 
 ### Credits
 - [COD Warzone Stats Tracker API](https://cod.tracker.gg/warzone)
