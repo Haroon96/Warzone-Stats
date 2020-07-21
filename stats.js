@@ -26,6 +26,8 @@ function calculateStats(matches) {
         'Match Deaths': sum(stats, 'deaths') - sum(stats, 'gulagDeaths'),
         'Gulag Kills': sum(stats, 'gulagKills'),
         'Gulag Deaths': sum(stats, 'gulagDeaths'),
+        'Overall Kills': sum(stats, 'kills'),
+        'Overall Deaths': sum(stats, 'deaths'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(matches.length, 1))),
@@ -45,7 +47,7 @@ function calculateStats(matches) {
     statValues['K/D (overall)'] = statValues['K/D (overall)'].toFixed(2);
 
     return statValues;
-   }
+}
 
 // timed-recursive function
 function sendStats(u, tryn, msgObj, duration, mode, err='') {
