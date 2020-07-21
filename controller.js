@@ -41,7 +41,7 @@ const commands = {
         method: scheduleStats,
         syntax: 'schedule \'<cronjob>\' <br|rmbl|plnd> [time:3h|3d|1w|2m:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /^!wz schedule '[*\//0-9- ]+' (br|rmbl|plnd)( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz schedule '([*\//0-9- ]+)' (br|rmbl|plnd)( ([0-9]+)([h|d|w|m]))?$/
     },
     'unschedule': {
         method: unscheduleStats,
