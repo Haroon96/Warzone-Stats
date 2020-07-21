@@ -7,6 +7,8 @@ const moment = require('moment');
 const fetch = require('node-fetch');
 // supported game modes
 const brModeIds = ['br_br_real', 'br_brthquad', 'br_brquads', 'br_jugg_brtriojugr', 'br_brtrios', 'br_brduos', 'br_brsolos', 'br_brtriostim_name2'];
+const rmblModeIds = ['brtdm_rmbl']
+const plndModeIds = ['br_dmz_plndtrios']
 
 async function request(url) {
     return await fetch(url, {
@@ -30,7 +32,7 @@ async function getPlayerProfile(platform, username) {
         };
 }
 
-async function getRecentMatches(platform, username, duration) {
+async function getRecentMatches(platform, username, duration, mode) {
     let now = moment();
     let recentMatches = [];
 
@@ -50,7 +52,13 @@ async function getRecentMatches(platform, username, duration) {
         let matches = res.data.matches;
 
         // only select battle royale
-        matches = matches.filter(x => brModeIds.includes(x.attributes.modeId));
+        if (mode == "br") {
+            matches = matches.filter(x => brModeIds.includes(x.attributes.modeId));
+        } else if (mode == "rmbl") {
+            matches = matches.filter(x => rmblModeIds.includes(x.attributes.modeId));
+        } else if (mode == "plnd") {
+            matches = matches.filter(x => plndModeIds.includes(x.attributes.modeId));
+        }
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);

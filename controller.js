@@ -9,9 +9,9 @@ const scheduler = require('./scheduler');
 const commands = {
     'stats': { 
         method: allStats, 
-        syntax: 'stats [time:3h|3d|1w|2m:1d]',
+        syntax: 'stats <br|rmbl|plnd> [time:3h|3d|1w|2m:1d]',
         help: 'Display stats of all registered users',
-        rx: /^!wz stats( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz stats (br|rmbl|plnd)( ([0-9]+)([h|d|w|m]))?$/
     },
     'users': { 
         method: getUsers,
@@ -33,9 +33,9 @@ const commands = {
     },
     'single': { 
         method: singleStats, 
-        syntax: 'single <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
+        syntax: 'single <br|rmbl|plnd> <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!wz single (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz single (br|rmbl|plnd) (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
@@ -101,14 +101,15 @@ async function allStats(msg) {
     }
  
     // prepare reply
-    let duration = util.parseDuration(tokens[2]);
+    let duration = util.parseDuration(tokens[3]);
+    let mode = tokens[2];
 
     let i = 0;
     // for each user, call the sendStats function with a 3s delay to prevent API exhaustion
     users.forEach(async(u) => { 
         // send initial message for further editing
         let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
-        setTimeout(sendStats(u, 0, msgObj, duration), i++ * 3000)
+        setTimeout(sendStats(u, 0, msgObj, duration, mode), i++ * 3000)
     });
 }
 
@@ -153,12 +154,13 @@ async function unregisterUser(msg) {
 
 async function singleStats(msg) {
     let tokens = util.tokenize(msg.content);   
-    let username = tokens[3];
-    let platform = tokens[2];
-    let duration = util.parseDuration(tokens[4]);
+    let username = tokens[4];
+    let platform = tokens[3];
+    let mode = tokens[2];
+    let duration = util.parseDuration(tokens[5]);
 
     let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(username)}** (${platform})...`);
-    await sendStats({ username, platform }, 0, msgObj, duration)(); 
+    await sendStats({ username, platform }, 0, msgObj, duration, mode)(); 
 }
 
 async function scheduleStats(msg) {
