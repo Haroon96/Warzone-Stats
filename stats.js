@@ -21,41 +21,31 @@ function sum(stats, field) {
 function calculateStats(matches, mode) {
     let stats = matches.map(x => x.segments[0].stats);
     let statValues = {
-        'Matches': stats.length,    
+        'Matches': stats.length,
+        'Match Kills': sum(stats, 'kills') - sum(stats, 'gulagKills'),
+        'Match Deaths': sum(stats, 'deaths') - sum(stats, 'gulagDeaths'),
+        'Gulag Kills': sum(stats, 'gulagKills'),
+        'Gulag Deaths': sum(stats, 'gulagDeaths'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
-        'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),    
+        'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
+        'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(matches.length, 1))),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
-        'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy')
+        'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
+        'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
-    if (mode != "rmbl") {
-        statValues['Team Wipes'] = sum(stats, 'objectiveTeamWiped');
-        statValues['Avg. Team Placement'] = (sum(stats, 'teamPlacement') / Math.max(matches.length, 1)).toFixed(2);
-    }
+    statValues['K/D (match)'] = statValues['Match Kills'] / Math.max(statValues['Match Deaths'], 1);
+    statValues['K/D (match)'] = statValues['K/D (match)'].toFixed(2);
 
-    if (mode == "br") {
-        statValues['Match Kills'] = sum(stats, 'kills') - sum(stats, 'gulagKills');
-        statValues['Match Deaths'] = sum(stats, 'deaths') - sum(stats, 'gulagDeaths');
-        statValues['Gulag Kills'] = sum(stats, 'gulagKills');
-        statValues['Gulag Deaths'] = sum(stats, 'gulagDeaths');
-    } 
-
-    statValues['Overall Kills'] = sum(stats, 'kills');
-    statValues['Overall Deaths'] = sum(stats, 'deaths');
-
-    if (mode == "br") {
-        statValues['K/D (match)'] = statValues['Match Kills'] / Math.max(statValues['Match Deaths'], 1);
-        statValues['K/D (match)'] = statValues['K/D (match)'].toFixed(2);
-        statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
-        statValues['K/D (gulag)'] = statValues['K/D (gulag)'].toFixed(2);
-    }
+    statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
+    statValues['K/D (gulag)'] = statValues['K/D (gulag)'].toFixed(2);
 
     statValues['K/D (overall)'] = sum(stats, 'kills') / Math.max(sum(stats, 'deaths'), 1);
     statValues['K/D (overall)'] = statValues['K/D (overall)'].toFixed(2);
 
     return statValues;
-}
+   }
 
 // timed-recursive function
 function sendStats(u, tryn, msgObj, duration, mode, err='') {
