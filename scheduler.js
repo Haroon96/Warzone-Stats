@@ -15,7 +15,7 @@ async function init(_client) {
     client = _client;
     let schedules = await db.getAllSchedules();
     schedules.forEach(sch => {
-        createJob(sch.channelId, sch.cron, sch.time);
+        createJob(sch.channelId, sch.cron, sch.mode, sch.time);
     });
 }
 
@@ -34,7 +34,7 @@ function createJob(channelId, cron, mode, time) {
     let job = scheduleJob(cron, () => {
         let channel = client.channels.cache.get(channelId);
         if (channel) {
-            channel.send(`!wz stats ${mode} ${time ? time : '1d'}`);
+            channel.send(`!wz stats ${mode ? mode : 'br'} ${time ? time : '1d'}`);
         }
     });
     jobs[channelId] = job;
