@@ -77,11 +77,12 @@ async function getAllUsers(channelId) {
     return channel.users;
 }
 
-async function schedule(channelId, cron, time) {
+async function schedule(channelId, cron, mode, time) {
     await _db.collection('schedules').updateOne({ channelId: channelId }, {
         $set: {
             cron: cron,
-            time: time
+            time: time,
+            mode: mode
         }
     }, {
         upsert: true

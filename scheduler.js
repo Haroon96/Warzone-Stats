@@ -19,10 +19,10 @@ async function init(_client) {
     });
 }
 
-async function schedule(channelId, cron, time) {
-    await db.schedule(channelId, cron, time);
+async function schedule(channelId, mode, cron, time) {
+    await db.schedule(channelId, cron, mode, time);
     cancelJob(channelId);
-    createJob(channelId, cron, time);
+    createJob(channelId, cron, mode, time);
 }
 
 async function unschedule(channelId) {
@@ -30,11 +30,11 @@ async function unschedule(channelId) {
     cancelJob(channelId);
 }
 
-function createJob(channelId, cron, time) {
+function createJob(channelId, cron, mode, time) {
     let job = scheduleJob(cron, () => {
         let channel = client.channels.cache.get(channelId);
         if (channel) {
-            channel.send(`!wz stats br ${time ? time : '1d'}`);
+            channel.send(`!wz stats ${mode} ${time ? time : '1d'}`);
         }
     });
     jobs[channelId] = job;
