@@ -16,12 +16,27 @@ function tokenize(msg) {
     return msg.toLowerCase().split(/ +/);
 }
 
+function isValidStat(value) {
+    if (!value) return false;
+    if (value == 0) return false;
+    if (value == NaN) return false;
+    if (value == "0.00") return false;
+    if (value == "0s") return false;
+    return true;
+}
+
 function pprint(username, stats, duration) {
-    let msg = `Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)\n`;
+    let msg = [`Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)`];
     for (let stat in stats) {
-        msg += `> ${stat}: ${stats[stat]}\n`;
+        if (isValidStat(stats[stat])) {
+            msg.push(`> ${stat}: ${stats[stat]}`);
+        }
     }
-    return msg;
+    // no stats pushed, no matches played
+    if (msg.length == 1) {
+        msg.push("> No matches played!");
+    }
+    return msg.join('\n');
 }
 
 function escapeMarkdown(text) {
