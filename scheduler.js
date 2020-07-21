@@ -19,7 +19,7 @@ async function init(_client) {
     });
 }
 
-async function schedule(channelId, mode, cron, time) {
+async function schedule(channelId, cron, mode, time) {
     await db.schedule(channelId, cron, mode, time);
     cancelJob(channelId);
     createJob(channelId, cron, mode, time);
