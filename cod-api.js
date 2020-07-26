@@ -5,12 +5,9 @@ module.exports = {
 
 const moment = require('moment');
 const fetch = require('node-fetch');
-// supported game modes
-const modeIds = {
-    'br': ['br_br_real', 'br_brthquad', 'br_brquads', 'br_jugg_brtriojugr', 'br_brtrios', 'br_brduos', 'br_brsolos', 'br_brtriostim_name2'],
-    'plndr': ['br_dmz_plndtrios'],
-    'rmbl': ['brtdm_rmbl']
-};
+const { getModeIds } = require('./db');
+
+const modeIds = {};
 
 async function request(url) {
     return await fetch(url, {
@@ -39,6 +36,9 @@ async function getRecentMatches(platform, username, duration, mode) {
     let recentMatches = [];
 
     let next = 'null';
+
+    // check if modeIds loaded, else load from db
+    if (!modeIds[mode]) modeIds[mode] = await getModeIds(mode);
 
     // fetch all matches during specified duration
     while (true) {
