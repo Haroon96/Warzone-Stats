@@ -22,19 +22,22 @@ function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
     let statValues = {
         'Matches': stats.length,
-        'Kills': sum(stats, 'kills') - sum(stats, 'gulagKills'),
-        'Deaths': sum(stats, 'deaths') - sum(stats, 'gulagDeaths'),
+        'Match Kills': sum(stats, 'kills') - sum(stats, 'gulagKills'),
+        'Match Deaths': sum(stats, 'deaths') - sum(stats, 'gulagDeaths'),
         'Gulag Kills': sum(stats, 'gulagKills'),
         'Gulag Deaths': sum(stats, 'gulagDeaths'),
+        'Overall Kills': sum(stats, 'kills'),
+        'Overall Deaths': sum(stats, 'deaths'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
+        'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(matches.length, 1))),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
         'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
-    statValues['K/D (match)'] = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
+    statValues['K/D (match)'] = statValues['Match Kills'] / Math.max(statValues['Match Deaths'], 1);
     statValues['K/D (match)'] = statValues['K/D (match)'].toFixed(2);
 
     statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
@@ -47,7 +50,7 @@ function calculateStats(matches) {
 }
 
 // timed-recursive function
-function sendStats(u, tryn, msgObj, duration, err='') {
+function sendStats(u, tryn, msgObj, duration, mode, err='') {
     // timeout durations for each retry
     let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
     
@@ -61,7 +64,7 @@ function sendStats(u, tryn, msgObj, duration, err='') {
 
         try {
             // try and send stats
-            let matches = await getRecentMatches(u.platform, u.username, duration);
+            let matches = await getRecentMatches(u.platform, u.username, duration, mode);
             let stats = calculateStats(matches);
             let msg = pprint(escapeMarkdown(u.username), stats, duration);
          
@@ -77,7 +80,7 @@ function sendStats(u, tryn, msgObj, duration, err='') {
                 errMsg = errMsg.slice(0, errMsg.indexOf("*Retry") - 1);
             } else {
                 // schedule retry
-                setTimeout(sendStats(u, tryn + 1, msgObj, duration, e), tryWaits[tryn]);
+                setTimeout(sendStats(u, tryn + 1, msgObj, duration, mode, e), tryWaits[tryn]);
             }
             // edit message with error
             await msgObj.edit(errMsg);
