@@ -16,7 +16,10 @@ function tokenize(msg) {
     return msg.toLowerCase().split(/ +/);
 }
 
-function isValidStat(value) {
+function keepStat(key, value) {
+    // always display these stats
+    if (['Match Kills', 'Match Deaths', 'K/D (match)'].includes(key)) return true;
+    // remove 0 value stats
     if (!value) return false;
     if (value == 0) return false;
     if (value == NaN) return false;
@@ -28,7 +31,7 @@ function isValidStat(value) {
 function pprint(username, stats, duration) {
     let msg = [`Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)`];
     for (let stat in stats) {
-        if (isValidStat(stats[stat])) {
+        if (keepStat(stat, stats[stat])) {
             msg.push(`> ${stat}: ${stats[stat]}`);
         }
     }
