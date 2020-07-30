@@ -1,7 +1,7 @@
-## COD Warzone Stats
-Discord bot for calculating aggregate player stats for Call of Duty Warzone Battle Royale.
+# COD Warzone Stats
+Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 
-### Features
+## Features
 - Register players for combined stats
 - Scheduled stats posting using cronjob syntax
 - View single player stats
@@ -17,7 +17,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
   - Months: `m`
 - Supports random team splits into groups
 
-### Guide
+## Guide
 - [Invite](https://discordapp.com/oauth2/authorize?scope=bot&client_id=711383069160112128) the bot to your server.
 - Send `!wz single <mode> <platform> <username> [time]` to fetch stats for a single user.
 - Send `!wz stats <mode> [time]` to get stats for all registered users.
@@ -26,16 +26,16 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone Batt
 - For scheduling stats posting, send `!wz schedule '<cronjob>' 8h`. For example, `!wz schedule '30 19 * * *' 8h` posts stats everyday at 19:30 UTC.
 - For team splits, send `!wz teams <people-per-team>` to get a random list of teams from registered users.
 
-### Example
+## Example
 - Example response from the bot on Discord
 
 <p align="center">
  <img src="https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/response-example.png" alt="Example bot response">
 </p>
 
-### Issues
+## Issues
 - If you encounter issues with your profile not loading, check if you can access it on the [COD Warzone Stats Tracker Site](https://cod.tracker.gg/warzone) whose awesome API is used by the bot. Your might be set to private.
-- For Activision ID, it may be necessary to suffix the hash for your profile (username#12345).
+- For Activision ID, it may be necessary to suffix the hash for your profile (e.g., `username#12345`).
 
-### Credits
+## Credits
 - [COD Warzone Stats Tracker API](https://cod.tracker.gg/warzone)
