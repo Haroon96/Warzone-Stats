@@ -161,8 +161,13 @@ async function singleStats(msg) {
 
     let player = await getPlayerProfile(platform, username);
 
-    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(player.username)}** (${player.platform})...`);
-    await sendStats(player, 0, msgObj, duration, mode)(); 
+    if (player) {
+        let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(player.username)}** (${player.platform})...`);
+        await sendStats(player, 0, msgObj, duration, mode)();
+    } else {
+        msg.reply(`**${username}** (${platform}) does not exist!`);
+    }
+
 }
 
 async function scheduleStats(msg) {
