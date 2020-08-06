@@ -30,15 +30,19 @@ function keepStat(key, value) {
 
 function pprint(username, stats, duration) {
     let msg = [`Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)`];
-    for (let stat in stats) {
-        if (keepStat(stat, stats[stat])) {
-            msg.push(`> ${stat}: ${stats[stat]}`);
+
+    // if no matches played, inform user
+    if (stats['Matches'] == 0) {
+        msg.push("> No matches played!");
+    } else {
+        // pprint the stats
+        for (let stat in stats) {
+            if (keepStat(stat, stats[stat])) {
+                msg.push(`> ${stat}: ${stats[stat]}`);
+            }
         }
     }
-    // no stats pushed, no matches played
-    if (msg.length == 1) {
-        msg.push("> No matches played!");
-    }
+
     return msg.join('\n');
 }
 
