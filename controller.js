@@ -159,8 +159,10 @@ async function singleStats(msg) {
     let mode = tokens[2];
     let duration = util.parseDuration(tokens[5]);
 
-    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(username)}** (${platform})...`);
-    await sendStats({ username, platform }, 0, msgObj, duration, mode)(); 
+    let player = await getPlayerProfile(platform, username);
+
+    let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(player.username)}** (${player.platform})...`);
+    await sendStats(player, 0, msgObj, duration, mode)(); 
 }
 
 async function scheduleStats(msg) {
