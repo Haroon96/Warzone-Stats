@@ -163,7 +163,7 @@ async function singleStats(msg) {
     let [ mode, platform, username, duration ] = match.slice(1);
 
     username = username.replace(/"/g, '');
-    duration = util.parseDuration(match[4]);
+    duration = util.parseDuration(duration);
 
     let player = await getPlayerProfile(platform, username);
 
