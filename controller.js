@@ -21,21 +21,21 @@ const commands = {
     },
     'register': {
         method: registerUser,
-        syntax: 'register <psn|xbl|atvi> <username>',
+        syntax: 'register <psn|xbl|atvi> "<username>"',
         help: 'Registers a new user',
-        rx: /^!wz register (psn|xbl|atvi) [0-9A-Za-z#_-]+$/
+        rx: /^!wz register (psn|xbl|atvi) ([0-9A-Za-z#_\-]+|"[0-9A-Za-z#_\- ]+")$/
     },
     'unregister': { 
         method: unregisterUser, 
-        syntax: 'unregister <psn|xbl|atvi> <username>', 
+        syntax: 'unregister <psn|xbl|atvi> "<username>"', 
         help: 'Unregisters a user',
-        rx: /^!wz unregister (psn|xbl|atvi) [0-9A-Za-z#_-]+$/ 
+        rx: /^!wz unregister (psn|xbl|atvi) ([0-9A-Za-z#_\-]+|"[0-9A-Za-z#_\- ]+")$/ 
     },
     'single': { 
         method: singleStats, 
-        syntax: 'single <br|rmbl|plndr> <psn|xbl|atvi> <username> [time:3h|3d|1w|2m:1d]',
+        syntax: 'single <br|rmbl|plndr> <psn|xbl|atvi> "<username>" [time:3h|3d|1w|2m:1d]',
         help: 'Display solo stats',
-        rx: /^!wz single (br|rmbl|plndr) (psn|xbl|atvi) [0-9A-Za-z#_-]+( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz single (br|rmbl|plndr) (psn|xbl|atvi) ([0-9A-Za-z#_\-]+|"[0-9A-Za-z#_\- ]+")( ([0-9]+)([h|d|w|m]))?$/
     },
     'schedule': {
         method: scheduleStats,
@@ -124,9 +124,12 @@ async function getUsers(msg) {
 }
 
 async function registerUser(msg) {
-    let tokens = util.tokenize(msg.content);
-    let username = tokens[3];
-    let platform = tokens[2];
+    let rx = commands['register'].rx;
+    let match = msg.content.match(rx);
+    let [ platform, username ] = match.slice(1);
+    
+    username = username.replace(/"/g, '');
+
     let player = await getPlayerProfile(platform, username);
 
     if (player) {
@@ -138,10 +141,12 @@ async function registerUser(msg) {
 }
 
 async function unregisterUser(msg) {
-    let tokens = util.tokenize(msg.content);
-    let username = tokens[3];
-    let platform = tokens[2];
-
+    let rx = commands['unregister'].rx;
+    let match = msg.content.match(rx);
+    let [ platform, username ] = match.slice(1);
+    
+    username = username.replace(/"/g, '');
+ 
     let player = await db.getUserFromChannel(msg.channel.id, username, platform)
 
     if (player) {
@@ -153,11 +158,12 @@ async function unregisterUser(msg) {
 }
 
 async function singleStats(msg) {
-    let tokens = util.tokenize(msg.content);   
-    let username = tokens[4];
-    let platform = tokens[3];
-    let mode = tokens[2];
-    let duration = util.parseDuration(tokens[5]);
+    let rx = commands['single'].rx;
+    let match = msg.content.match(rx);
+    let [ mode, platform, username, duration ] = match.slice(1);
+
+    username = username.replace(/"/g, '');
+    duration = util.parseDuration(duration);
 
     let player = await getPlayerProfile(platform, username);
 
