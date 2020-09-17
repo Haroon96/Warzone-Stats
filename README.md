@@ -23,7 +23,8 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - Send `!wz stats <mode> [time]` to get stats for all registered users.
   - Register users using `!wz register <platform> <username>`
   - Unregister users using `!wz unregister <platform> <username>`
-- For scheduling stats posting, send `!wz schedule '<cronjob>' 8h`. For example, `!wz schedule '30 19 * * *' 8h` posts stats everyday at 19:30 UTC.
+  - Enclose `<username>` in double-quotes (like `"<username>"`) if it contains spaces.
+- For scheduling stats posting, send `!wz schedule "<cronjob>" 8h`. For example, `!wz schedule "30 19 * * *" 8h` posts stats everyday at 19:30 UTC.
 - For team splits, send `!wz teams <people-per-team>` to get a random list of teams from registered users.
 
 ## Example
