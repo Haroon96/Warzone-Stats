@@ -39,9 +39,9 @@ const commands = {
     },
     'schedule': {
         method: scheduleStats,
-        syntax: 'schedule \'<cronjob>\' <br|rmbl|plndr> [time:3h|3d|1w|2m:1d]',
+        syntax: 'schedule "<cronjob>" <br|rmbl|plndr> [time:3h|3d|1w|2m:1d]',
         help: 'Schedule automatic stats posting',
-        rx: /^!wz schedule '([*\//0-9- ]+)' (br|rmbl|plndr)( ([0-9]+)([h|d|w|m]))?$/
+        rx: /^!wz schedule "([*\//0-9- ]+)" (br|rmbl|plndr)( ([0-9]+)([h|d|w|m]))?$/
     },
     'unschedule': {
         method: unscheduleStats,
@@ -179,9 +179,8 @@ async function singleStats(msg) {
 async function scheduleStats(msg) {
     let rx = commands['schedule'].rx;
     let match = msg.content.match(rx);
-    let cron = match[1];
-    let mode = match[2];
-    let time = match[3] ? match[3].trim() : '1d';
+    let [ cron, mode, time ] = msg.content.match(rx).slice(1);
+    time = time ? time.trim() : '1d';
     
     try {
         // check if cron is valid
