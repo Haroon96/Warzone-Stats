@@ -125,8 +125,7 @@ async function getUsers(msg) {
 
 async function registerUser(msg) {
     let rx = commands['register'].rx;
-    let match = msg.content.match(rx);
-    let [ platform, username ] = match.slice(1);
+    let [ platform, username ] = msg.content.match(rx).slice(1);
     
     username = username.replace(/"/g, '');
 
@@ -142,8 +141,7 @@ async function registerUser(msg) {
 
 async function unregisterUser(msg) {
     let rx = commands['unregister'].rx;
-    let match = msg.content.match(rx);
-    let [ platform, username ] = match.slice(1);
+    let [ platform, username ] = msg.content.match(rx).slice(1);
     
     username = username.replace(/"/g, '');
  
@@ -159,8 +157,7 @@ async function unregisterUser(msg) {
 
 async function singleStats(msg) {
     let rx = commands['single'].rx;
-    let match = msg.content.match(rx);
-    let [ mode, platform, username, duration ] = match.slice(1);
+    let [ mode, platform, username, duration ] = msg.content.match(rx).slice(1);
 
     username = username.replace(/"/g, '');
     duration = util.parseDuration(duration);
@@ -178,7 +175,6 @@ async function singleStats(msg) {
 
 async function scheduleStats(msg) {
     let rx = commands['schedule'].rx;
-    let match = msg.content.match(rx);
     let [ cron, mode, time ] = msg.content.match(rx).slice(1);
     time = time ? time.trim() : '1d';
     
