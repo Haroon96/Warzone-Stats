@@ -3,13 +3,16 @@
     <head>
         <title>Warzone Stats</title>
         <link rel="icon" href="img/favicon.png">
-        <link rel="stylesheet" href="stylesheet.css">
+        <link rel="stylesheet" href="https://haroon96.github.io/README-Renderer/stylesheet.css">
+        <script src="https://haroon96.github.io/README-Renderer/render.js"></script>
     </head>
     <body>
-        <div id="readme-md"></div>
+        <div id="render"></div>
         <div class="social">
             <a href="https://github.com/haroon96/warzone-stats" target="_blank"><img src="img/GitHub_Logo.png"></a>
         </div>
-        <script src="render.js"></script>
+        <script>
+            render("Haroon96/warzone-stats", document.getElementById('render'));
+        </script>
     </body>
 </html>
