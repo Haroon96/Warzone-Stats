@@ -18,7 +18,7 @@ function tokenize(msg) {
 
 function keepStat(key, value) {
     // always display these stats
-    if (['Match Kills', 'Match Deaths', 'K/D (match)'].includes(key)) return true;
+    if (['Kills', 'Deaths', 'K/D'].includes(key)) return true;
     // remove 0 value stats
     if (!value) return false;
     if (value == 0) return false;

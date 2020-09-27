@@ -22,12 +22,8 @@ function calculateStats(matches) {
     let stats = matches.map(x => x.segments[0].stats);
     let statValues = {
         'Matches': stats.length,
-        'Match Kills': sum(stats, 'kills') - sum(stats, 'gulagKills'),
-        'Match Deaths': sum(stats, 'deaths') - sum(stats, 'gulagDeaths'),
-        'Gulag Kills': sum(stats, 'gulagKills'),
-        'Gulag Deaths': sum(stats, 'gulagDeaths'),
-        'Overall Kills': sum(stats, 'kills'),
-        'Overall Deaths': sum(stats, 'deaths'),
+        'Kills': sum(stats, 'kills'),
+        'Deaths': sum(stats, 'deaths'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(matches.length, 1))),
@@ -37,14 +33,8 @@ function calculateStats(matches) {
         'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
-    statValues['K/D (match)'] = statValues['Match Kills'] / Math.max(statValues['Match Deaths'], 1);
-    statValues['K/D (match)'] = statValues['K/D (match)'].toFixed(2);
-
-    statValues['K/D (gulag)'] = statValues['Gulag Kills'] / Math.max(statValues['Gulag Deaths'], 1);
-    statValues['K/D (gulag)'] = statValues['K/D (gulag)'].toFixed(2);
-
-    statValues['K/D (overall)'] = sum(stats, 'kills') / Math.max(sum(stats, 'deaths'), 1);
-    statValues['K/D (overall)'] = statValues['K/D (overall)'].toFixed(2);
+    statValues['K/D'] = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
+    statValues['K/D'] = statValues['K/D'].toFixed(2);
 
     return statValues;
 }
