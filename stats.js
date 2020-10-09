@@ -3,7 +3,7 @@ module.exports = {
 };
 
 const { getRecentMatches } = require('./cod-api');
-const { pprint, escapeMarkdown, formatDuration } = require('./util');
+const { generateEmbed, escapeMarkdown, formatDuration } = require('./util');
 
 function sum(stats, field) {
     try {
@@ -40,15 +40,12 @@ function calculateStats(matches) {
 }
 
 // timed-recursive function
-function sendStats(u, tryn, msgObj, duration, mode, err='') {
-    // timeout durations for each retry
-    let tryWaits = new Array(3).fill([5000, 10000, 30000, 60000, 90000]).flat().sort((a, b) => a - b);
-    
+function sendStats(u, try_number, msgObj, duration, mode, err='') {    
     // returns a function that can be passed to setTimeout
     return async function() {
         // if retried max times, just stop
-        if (tryn >= tryWaits.length) {
-            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg}`);
+        if (try_number >= 10) {
+            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg ? err.msg : err}`);
             return;
         }
 
@@ -56,22 +53,22 @@ function sendStats(u, tryn, msgObj, duration, mode, err='') {
             // try and send stats
             let matches = await getRecentMatches(u.platform, u.username, duration, mode);
             let stats = calculateStats(matches);
-            let msg = pprint(escapeMarkdown(u.username), stats, duration);
+            let msg = generateEmbed(escapeMarkdown(u.username), stats, duration);
          
             // edit original message
-            await msgObj.edit(msg);
+            await msgObj.delete();
+            await msgObj.channel.send(msg);
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg}\n *Retry ${tryn + 1}/${tryWaits.length}*.`;
+                `for **${escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg ? e.msg : e}`;
 
-            if(e.code == "WzMatchService::NoAccount") {
-                //truncate the retry part and the /n
-                errMsg = errMsg.slice(0, errMsg.indexOf("*Retry") - 1);
-            } else {
+            if (e.code != "WzMatchService::NoAccount") {
                 // schedule retry
-                setTimeout(sendStats(u, tryn + 1, msgObj, duration, mode, e), tryWaits[tryn]);
+                setTimeout(sendStats(u, try_number + 1, msgObj, duration, mode, e), try_number * 5000);
+                errMsg = `${errMsg}\n *Retry ${try_number + 1}/10*.`
             }
+
             // edit message with error
             await msgObj.edit(errMsg);
         }
