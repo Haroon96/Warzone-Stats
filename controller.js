@@ -92,7 +92,7 @@ async function controller(msg) {
 
 async function allStats(msg) {
     let tokens = util.tokenize(msg.content);
-    let users = await db.getAllUsers(msg.channel.id);
+    let users = await db.getAllUsers(msg.guild.id);
 
     // check if any users registered
     if (users.length == 0) {
@@ -114,7 +114,7 @@ async function allStats(msg) {
 }
 
 async function getUsers(msg) {
-    let users = await db.getAllUsers(msg.channel.id);
+    let users = await db.getAllUsers(msg.guild.id);
     if (users.length > 0) {
         users = users.map(x => `${util.escapeMarkdown(x.username)} (${x.platform})`);
         msg.reply(`\nRegistered users:\n${users.join('\n')}`);    
@@ -132,7 +132,7 @@ async function registerUser(msg) {
     let player = await getPlayerProfile(platform, username);
 
     if (player) {
-        await db.addUserToChannel(msg.channel.id, player.username, player.platform);
+        await db.addUserToGuild(msg.guild.id, player.username, player.platform);
         msg.reply(`**${player.username}** (${player.platform}) has been registered!`);        
     } else {
         msg.reply(`**${username}** (${platform}) does not exist!`);    
@@ -145,10 +145,10 @@ async function unregisterUser(msg) {
     
     username = username.replace(/"/g, '');
  
-    let player = await db.getUserFromChannel(msg.channel.id, username, platform)
+    let player = await db.getUserFromGuild(msg.guild.id, username, platform)
 
     if (player) {
-        await db.removeUserFromChannel(msg.channel.id, player.username, player.platform);
+        await db.removeUserFromGuild(msg.guild.id, player.username, player.platform);
         msg.reply(`**${util.escapeMarkdown(player.username)}** (${player.platform}) has been unregistered!`);            
     } else {
         msg.reply(`**${util.escapeMarkdown(username)}** (${platform}) has not been registered!`); 
@@ -209,7 +209,7 @@ async function help(msg) {
 
 async function teamSplit(msg) {
     let perTeam = parseInt(util.tokenize(msg.content)[2]);
-    let users = await db.getAllUsers(msg.channel.id);
+    let users = await db.getAllUsers(msg.guild.id);
     users = util.shuffle(users);
     try {
         let reply = [];
