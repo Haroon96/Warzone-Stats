@@ -1,6 +1,6 @@
 module.exports = {
     tokenize,
-    pprint,
+    generateEmbed,
     escapeMarkdown,
     parseDuration,
     isValidCron: require('cron-validator').isValidCron,
@@ -8,6 +8,7 @@ module.exports = {
     formatDuration
 };
 
+const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
 // load moment-duration
 require("moment-duration-format");
@@ -28,22 +29,30 @@ function keepStat(key, value) {
     return true;
 }
 
-function pprint(username, stats, duration) {
-    let msg = [`Stats for **${username}** over the last ${duration.value} ${duration.unit}(s)`];
+function generateEmbed(username, stats, duration) {
 
-    // if no matches played, inform user
+    let embed = new MessageEmbed()
+        .setColor('#2D3640')
+        .setTitle(`Stats for ${username}`)
+        .setAuthor('Warzone Stats', 'https://raw.githubusercontent.com/Haroon96/warzone-stats/gh-pages/img/favicon.png', 'https://haroon96.github.io/warzone-stats')
+        .setTimestamp();
+
+    // no matches played, early return
     if (stats['Matches'] == 0) {
-        msg.push("> No matches played!");
-    } else {
-        // pprint the stats
-        for (let stat in stats) {
-            if (keepStat(stat, stats[stat])) {
-                msg.push(`> ${stat}: ${stats[stat]}`);
-            }
-        }
+        embed.setDescription(`No matches played over the past ${duration.value} ${duration.unit}(s)!`);
+        return embed;
     }
 
-    return msg.join('\n');
+    // proceed with formatting
+    embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
+
+    for (let stat in stats) {
+        if (keepStat(stat, stats[stat])) {
+            embed.addField(stat, stats[stat], true);
+        }
+    }
+    
+    return embed;
 }
 
 function escapeMarkdown(text) {
