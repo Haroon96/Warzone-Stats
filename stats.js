@@ -45,7 +45,7 @@ function sendStats(u, try_number, msgObj, duration, mode, err='') {
     return async function() {
         // if retried max times, just stop
         if (try_number >= 10) {
-            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg}`);
+            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg ? err.msg : err}`);
             return;
         }
 
