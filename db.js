@@ -1,7 +1,7 @@
 module.exports = {
-    addUserToChannel,
-    removeUserFromChannel,
-    getUserFromChannel,
+    addUserToGuild,
+    removeUserFromGuild,
+    getUserFromGuild,
     schedule,
     unschedule,
     getAllUsers,
@@ -19,28 +19,28 @@ async function init() {
     _db = client.db(process.env.MONGO_DBNAME);
 }
 
-async function findChannel(channelId) {
-    let channel = await _db.collection('channels').findOne({ channelId });
-    // if channel not found in db, create it
-    if (channel == null) {
-        channel = { channelId, users: [] };
-        await _db.collection('channels').insertOne(channel);
+async function findGuild(guildId) {
+    let guild = await _db.collection('guilds').findOne({ guildId });
+    // if guild not found in db, create it
+    if (guild == null) {
+        guild = { guildId, users: [] };
+        await _db.collection('guilds').insertOne(guild);
     }
-    return channel;
+    return guild;
 }
 
-async function isUserAdded(channelId, username, platform) {
-    let userAdded = await _db.collection('channels').findOne({channelId, users: { $all: [{username: username, platform: platform}] }});
+async function isUserAdded(guildId, username, platform) {
+    let userAdded = await _db.collection('guilds').findOne({guildId, users: { $all: [{username: username, platform: platform}] }});
     return userAdded != null;
 }
 
-async function addUserToChannel(channelId, username, platform) {
+async function addUserToGuild(guildId, username, platform) {
 
-    if (await isUserAdded(channelId, username, platform)) {
+    if (await isUserAdded(guildId, username, platform)) {
         throw 'User already added!';
     }
 
-    await _db.collection('channels').updateOne({ channelId }, {
+    await _db.collection('guilds').updateOne({ guildId }, {
         $push: {
             users: { username, platform }
         }
@@ -49,9 +49,9 @@ async function addUserToChannel(channelId, username, platform) {
     });
 }
 
-async function getUserFromChannel(channelId, username, platform) {
-    let r = await _db.collection('channels').findOne({ 
-        channelId,
+async function getUserFromGuild(guildId, username, platform) {
+    let r = await _db.collection('guilds').findOne({ 
+        guildId,
         users: {
             $elemMatch: {
                 username: new RegExp(username, 'i'),
@@ -65,17 +65,17 @@ async function getUserFromChannel(channelId, username, platform) {
     return r ? r.users[0] : null;
 }
 
-async function removeUserFromChannel(channelId, username, platform) {
-    await _db.collection('channels').updateOne({ channelId }, {
+async function removeUserFromGuild(guildId, username, platform) {
+    await _db.collection('guilds').updateOne({ guildId }, {
         $pull: {
             users: { username, platform }
         }
     });
 }
 
-async function getAllUsers(channelId) {
-    let channel = await findChannel(channelId);
-    return channel.users;
+async function getAllUsers(guildId) {
+    let guild = await findGuild(guildId);
+    return guild.users;
 }
 
 async function schedule(channelId, cron, mode, time) {
