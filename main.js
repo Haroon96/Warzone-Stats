@@ -1,5 +1,5 @@
-const discord = require('discord.js');
-const bot = new discord.Client();
+const { Client } = require('discord.js');
+const bot = new Client();
 
 const db = require('./db');
 const controller = require('./controller');

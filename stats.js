@@ -55,9 +55,9 @@ function sendStats(u, try_number, msgObj, duration, mode, err='') {
             let stats = calculateStats(matches);
             let msg = generateEmbed(escapeMarkdown(u.username), stats, duration);
          
-            // edit original message
-            await msgObj.delete();
+            // send message and delete original
             await msgObj.channel.send(msg);
+            await msgObj.delete();
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
             let errMsg = `Encountered the following issue while fetching stats ` + 
@@ -65,7 +65,7 @@ function sendStats(u, try_number, msgObj, duration, mode, err='') {
 
             if (e.code != "WzMatchService::NoAccount") {
                 // schedule retry
-                setTimeout(sendStats(u, try_number + 1, msgObj, duration, mode, e), try_number * 5000);
+                setTimeout(sendStats(u, try_number + 1, msgObj, duration, mode, e), (try_number + 1) * 5000);
                 errMsg = `${errMsg}\n *Retry ${try_number + 1}/10*.`
             }
 
