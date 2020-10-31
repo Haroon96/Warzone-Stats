@@ -48,7 +48,7 @@ async function getRecentMatches(platform, username, duration, mode) {
         let res = await request(url);
 
         if (res.errors) {
-            let err = res.errors[0];
+            let err = res.errors[0];    
             if (err.code == 'WzMatchService::ApiUnavailable' && recentMatches.length > 0) {
                 // end of match list for this user
                 return recentMatches;
