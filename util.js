@@ -18,8 +18,8 @@ function tokenize(msg) {
 }
 
 function keepStat(key, value) {
-    // always display these stats
-    if (['Kills', 'Deaths', 'K/D'].includes(key)) return true;
+    // skip default stats
+    if (['Matches', 'Kills', 'Deaths', 'K/D'].includes(key)) return false;
     // remove 0 value stats
     if (!value) return false;
     if (value == 0) return false;
@@ -45,6 +45,10 @@ function generateEmbed(username, stats, duration) {
 
     // proceed with formatting
     embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
+    embed.addField('Matches', stats['Matches']);
+    embed.addField('Kills', stats['Kills'], true);
+    embed.addField('Deaths', stats['Deaths'], true);
+    embed.addField('K/D', stats['K/D'], true);
 
     for (let stat in stats) {
         if (keepStat(stat, stats[stat])) {
@@ -67,14 +71,14 @@ function parseDuration(d) {
     let match = d.match(rx);
     return {
         value: match[1],
-        unit: function(x) {
+        unit: (function(x) {
             switch(x) {
                 case 'h': return 'hour';
                 case 'd': return 'day';
                 case 'w': return 'week';
                 case 'm': return 'month';
             }
-        }(match[2])
+        })(match[2])
     }
 }
 
