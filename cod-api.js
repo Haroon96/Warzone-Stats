@@ -49,7 +49,7 @@ async function getRecentMatches(platform, username, duration, mode) {
 
         if (res.errors) {
             let err = res.errors[0];    
-            if (err.code == 'WzMatchService::ApiUnavailable' && recentMatches.length > 0) {
+            if (err.code == 'WzMatchService::ApiUnavailable') {
                 // end of match list for this user
                 return recentMatches;
             } else {
