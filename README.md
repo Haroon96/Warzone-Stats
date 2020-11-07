@@ -18,7 +18,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - Supports random team splits into groups
 
 ## Guide
-- [Invite](https://discordapp.com/oauth2/authorize?scope=bot&client_id=711383069160112128) the bot to your server.
+- [Invite](https://discord.com/api/oauth2/authorize?client_id=711383069160112128&permissions=92160&scope=bot) the bot to your server.
 - Send `!wz single <mode> <platform> <username> [time]` to fetch stats for a single user.
 - Send `!wz stats <mode> [time]` to get stats for all registered users.
   - Register users using `!wz register <platform> <username>`
