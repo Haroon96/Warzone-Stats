@@ -108,8 +108,8 @@ async function allStats(msg) {
     // for each user, call the sendStats function with a 3s delay to prevent API exhaustion
     users.forEach(async(u) => { 
         // send initial message for further editing
-        let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(u.username)}** (${u.platform})...`);
-        setTimeout(sendStats(u, 0, msgObj, duration, mode), i++ * 3000)
+        let msgEmbed = await msg.reply(util.generateEmbedTemplate(u.username).setDescription('Retrieving...'));
+        setTimeout(sendStats(u, 0, msgEmbed, duration, mode), i++ * 3000)
     });
 }
 
@@ -165,8 +165,8 @@ async function singleStats(msg) {
     let player = await getPlayerProfile(platform, username);
 
     if (player) {
-        let msgObj = await msg.reply(`Fetching stats for **${util.escapeMarkdown(player.username)}** (${player.platform})...`);
-        await sendStats(player, 0, msgObj, duration, mode)();
+        let msgEmbed = await msg.reply(util.generateEmbedTemplate(username).setDescription('Retrieving...'));
+        await sendStats(player, 0, msgEmbed, duration, mode)();
     } else {
         msg.reply(`**${username}** (${platform}) does not exist!`);
     }
