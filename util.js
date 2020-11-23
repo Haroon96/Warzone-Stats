@@ -1,6 +1,7 @@
 module.exports = {
     tokenize,
-    generateEmbed,
+    generateStatsEmbed,
+    generateEmbedTemplate,
     escapeMarkdown,
     parseDuration,
     isValidCron: require('cron-validator').isValidCron,
@@ -29,13 +30,17 @@ function keepStat(key, value) {
     return true;
 }
 
-function generateEmbed(username, stats, duration) {
-
-    let embed = new MessageEmbed()
+function generateEmbedTemplate(username) {
+    return new MessageEmbed()
         .setColor('#2D3640')
         .setTitle(`Stats for ${username}`)
         .setAuthor('Warzone Stats', 'https://raw.githubusercontent.com/Haroon96/warzone-stats/gh-pages/img/favicon.png', 'https://haroon96.github.io/warzone-stats')
         .setTimestamp();
+}
+
+function generateStatsEmbed(username, stats, duration) {
+
+    let embed = generateEmbedTemplate(username);
 
     // no matches played, early return
     if (stats['Matches'] == 0) {

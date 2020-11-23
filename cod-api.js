@@ -14,7 +14,8 @@ async function request(url) {
         "credentials": "include",
         "headers": {
             "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en"
+            "Accept-Language": "en",
+            "User-Agent": "haroon96/warzone-stats"
         },
         "method": "GET",
         "mode": "cors"

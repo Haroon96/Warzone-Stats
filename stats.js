@@ -3,7 +3,7 @@ module.exports = {
 };
 
 const { getRecentMatches } = require('./cod-api');
-const { generateEmbed, escapeMarkdown, formatDuration } = require('./util');
+const { generateStatsEmbed, escapeMarkdown, formatDuration, generateEmbedTemplate } = require('./util');
 
 function sum(stats, field) {
     try {
@@ -40,12 +40,12 @@ function calculateStats(matches) {
 }
 
 // timed-recursive function
-function sendStats(u, try_number, msgObj, duration, mode, err='') {    
+function sendStats(u, try_number, msgEmbed, duration, mode, err='') {    
     // returns a function that can be passed to setTimeout
     return async function() {
         // if retried max times, just stop
         if (try_number >= 10) {
-            await msgObj.edit(`Failed to fetch stats for **${escapeMarkdown(u.username)}** (${u.platform}):\n> ${err.msg ? err.msg : err}`);
+            await msgEmbed.edit(generateEmbedTemplate(u.username).setDescription('Failed to fetch stats!').addField("Error", err.msg ? err.msg : err));
             return;
         }
 
@@ -53,24 +53,23 @@ function sendStats(u, try_number, msgObj, duration, mode, err='') {
             // try and send stats
             let matches = await getRecentMatches(u.platform, u.username, duration, mode);
             let stats = calculateStats(matches);
-            let msg = generateEmbed(escapeMarkdown(u.username), stats, duration);
+            let msg = generateStatsEmbed(escapeMarkdown(u.username), stats, duration);
          
-            // send message and delete original
-            await msgObj.channel.send(msg);
-            await msgObj.delete();
+            // update original message
+            await msgEmbed.edit(msg);
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
-            let errMsg = `Encountered the following issue while fetching stats ` + 
-                `for **${escapeMarkdown(u.username)}** (${u.platform}).\n> ${e.msg ? e.msg : e}`;
+            let embed = generateEmbedTemplate(u.username);
+            embed.addField("Error", e.msg ? e.msg : e);
 
             if (e.code != "WzMatchService::NoAccount") {
                 // schedule retry
-                setTimeout(sendStats(u, try_number + 1, msgObj, duration, mode, e), (try_number + 1) * 5000);
-                errMsg = `${errMsg}\n *Retry ${try_number + 1}/10*.`
+                setTimeout(sendStats(u, try_number + 1, msgEmbed, duration, mode, e), (try_number + 1) * 5000);
+                embed.addField("Retry", try_number + 1);
             }
 
             // edit message with error
-            await msgObj.edit(errMsg);
+            await msgEmbed.edit(embed);
         }
 
     }
