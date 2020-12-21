@@ -108,7 +108,7 @@ async function allStats(msg) {
     // for each user, call the sendStats function with a 3s delay to prevent API exhaustion
     users.forEach(async(u) => { 
         // send initial message for further editing
-        let msgEmbed = await msg.reply(util.generateEmbedTemplate(u.username).setDescription('Retrieving...'));
+        let msgEmbed = await msg.reply(util.generateEmbedTemplate(u).setDescription('Retrieving...'));
         setTimeout(sendStats(u, 0, msgEmbed, duration, mode), i++ * 3000)
     });
 }
@@ -132,7 +132,7 @@ async function registerUser(msg) {
     let player = await getPlayerProfile(platform, username);
 
     if (player) {
-        await db.addUserToGuild(msg.guild.id, player.username, player.platform);
+        await db.addUserToGuild(msg.guild.id, player);
         msg.reply(`**${player.username}** (${player.platform}) has been registered!`);        
     } else {
         msg.reply(`**${username}** (${platform}) does not exist!`);    
@@ -148,7 +148,7 @@ async function unregisterUser(msg) {
     let player = await db.getUserFromGuild(msg.guild.id, username, platform)
 
     if (player) {
-        await db.removeUserFromGuild(msg.guild.id, player.username, player.platform);
+        await db.removeUserFromGuild(msg.guild.id, player);
         msg.reply(`**${util.escapeMarkdown(player.username)}** (${player.platform}) has been unregistered!`);            
     } else {
         msg.reply(`**${util.escapeMarkdown(username)}** (${platform}) has not been registered!`); 
@@ -165,7 +165,7 @@ async function singleStats(msg) {
     let player = await getPlayerProfile(platform, username);
 
     if (player) {
-        let msgEmbed = await msg.reply(util.generateEmbedTemplate(username).setDescription('Retrieving...'));
+        let msgEmbed = await msg.reply(util.generateEmbedTemplate(player).setDescription('Retrieving...'));
         await sendStats(player, 0, msgEmbed, duration, mode)();
     } else {
         msg.reply(`**${username}** (${platform}) does not exist!`);

@@ -40,31 +40,31 @@ function calculateStats(matches) {
 }
 
 // timed-recursive function
-function sendStats(u, try_number, msgEmbed, duration, mode, err='') {    
+function sendStats(user, try_number, msgEmbed, duration, mode, err='') {    
     // returns a function that can be passed to setTimeout
     return async function() {
         // if retried max times, just stop
         if (try_number >= 10) {
-            await msgEmbed.edit(generateEmbedTemplate(u.username).setDescription('Failed to fetch stats!').addField("Error", err.msg ? err.msg : err));
+            await msgEmbed.edit(generateEmbedTemplate(u).setDescription('Failed to fetch stats!').addField("Error", err.msg ? err.msg : err));
             return;
         }
 
         try {
             // try and send stats
-            let matches = await getRecentMatches(u.platform, u.username, duration, mode);
+            let matches = await getRecentMatches(user.platform, user.username, duration, mode);
             let stats = calculateStats(matches);
-            let msg = generateStatsEmbed(escapeMarkdown(u.username), stats, duration);
+            let msg = generateStatsEmbed(user, stats, duration);
          
             // update original message
             await msgEmbed.edit(msg);
         } catch (e) {
             // an issue with the API, configure a retry and notify the user
-            let embed = generateEmbedTemplate(u.username);
+            let embed = generateEmbedTemplate(user);
             embed.addField("Error", e.msg ? e.msg : e);
 
             if (e.code != "WzMatchService::NoAccount") {
                 // schedule retry
-                setTimeout(sendStats(u, try_number + 1, msgEmbed, duration, mode, e), (try_number + 1) * 5000);
+                setTimeout(sendStats(user, try_number + 1, msgEmbed, duration, mode, e), (try_number + 1) * 5000);
                 embed.addField("Retry", try_number + 1);
             }
 

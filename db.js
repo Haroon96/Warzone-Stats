@@ -34,7 +34,9 @@ async function isUserAdded(guildId, username, platform) {
     return userAdded != null;
 }
 
-async function addUserToGuild(guildId, username, platform) {
+async function addUserToGuild(guildId, player) {
+
+    let { username, platform, avatar } = player;
 
     if (await isUserAdded(guildId, username, platform)) {
         throw 'User already added!';
@@ -42,7 +44,7 @@ async function addUserToGuild(guildId, username, platform) {
 
     await _db.collection('guilds').updateOne({ guildId }, {
         $push: {
-            users: { username, platform }
+            users: { username, platform, avatar }
         }
     }, {
         upsert: true
@@ -65,7 +67,8 @@ async function getUserFromGuild(guildId, username, platform) {
     return r ? r.users[0] : null;
 }
 
-async function removeUserFromGuild(guildId, username, platform) {
+async function removeUserFromGuild(guildId, player) {
+    let { username, platform } = player;
     await _db.collection('guilds').updateOne({ guildId }, {
         $pull: {
             users: { username, platform }
