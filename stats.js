@@ -2,7 +2,6 @@ module.exports = {
     sendStats
 };
 
-const { UserManager } = require('discord.js');
 const { getRecentMatches } = require('./cod-api');
 const { generateStatsEmbed, escapeMarkdown, formatDuration, generateEmbedTemplate } = require('./util');
 
