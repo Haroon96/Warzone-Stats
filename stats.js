@@ -3,7 +3,7 @@ module.exports = {
 };
 
 const { getRecentMatches } = require('./cod-api');
-const { generateStatsEmbed, escapeMarkdown, formatDuration, generateEmbedTemplate } = require('./util');
+const { generateStatsEmbed, formatDuration, generateEmbedTemplate } = require('./util');
 
 function sum(stats, field) {
     try {
