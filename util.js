@@ -30,17 +30,18 @@ function keepStat(key, value) {
     return true;
 }
 
-function generateEmbedTemplate(username) {
+function generateEmbedTemplate(user) {
     return new MessageEmbed()
         .setColor('#2D3640')
-        .setTitle(`Stats for ${username}`)
+        .setTitle(`Stats for ${user.username}`)
+        .setThumbnail(user.avatar)
         .setAuthor('Warzone Stats', 'https://raw.githubusercontent.com/Haroon96/warzone-stats/gh-pages/img/favicon.png', 'https://haroon96.github.io/warzone-stats')
         .setTimestamp();
 }
 
-function generateStatsEmbed(username, stats, duration) {
+function generateStatsEmbed(user, stats, duration) {
 
-    let embed = generateEmbedTemplate(username);
+    let embed = generateEmbedTemplate(user);
 
     // no matches played, early return
     if (stats['Matches'] == 0) {

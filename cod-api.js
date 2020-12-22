@@ -28,7 +28,8 @@ async function getPlayerProfile(platform, username) {
     return res.errors ? null : 
         {
             username: res.data.platformInfo.platformUserIdentifier,
-            platform: res.data.platformInfo.platformSlug
+            platform: res.data.platformInfo.platformSlug,
+            avatar: res.data.platformInfo.avatarUrl
         };
 }
 
