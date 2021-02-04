@@ -34,7 +34,7 @@ function generateEmbedTemplate(user) {
     return new MessageEmbed()
         .setColor('#2D3640')
         .setTitle(`Stats for ${user.username}`)
-        .setThumbnail(user.avatar)
+        .setThumbnail(user.avatar + '?' + randomInt())
         .setAuthor('Warzone Stats', 'https://raw.githubusercontent.com/Haroon96/warzone-stats/gh-pages/img/favicon.png', 'https://haroon96.github.io/warzone-stats')
         .setTimestamp();
 }
@@ -96,4 +96,8 @@ function shuffle(arr) {
 
 function formatDuration(s) {
     return moment.duration(s, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"});
+}
+
+function randomInt() {
+    return parseInt(Math.random() * 100000);
 }
