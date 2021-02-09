@@ -35,6 +35,10 @@ function calculateStats(matches) {
 
     statValues['K/D'] = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
     statValues['K/D'] = statValues['K/D'].toFixed(2);
+    
+    if(statValues['K/D'] == 0.69 || statValues['K/D'] == 6.90) {
+        statValues['K/D'] = statValues['K/D'] + " (nice)";
+    }
 
     return statValues;
 }
