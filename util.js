@@ -99,5 +99,5 @@ function formatDuration(s) {
 }
 
 function makeThumbnailUrl(url) {
-    return url ? `${url}?${Math.random() * 100000}` : url;
+    return url ? `${url}?${Math.random() * 100000}` : 'https://trackercdn.com/cdn/cod.tracker.gg/modern-warfare/images/player-avatar.jpg';
 }
