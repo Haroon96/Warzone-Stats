@@ -27,7 +27,7 @@ export default async function(message: Message) {
     }
 
     // forward message to corresponding method
-    await command.method(message);
+    await command.method(message, tokens.args);
 }
 
 
