@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "npm run build && node dist/main.js",
-    "test": "npm run build && node dist/tests.js"
+    "start": "node dist/main.js",
+    "test": "node dist/tests.js"
   },
   "author": "Muhammad Haroon",
   "license": "ISC",
