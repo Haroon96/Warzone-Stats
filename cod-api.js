@@ -46,7 +46,7 @@ async function getRecentMatches(platform, username, duration, mode) {
     while (true) {
 
         // get matches from tracker.gg api
-        let url = `https://api.tracker.gg/api/v1/warzone/matches/${platform}/${encodeURIComponent(username)}?type=wz&next=${next}`;
+        let url = `https://api.tracker.gg/api/v2/warzone/standard/matches/${platform}/${encodeURIComponent(username)}?type=wz&next=${next}`;
         let res = await request(url);
 
         if (res.errors) {
