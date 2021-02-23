@@ -30,7 +30,7 @@ async function findGuild(guildId) {
 }
 
 async function isUserAdded(guildId, username, platform) {
-    let userAdded = await _db.collection('guilds').findOne({guildId, users: { $all: [{username: username, platform: platform}] }});
+    let userAdded = await _db.collection('guilds').findOne({guildId, users: { $elemMatch: {username, platform} }});
     return userAdded != null;
 }
 
