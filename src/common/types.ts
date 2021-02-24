@@ -6,20 +6,15 @@ export type DurationUnit = 'hour' | 'day' | 'week' | 'month';
 
 export type Command = {
     method: Function;
-    syntax: string;
+    usage: Array<string>;
     help: string;
-    regex: RegExp;
+    regex: Array<RegExp>;
 };
 
 export type Player = {
-    username: string;
-    platform: Platform;
-    avatar: string;
-};
-
-export type MessageTokens = {
-    command: string,
-    args: Array<string>
+    playerId: string;
+    platformId: Platform;
+    avatarUrl: string;
 };
 
 export type Guild = {

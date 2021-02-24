@@ -1,25 +1,37 @@
 import { Message } from "discord.js";
-import { fetchPlayerStats } from "../cod/stats";
-import { GameMode } from "../common/types";
+import { sendPlayerStats } from "../cod/stats";
+import { getPlayerProfile } from "../cod/tracker-api";
+import { GameMode, Player } from "../common/types";
 import { DAL } from "../dal/mongo-dal";
 import { getEmbedTemplate, parseDuration, parseGameMode } from "../utilities/util";
 
 export async function postStats(message: Message, args: Array<string>) {
-    let guildId = message.guild.id;
-    let players = await DAL.getGuildPlayers(guildId);
-
-    // if no players registered
-    if (!players.length) {
-        let embed = getEmbedTemplate("", "No players registed!");
-        message.reply(embed);
-        return;
-    }
-
-    let [ mode, duration ] = [parseGameMode(args[0]), parseDuration(args[1])];
     
-    players.forEach(async p => {
-        await fetchPlayerStats(message, p, duration, mode);
-    });
+    let [ mode, playerId, platformId, duration ] = args;
+
+    if (platformId && playerId) {
+        // if requesting for a specific user
+        // check if player exists
+        let player = await getPlayerProfile(platformId, playerId);
+        if (player) {
+            await sendPlayerStats(message, player, parseDuration(duration), parseGameMode(mode));
+        } else {
+            message.reply(getEmbedTemplate("Error", "Player does not exist!"));
+        }
+    } else {
+        // if requesting for all registered users
+        // fetch list of registered users
+        let guildId = message.guild.id;
+        let players = await DAL.getGuildPlayers(guildId);
+        // check if players registered
+        if (players && players.length) {
+            players.forEach(async player => {
+                await sendPlayerStats(message, player, parseDuration(duration), parseGameMode(mode));
+            });    
+        } else {
+            message.reply(getEmbedTemplate("Error", "No players registered for this server! See `!wz register` command."));
+        }
+    }
 
 } 
 

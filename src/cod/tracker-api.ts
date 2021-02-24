@@ -9,9 +9,9 @@ export async function getPlayerProfile(platform: string, username: string): Prom
     let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platform}/${encodeURIComponent(username)}`;
     let res = await request(url);
     return res.errors ? null : {
-        username: res.data.platformInfo.platformUserIdentifier,
-        platform: res.data.platformInfo.platformSlug,
-        avatar: res.data.platformInfo.avatarUrl
+        playerId: res.data.platformInfo.platformUserIdentifier,
+        platformId: res.data.platformInfo.platformSlug,
+        avatarUrl: res.data.platformInfo.avatarUrl
     }
 }
 
@@ -28,7 +28,7 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
     while (true) {
 
         // get matches from tracker.gg api
-        let url = `https://api.tracker.gg/api/v1/warzone/matches/${player.platform}/${encodeURIComponent(player.username)}?type=wz&next=${next}`;
+        let url = `https://api.tracker.gg/api/v1/warzone/matches/${player.platformId}/${encodeURIComponent(player.playerId)}?type=wz&next=${next}`;
         let res = await request(url);
 
         if (res.errors) {

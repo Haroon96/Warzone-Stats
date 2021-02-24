@@ -1,6 +1,5 @@
 import { assert } from "console";
 import { trimWhitespace } from "./utilities/util";
-import { tokenizeMessage } from "./controller/controller";
 import TaskRepeater from "./utilities/task-repeater";
 
 function test_trimWhitespace() {
@@ -9,16 +8,6 @@ function test_trimWhitespace() {
     inputs.forEach((v, i) => {
         assert(trimWhitespace(v) === outputs[i]);
     });
-}
-
-function test_tokenizeMessage() {
-    let input = '!wz cmd arg0 arg1 arg2';
-    let tokens = tokenizeMessage(input);
-    assert(tokens.command == 'cmd');
-    assert(tokens.args.length == 3);
-    assert(tokens.args[0] == 'arg0');
-    assert(tokens.args[1] == 'arg1');
-    assert(tokens.args[2] == 'arg2');
 }
 
 function test_taskRepeater() {
@@ -47,5 +36,4 @@ function test_taskRepeater() {
 }
 
 test_trimWhitespace();
-test_tokenizeMessage();
 test_taskRepeater();

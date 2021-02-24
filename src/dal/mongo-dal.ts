@@ -12,7 +12,9 @@ class MongoDAL {
             guild = { guildId, players: [] };
             await this.db.collection('guilds').insertOne(guild);
         }
-        return guild.players;
+        
+        const { players } = guild;
+        return players;
     }
 
     async getModeIds(mode: GameMode): Promise<Array<string>> {

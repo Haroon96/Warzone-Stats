@@ -4,9 +4,9 @@ import { formatDuration, getEmbedTemplate } from "../utilities/util";
 import { Message, MessageEmbed } from "discord.js";
 import TaskRepeater from "../utilities/task-repeater";
 
-export async function fetchPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
+export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
 
-    let reply = await message.reply(getEmbedTemplate(`Fetching stats for ${player.username} (${player.platform})`, "", player.avatar));
+    let reply = await message.reply(getEmbedTemplate(`Fetching stats for ${player.playerId} (${player.platformId})`, "", player.avatarUrl));
 
     try {
         // create a taskrepeater instance
@@ -19,7 +19,7 @@ export async function fetchPlayerStats(message: Message, player: Player, duratio
         let embed = createStatsEmbed(player, playerStats, duration);
         await reply.edit(embed);
     } catch (e) {
-        await reply.edit(getEmbedTemplate(`Failed to fetch stats for ${player.username} (${player.platform})`, e))
+        await reply.edit(getEmbedTemplate(`Failed to fetch stats for ${player.playerId} (${player.platformId})`, e))
     }
 }
 
@@ -29,7 +29,7 @@ async function fetchTask(player: Player, duration: Duration, mode: GameMode) {
 }
 
 function createStatsEmbed(player: Player, stats: Stats, duration: Duration): MessageEmbed {
-    let embed = getEmbedTemplate(`Stats for ${player.username} (${player.platform})`, `for the past ${duration.value} ${duration.unit}(s)`, player.avatar)
+    let embed = getEmbedTemplate(`Stats for ${player.playerId} (${player.platformId})`, `for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
 
     // no matches played, early return
     if (stats['Matches'] == 0) {
