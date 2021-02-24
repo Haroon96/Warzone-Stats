@@ -1,12 +1,12 @@
 import { Duration, GameMode, Player, Stats } from "../common/types";
 import { getRecentMatches } from "./tracker-api";
-import { formatDuration, getEmbedTemplate } from "../utilities/util";
-import { Message, MessageEmbed } from "discord.js";
+import { formatDuration, formatPlayername, getEmbedTemplate } from "../utilities/util";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TaskRepeater from "../utilities/task-repeater";
 
 export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
 
-    let reply = await message.reply(getEmbedTemplate(`Fetching stats for ${player.playerId} (${player.platformId})`, "", player.avatarUrl));
+    let reply = await message.reply(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Fetching stats...", player.avatarUrl));
 
     try {
         // create a taskrepeater instance
@@ -16,10 +16,10 @@ export async function sendPlayerStats(message: Message, player: Player, duration
         let playerStats:Stats = await taskRepeater.run();
 
         // create a stats embed and send
-        let embed = createStatsEmbed(player, playerStats, duration);
+        let embed = createStatsEmbed(player, playerStats, duration, message.client);
         await reply.edit(embed);
     } catch (e) {
-        await reply.edit(getEmbedTemplate(`Failed to fetch stats for ${player.playerId} (${player.platformId})`, e))
+        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)})`, "Failed to fetch stats.\n" + e))
     }
 }
 
@@ -28,8 +28,8 @@ async function fetchTask(player: Player, duration: Duration, mode: GameMode) {
     return calculateStats(matches);
 }
 
-function createStatsEmbed(player: Player, stats: Stats, duration: Duration): MessageEmbed {
-    let embed = getEmbedTemplate(`Stats for ${player.playerId} (${player.platformId})`, `for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
+function createStatsEmbed(player: Player, stats: Stats, duration: Duration, client: Client): MessageEmbed {
+    let embed = getEmbedTemplate(`${formatPlayername(player, client)}`, `Stats for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
 
     // no matches played, early return
     if (stats['Matches'] == 0) {

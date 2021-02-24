@@ -1,12 +1,11 @@
-import { Platform } from '../common/enums';
-
 export type GameMode = 'br' | 'rmbl' | 'plndr';
+export type Platform = 'psn' | 'xbl' | 'atvi';
 export type DurationCode = 'h' | 'd' | 'w' | 'm';
 export type DurationUnit = 'hour' | 'day' | 'week' | 'month';
 
 export type Command = {
     method: Function;
-    usage: Array<string>;
+    usage: string;
     help: string;
     regex: Array<RegExp>;
 };

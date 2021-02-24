@@ -1,12 +1,12 @@
 import moment = require("moment");
-import { Duration, GameMode, Player } from "../common/types";
+import { Duration, GameMode, Player, Platform } from "../common/types";
 import { DAL } from "../dal/mongo-dal";
 import { request } from "../utilities/util";
 
 const modeIds = {};
 
-export async function getPlayerProfile(platform: string, username: string): Promise<Player> {
-    let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platform}/${encodeURIComponent(username)}`;
+export async function getPlayerProfile(platformId: Platform, playerId: string): Promise<Player> {
+    let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platformId}/${encodeURIComponent(playerId)}`;
     let res = await request(url);
     return res.errors ? null : {
         playerId: res.data.platformInfo.platformUserIdentifier,
@@ -28,7 +28,7 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
     while (true) {
 
         // get matches from tracker.gg api
-        let url = `https://api.tracker.gg/api/v1/warzone/matches/${player.platformId}/${encodeURIComponent(player.playerId)}?type=wz&next=${next}`;
+        let url = `https://api.tracker.gg/api/v2/warzone/standard/matches/${player.platformId}/${encodeURIComponent(player.playerId)}?type=wz&next=${next}`;
         let res = await request(url);
 
         if (res.errors) {

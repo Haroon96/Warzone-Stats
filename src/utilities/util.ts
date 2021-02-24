@@ -1,5 +1,5 @@
-import { MessageEmbed } from "discord.js";
-import { Duration, DurationCode, DurationUnit, GameMode } from "../common/types";
+import { Client, MessageEmbed } from "discord.js";
+import { Duration, DurationCode, DurationUnit, Player } from "../common/types";
 import fetch from 'node-fetch';
 import moment = require("moment");
 require("moment-duration-format");
@@ -12,8 +12,6 @@ export function trimWhitespace(str: string): string {
 export function getEmbedTemplate(title:string, desc: string, thumbnail: string=''): MessageEmbed {
     return new MessageEmbed()
         .setColor('#2D3640')
-        .setAuthor('Warzone Stats', 'https://raw.githubusercontent.com/Haroon96/warzone-stats/gh-pages/img/favicon.png', 'https://haroon96.github.io/warzone-stats')
-        .setTimestamp()
         .setTitle(title)
         .setDescription(desc)
         .setThumbnail(formatThumbnail(thumbnail));
@@ -54,23 +52,18 @@ export function parseDuration(str: string): Duration {
     return { value, code, unit };
 }
 
-export function parseGameMode(str: string): GameMode {
-    if (str == "br") return "br";
-    if (str == "rmbl") return "rmbl";
-    if (str == "plndr") return "plndr";
-    return null;
-}
-
 export function formatDuration(s) {
     // @ts-ignore
     return moment.duration(s, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", {trim: "both mid"});
 }
 
+export function formatPlayername(player: Player, client: Client) {
+    const platformEmoji = client.emojis.cache.find(e => e.name == player.platformId);
+    return `<:${platformEmoji.name}:${platformEmoji.id}> **${player.playerId}**`;
+}
 
-function formatThumbnail(thumbnail) {
-    let th = thumbnail ? thumbnail + `?${randomInt()}` : '';
-    console.log(th);
-    return th;
+function formatThumbnail(thumbnail: string) {
+    return thumbnail ? thumbnail + `?${randomInt()}` : '';
 }
 
 function randomInt() {
