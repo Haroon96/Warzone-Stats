@@ -39,3 +39,10 @@ export type Stats = {
     'Vehicles Destroyed': number,
     'Team Wipes': number
 };
+
+export type Schedule = {
+    channelId: string,
+    cron: string,
+    time: string,
+    modeId: GameMode
+}

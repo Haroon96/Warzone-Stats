@@ -1,8 +1,11 @@
 import { Db, MongoClient } from "mongodb";
-import { Player, Guild, GameMode } from "../common/types";
+import { Player, Guild, GameMode, Schedule } from "../common/types";
 
 
 class MongoDAL {
+    
+    // registration related
+
     async removePlayerFromGuild(player: Player, guildId: string) {
         await this.db.collection('guilds').updateOne({ guildId }, {
             $pull: {
@@ -32,11 +35,6 @@ class MongoDAL {
         return players;
     }
 
-    async getModeIds(mode: GameMode): Promise<Array<string>> {
-        const { modeIds } = await this.db.collection('modes').findOne({ mode });
-        return modeIds;
-    }
-
     async isPlayerRegisteredInGuild(player: Player, guildId: string) {
         const { playerId, platformId } = player;
         const p = await this.db.collection('guilds')
@@ -44,11 +42,40 @@ class MongoDAL {
         return p != null;
     }
 
+    // helpers
+
+    async getModeIds(mode: GameMode): Promise<Array<string>> {
+        const { modeIds } = await this.db.collection('modes').findOne({ mode });
+        return modeIds;
+    }
+
+    // scheduling related
+
+    async unschedule(schedule: Schedule) {
+        const { channelId } = schedule;
+        await this.db.collection('schedules').deleteOne({ channelId });
+    }
+
+    async schedule(schedule: Schedule) {
+        const { channelId, cron, time, modeId } = schedule;
+        await this.db.collection('schedules').updateOne({ channelId }, {
+            $set: { cron, time, modeId }
+        }, {
+            upsert: true
+        });
+    }
+    
+    async getAllSchedules(): Promise<Array<Schedule>> {
+        const schedules: Array<Schedule> = [];
+        await this.db.collection('schedules').find({}).forEach(s => schedules.push(s));
+        return schedules;
+    }
+
+
     constructor() {
-        const self = this;
         MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
             .then(client => {
-                self.db = client.db(process.env.MONGO_DBNAME);
+                this.db = client.db(process.env.MONGO_DBNAME);
                 console.log("DB Connected!");
             });
     }
