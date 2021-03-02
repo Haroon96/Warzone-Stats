@@ -57,9 +57,9 @@ class MongoDAL {
     }
 
     async schedule(schedule: Schedule) {
-        const { channelId, cron, time, modeId } = schedule;
+        const { channelId, cron, duration, modeId } = schedule;
         await this.db.collection('schedules').updateOne({ channelId }, {
-            $set: { cron, time, modeId }
+            $set: { cron, duration, modeId }
         }, {
             upsert: true
         });
@@ -71,13 +71,10 @@ class MongoDAL {
         return schedules;
     }
 
-
-    constructor() {
-        MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-            .then(client => {
-                this.db = client.db(process.env.MONGO_DBNAME);
-                console.log("DB Connected!");
-            });
+    async init() {
+        const client = await MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        this.db = client.db(process.env.MONGO_DBNAME);
+        console.info("DB Connected!");
     }
 
     db: Db = null;

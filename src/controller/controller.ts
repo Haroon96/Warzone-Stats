@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { trimWhitespace } from "../utilities/util";
+import { parseArgs, trimWhitespace } from "../utilities/util";
 import commandMap from "./mapping";
 
 export default async function(message: Message) {
@@ -8,10 +8,10 @@ export default async function(message: Message) {
     message.content = trimWhitespace(message.content).toLowerCase();
 
     // extract commandName from message
-    let commandName = message.content.split(' ')[1];
+    const commandName = message.content.split(' ')[1];
 
     // fetch the command from commandMap
-    let command = commandMap.get(commandName);
+    const command = commandMap.get(commandName);
 
     // if command not found, post help and return
     if (!command) {
@@ -20,23 +20,24 @@ export default async function(message: Message) {
     }
     
     // check if command regex matches
-    for (let regex of command.regex) {
+    for (const regex of command.regex) {
         if (regex.test(message.content)) {
-            let { groups } = message.content.match(regex);
-            await command.method(message, groups);
+            const { groups } = message.content.match(regex);
+            const args = parseArgs(groups);
+            await command.method(message, args);
             return;
         }
     }
 
     // command syntax was incorrect, post command syntax
-    await message.reply(`Invalid usage of command! See example usage below.\n${command.usage}`);
+    await message.reply(`Invalid command syntax! See usage below.\n\`${command.usage}\``);
 }
 
 async function postHelp(message: Message) {
 
     const str: Array<string> = [];
 
-    for (let c of commandMap.values()) {
+    for (const c of commandMap.values()) {
         str.push(`${c.help}\n\`${c.usage}\`\n`);
     }
 

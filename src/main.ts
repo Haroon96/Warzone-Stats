@@ -1,21 +1,27 @@
 import { Client, Message } from 'discord.js';
 import controller from './controller/controller';
 import * as moment from 'moment';
+import { Scheduler } from './utilities/scheduler';
+import { DAL } from './dal/mongo-dal';
 
 function main() {
     const bot = new Client();
 
     bot.login(process.env.TOKEN);
 
-    bot.on('ready', () => {
+    bot.on('ready', async() => {
+        // init pre-reqs
+        await DAL.init();
+        await Scheduler.init(bot);
+
         // set bot status
-        bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
+        await bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
         console.info(`Logged in as ${bot.user.tag}`);
     });
 
-    bot.on('message', (message: Message) => {
+    bot.on('message', async(message: Message) => {
         // check if the message is intended for the bot
-        if (!message.content.startsWith('!wz')) {
+        if (!message.content.startsWith('!wz ')) {
             return;
         } 
         
@@ -23,7 +29,7 @@ function main() {
         console.log(moment().format(), message.author.username, message.content);
 
         // forward to controller
-        controller(message);
+        await controller(message);
     });
 }
 

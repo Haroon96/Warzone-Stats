@@ -44,8 +44,8 @@ export default new Map<string, Command>([
         usage: '!wz schedule "<cronjob>" <modeId> [time]',
         help: 'Schedule automated stats posting',
         regex: [
-            /^!wz schedule "([*\//0-9- ]+)" (?<modeId>br|rmbl|plndr)$/,
-            /^!wz schedule "([*\//0-9- ]+)" (?<modeId>br|rmbl|plndr) (?<duration>[0-9]+[h|d|w|m])$/
+            /^!wz schedule "(?<cron>[*\//0-9- ]+)" (?<modeId>br|rmbl|plndr)$/,
+            /^!wz schedule "(?<cron>[*\//0-9- ]+)" (?<modeId>br|rmbl|plndr) (?<duration>[0-9]+[h|d|w|m])$/
         ]
     }],
     ['unschedule', {
@@ -58,7 +58,7 @@ export default new Map<string, Command>([
         method: commands.postTeamSplit,
         usage: '!wz teams <teamSize>' ,
         help: 'Randomly split registered players into teams',
-        regex: [/^!wz teams [0-9]+$/]
+        regex: [/^!wz teams (?<teamSize>[0-9]+)$/]
     }]
 ]);
 

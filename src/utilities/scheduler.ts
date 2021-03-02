@@ -3,31 +3,30 @@ import { Job, scheduleJob } from 'node-schedule';
 import { Schedule } from '../common/types';
 import { DAL } from "../dal/mongo-dal";
 
+class StatsScheduler {
 
-export default class Scheduler {
-
-    constructor(client) {
+    async init(client: Client) {
         this.client = client;
-        DAL.getAllSchedules()
-            .then(schedules => {
-                for (let schedule of schedules) {
-                    this.createJob(schedule);
-                }
-            });
+        this.jobs = new Map<string, Job>();
+        const schedules = await DAL.getAllSchedules();
+        for (const schedule of schedules) {
+            this.createJob(schedule);
+        }
     }
 
-    createJob(schedule) {
-        let job = scheduleJob(schedule.cron, () => {
+    private createJob(schedule: Schedule) {
+        const job = scheduleJob(schedule.cron, () => {
             const channel = this.client.channels.cache.get(schedule.channelId);
             if (channel) {
+                const duration = schedule.duration ? `${schedule.duration.value}${schedule.duration.code}` : '1d';
                 // @ts-ignore
-                channel.send(`!wz stats ${mode ? mode : 'br'} ${time ? time : '1d'}`);
+                channel.send(`!wz stats ${schedule.modeId ?? 'br'} ${duration}`);
             }
         });
         this.jobs.set(schedule.channelId, job);
     }
 
-    cancelJob(channelId) {
+    private cancelJob(channelId: string) {
         const job = this.jobs.get(channelId);
         if (job) {
             job.cancel();
@@ -48,3 +47,5 @@ export default class Scheduler {
     jobs: Map<string, Job>;
     client: Client;
 }
+
+export const Scheduler = new StatsScheduler();

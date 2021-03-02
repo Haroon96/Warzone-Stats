@@ -1,14 +1,5 @@
 export type GameMode = 'br' | 'rmbl' | 'plndr';
 export type Platform = 'psn' | 'xbl' | 'atvi';
-export type DurationCode = 'h' | 'd' | 'w' | 'm';
-export type DurationUnit = 'hour' | 'day' | 'week' | 'month';
-
-export type Command = {
-    method: Function;
-    usage: string;
-    help: string;
-    regex: Array<RegExp>;
-};
 
 export type Player = {
     playerId: string;
@@ -22,9 +13,25 @@ export type Guild = {
 };
 
 export type Duration = {
-    code: DurationCode,
-    unit: DurationUnit,
+    code: 'h' | 'd' | 'w' | 'm',
+    unit: 'hour' | 'day' | 'week' | 'month',
     value: number
+};
+
+export type Command = {
+    method: Function;
+    usage: string;
+    help: string;
+    regex: Array<RegExp>;
+};
+
+export type CommandArgs = {
+    modeId: GameMode,
+    playerId: string,
+    platformId: Platform,
+    duration: Duration,
+    cron: string,
+    teamSize: number
 };
 
 export type Stats = {
@@ -43,6 +50,6 @@ export type Stats = {
 export type Schedule = {
     channelId: string,
     cron: string,
-    time: string,
+    duration: Duration,
     modeId: GameMode
 }
