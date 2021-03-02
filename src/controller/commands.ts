@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { sendPlayerStats } from "../cod/stats";
-import { getPlayerProfile } from "../cod/tracker-api";
+import { getPlayerProfile } from "../cod/api";
 import { CommandArgs, Player, Schedule } from "../common/types";
 import { DAL } from "../dal/mongo-dal";
 import { formatPlayername, shuffle } from "../utilities/util";

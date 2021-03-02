@@ -1,25 +1,25 @@
 import { Duration, GameMode, Player, Stats } from "../common/types";
-import { getRecentMatches } from "./tracker-api";
+import { getRecentMatches } from "./api";
 import { formatDuration, formatPlayername, getEmbedTemplate } from "../utilities/util";
 import { Client, Message, MessageEmbed } from "discord.js";
 import TaskRepeater from "../utilities/task-repeater";
 
 export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
 
-    let reply = await message.reply(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Fetching stats...", player.avatarUrl));
+    const reply = await message.reply(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Fetching stats...", player.avatarUrl));
 
     try {
         // create a taskrepeater instance
-        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode], 5000, 10);
+        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode], 5000, 5);
 
         // run the repeater
-        let playerStats:Stats = await taskRepeater.run();
+        let playerStats: Stats = await taskRepeater.run();
 
         // create a stats embed and send
         let embed = createStatsEmbed(player, playerStats, duration, message.client);
         await reply.edit(embed);
     } catch (e) {
-        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)})`, "Failed to fetch stats.\n" + e))
+        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e))
     }
 }
 

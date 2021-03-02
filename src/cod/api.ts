@@ -32,14 +32,7 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
         let res = await request(url);
 
         if (res.errors) {
-            let err = res.errors[0];    
-            if (err.code == 'WzMatchService::ApiUnavailable') {
-                // end of match list for this user
-                return recentMatches;
-            } else {
-                // some other error, inform user
-                throw { msg: err.message, code: err.code };
-            }
+            throw res.errors[0];
         }
 
         let matches = res.data.matches;
