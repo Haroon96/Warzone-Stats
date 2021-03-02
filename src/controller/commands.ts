@@ -115,6 +115,8 @@ export async function scheduleStats(message: Message, args: CommandArgs) {
     // schedule stats
     const schedule: Schedule = { cron, modeId, duration, channelId: message.channel.id }
     await Scheduler.schedule(schedule);
+    
+    await message.reply("Stats scheduled!");
 }
 
 export async function unscheduleStats(message: Message, args: CommandArgs) {
@@ -124,6 +126,8 @@ export async function unscheduleStats(message: Message, args: CommandArgs) {
     // unschedule stats
     const schedule: Schedule = { cron, modeId, duration, channelId: message.channel.id }
     await Scheduler.unschedule(schedule);
+
+    await message.reply("Stats unscheduled!");
 }
 
 export async function postTeamSplit(message: Message, args: CommandArgs) {
