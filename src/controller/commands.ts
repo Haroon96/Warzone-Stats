@@ -11,36 +11,37 @@ export async function postStats(message: Message, args: CommandArgs) {
     
     const { modeId, playerId, platformId, duration } = args;
 
-    let players: Array<Player>;
+    const players: Array<Player> = [];
 
+    // check if called for a specific player
     if (platformId && playerId) {
-        // if requesting for a specific player
-        // check if player exists
+        // check if the specified player exists
         let player = await getPlayerProfile(platformId, playerId);
         if (player) {
-            players = [ player ];
+            // add the player to players array
+            players.push(player);
         } else {
             await message.reply("Player does not exist!");
-            return;
         }
     } else {
         // if requesting for all registered players
-        // fetch list of registered players
+        // fetch list of players registered in guild
         const guildId = message.guild.id;
-        players = await DAL.getGuildPlayers(guildId);
+        players.push(...await DAL.getGuildPlayers(guildId));
 
-        // check if players registered
-        if (!players || !players.length) {
+        // check if there are players registered in the guild
+        if (!players.length) {
             await message.reply("No players registered! See `register` command.");
-            return;
         }
     }
 
+    // send stats for each player in the players array
     players.forEach(async player => {
         await sendPlayerStats(message, player, duration, modeId);
-    });    
+    });
+    
+}
 
-} 
 
 export async function postPlayers(message: Message, args: CommandArgs) {
     // fetch guild id
@@ -55,7 +56,7 @@ export async function postPlayers(message: Message, args: CommandArgs) {
         return;
     }
 
-    let str = players.map(p => formatPlayername(p, message.client))
+    const str = players.map(p => formatPlayername(p, message.client))
         .reduce((str, p) => str + '\n' + p);
 
     await message.reply("Registered players:\n" + str);
@@ -69,11 +70,12 @@ export async function registerPlayer(message: Message, args: CommandArgs) {
     const player = await getPlayerProfile(platformId, playerId);
 
     if (player) {
+        // check if player is not already registered
         if (!await DAL.isPlayerRegisteredInGuild(player, message.guild.id)) {
             await DAL.addPlayerToGuild(player, message.guild.id);
-            await message.reply(`${formatPlayername(player, message.client)} was registered!`);
+            await message.reply(`${formatPlayername(player, message.client)} is registered!`);
         } else {
-            await message.reply(`${formatPlayername(player, message.client)} was already registered!`)
+            await message.reply(`${formatPlayername(player, message.client)} is already registered!`)
         }
         
     } else {
@@ -86,10 +88,12 @@ export async function unregisterPlayer(message: Message, args: CommandArgs) {
     
     // get player from args
     const { playerId, platformId } = args;
-    const player: Player = { platformId, playerId, avatarUrl: null };
+    
+    // get player from db
+    const player = await DAL.getPlayerFromGuild(message.guild.id, platformId, playerId);
 
-    // check if player is registered
-    if (await DAL.isPlayerRegisteredInGuild(player, message.guild.id)) {
+    // check if the player is registered in db
+    if (player) {
         await DAL.removePlayerFromGuild(player, message.guild.id);
         await message.reply(`${formatPlayername(player, message.client)} was unregistered!`);
     } else {
@@ -141,7 +145,7 @@ export async function postTeamSplit(message: Message, args: CommandArgs) {
     
     for (let i = 0; i < players.length; ++i) {
         if (i % teamSize == 0) {
-            str.push('Team ' + (Math.floor(i / teamSize) + 1));
+            str.push('\nTeam ' + (Math.floor(i / teamSize) + 1));
         }
         str.push(formatPlayername(players[i], message.client));
     }

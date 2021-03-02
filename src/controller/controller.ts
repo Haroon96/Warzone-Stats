@@ -22,9 +22,14 @@ export default async function(message: Message) {
     // check if command regex matches
     for (const regex of command.regex) {
         if (regex.test(message.content)) {
-            const { groups } = message.content.match(regex);
-            const args = parseArgs(groups);
-            await command.method(message, args);
+            try {
+                const { groups } = message.content.match(regex);
+                const args = parseArgs(groups);
+                await command.method(message, args);
+            } catch (e) {
+                await message.reply("An error occurred!");
+                console.error(e);
+            }
             return;
         }
     }

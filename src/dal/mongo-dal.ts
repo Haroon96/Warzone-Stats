@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import { Player, Guild, GameMode, Schedule } from "../common/types";
+import { Player, Guild, GameMode, Schedule, Platform } from "../common/types";
 
 
 class MongoDAL {
@@ -35,11 +35,25 @@ class MongoDAL {
         return players;
     }
 
-    async isPlayerRegisteredInGuild(player: Player, guildId: string) {
-        const { playerId, platformId } = player;
-        const p = await this.db.collection('guilds')
-            .findOne({ guildId, players: { $elemMatch:{ playerId, platformId } } })
-        return p != null;
+    async getPlayerFromGuild(guildId: string, platformId: Platform, playerId: string): Promise<Player> {
+        const q = await this.db.collection('guilds').findOne({ 
+            guildId,
+            players: {
+                $elemMatch: {
+                    playerId: new RegExp(playerId, 'i'),
+                    platformId
+                }
+            }
+        }, {
+            // only select matching user
+            projection: {'players.$': 1}
+        });
+        return q ? q.players[0] : null;
+    }
+
+    async isPlayerRegisteredInGuild(player: Player, guildId: string): Promise<boolean> {
+        const { platformId, playerId } = player;
+        return await this.getPlayerFromGuild(guildId, platformId, playerId) != null;
     }
 
     // helpers
