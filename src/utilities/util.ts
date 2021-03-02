@@ -76,16 +76,23 @@ export function formatDuration(s: number) {
 }
 
 export function formatPlayername(player: Player, client: Client = null) {
-    // if we have access to the client, send platform emoji
+
+    let { playerId, platformId } = player;
+    
+    // remove unique id from playerId
+    playerId = playerId.replace(/#.*/, '');
+
+    // if we have access to the client, send platformId as emoji
     if (client) {
-        const emojiName = `wz_${player.platformId}`;
-        const platformEmoji = client.emojis.cache.find(e => e.name == emojiName);
+        // find the emoji in client emoji cache
+        const platformEmoji = client.emojis.cache.find(e => e.name == `wz_${platformId}`);
+        // if emoji found, return the string
         if (platformEmoji) {
-            return `<:${platformEmoji.name}:${platformEmoji.id}> **${player.playerId}**`;
+            return `<:${platformEmoji.name}:${platformEmoji.id}> **${playerId}**`;
         }
     }
-    // else send platform text
-    return `**${player.playerId}** *(${player.platformId})*`
+    // else send platformId as text
+    return `**${playerId}** *(${platformId})*`
 }
 
 function formatThumbnail(thumbnail: string) {
