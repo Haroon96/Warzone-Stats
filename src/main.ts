@@ -4,18 +4,20 @@ import * as moment from 'moment';
 import { Scheduler } from './utilities/scheduler';
 import { DAL } from './dal/mongo-dal';
 
-function main() {
-    const bot = new Client();
+async function main() {
 
+    // init bot
+    const bot = new Client();
     bot.login(process.env.TOKEN);
 
-    bot.on('ready', async() => {
-        // init pre-reqs
-        await DAL.init();
-        await Scheduler.init(bot);
+    // init pre-reqs
+    await DAL.init();
+    await Scheduler.init(bot);
 
+
+    bot.on('ready', () => {
         // set bot status
-        await bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
+        bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
         console.info(`Logged in as ${bot.user.tag}`);
     });
 

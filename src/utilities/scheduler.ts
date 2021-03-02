@@ -12,6 +12,7 @@ class StatsScheduler {
         for (const schedule of schedules) {
             this.createJob(schedule);
         }
+        console.info('Scheduler initialized!')
     }
 
     private createJob(schedule: Schedule) {

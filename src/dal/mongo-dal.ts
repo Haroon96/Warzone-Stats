@@ -74,7 +74,7 @@ class MongoDAL {
     async init() {
         const client = await MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         this.db = client.db(process.env.MONGO_DBNAME);
-        console.info("DB Connected!");
+        console.info("DB connected!");
     }
 
     db: Db = null;

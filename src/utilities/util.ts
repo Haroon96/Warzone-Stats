@@ -55,6 +55,9 @@ export function parseDuration(str: string): Duration {
 }
 
 export function parseArgs(args): CommandArgs {
+    
+    if (!args) args = {};
+    
     const parsedArgs: CommandArgs = {
         platformId: args.platformId ?? null,
         playerId: args.playerId ?? null,
@@ -77,7 +80,9 @@ export function formatPlayername(player: Player, client: Client = null) {
     if (client) {
         const emojiName = `wz_${player.platformId}`;
         const platformEmoji = client.emojis.cache.find(e => e.name == emojiName);
-        return `<:${platformEmoji.name}:${platformEmoji.id}> **${player.playerId}**`;    
+        if (platformEmoji) {
+            return `<:${platformEmoji.name}:${platformEmoji.id}> **${player.playerId}**`;
+        }
     }
     // else send platform text
     return `**${player.playerId}** *(${player.platformId})*`
