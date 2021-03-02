@@ -73,13 +73,14 @@ export async function registerPlayer(message: Message, args: CommandArgs) {
         // check if player is not already registered
         if (!await DAL.isPlayerRegisteredInGuild(player, message.guild.id)) {
             await DAL.addPlayerToGuild(player, message.guild.id);
-            await message.reply(`${formatPlayername(player, message.client)} is registered!`);
+            await message.reply(`${formatPlayername(player, message.client)} has been registered!`);
         } else {
             await message.reply(`${formatPlayername(player, message.client)} is already registered!`)
         }
         
     } else {
-        await message.reply(`${formatPlayername(player, message.client)} does not exist!`);
+        let fakePlayer: Player = { playerId: args.playerId, platformId: args.platformId };
+        await message.reply(`${formatPlayername(fakePlayer, message.client)} does not exist!`);
     }
 
 }

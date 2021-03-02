@@ -4,7 +4,7 @@ export type Platform = 'psn' | 'xbl' | 'atvi';
 export type Player = {
     playerId: string;
     platformId: Platform;
-    avatarUrl: string;
+    avatarUrl?: string;
 };
 
 export type Guild = {
