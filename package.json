@@ -1,7 +1,7 @@
 {
-  "name": "wz-stats-ts",
-  "version": "1.0.0",
-  "description": "",
+  "name": "warzone-stats",
+  "version": "2.0.0",
+  "description": "Discord bot for calculating match stats in Call of Duty Warzone",
   "main": "src/main.ts",
   "scripts": {
     "build": "tsc --build",
