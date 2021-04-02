@@ -23,7 +23,7 @@ async function main() {
 
     bot.on('message', async(message: Message) => {
         // check if the message is intended for the bot
-        if (!message.content.startsWith('!wz ')) {
+        if (!message.content.startsWith('!wz')) {
             return;
         } 
         
