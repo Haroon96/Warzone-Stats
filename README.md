@@ -18,20 +18,21 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - Supports random team splits into groups
 
 ## Guide
-- [Invite](https://discord.com/api/oauth2/authorize?client_id=711383069160112128&permissions=92160&scope=bot) the bot to your server.
-- Send `!wz single <mode> <platform> <username> [time]` to fetch stats for a single user.
+- [Invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=711383069160112128&permissions=346112&scope=bot).
+- Send `!wz stats <modeId> [platformId] [playerId] [time]` to fetch stats for a specific player.
 - Send `!wz stats <mode> [time]` to get stats for all registered users.
-  - Register users using `!wz register <platform> <username>`
-  - Unregister users using `!wz unregister <platform> <username>`
-  - Enclose `<username>` in double-quotes (like `"<username>"`) if it contains spaces.
+  - Register users using `!wz register <platformId> <playerId>`
+  - Unregister users using `!wz unregister <platformId> <playerId>`
+  - Enclose `<playerId>` in double-quotes (like `"<playerId>"`) if it contains spaces.
 - For scheduling stats posting, send `!wz schedule "<cronjob>" 8h`. For example, `!wz schedule "30 19 * * *" 8h` posts stats everyday at 19:30 UTC.
-- For team splits, send `!wz teams <people-per-team>` to get a random list of teams from registered users.
+- For team splits, send `!wz teams <teamSize>` to get a random list of teams from registered users.
 
 ## Example
+- To fetch stats for the player _m_haroon2305_ playing with a PlayStation for the last two weeks, send `!wz stats br psn m_haroon2305 2w`.
 - Example response from the bot on Discord
 
 <p align="center">
- <img src="https://github.com/Haroon96/cod-daily-stats/raw/gh-pages/img/response-example.png" alt="Example bot response">
+ <img src="https://github.com/Haroon96/warzone-stats/raw/gh-pages/img/response-example.png" alt="Example bot response">
 </p>
 
 ## Issues
