@@ -20,6 +20,11 @@ async function main() {
         bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
         console.info(`Logged in as ${bot.user.tag}`);
     });
+    
+    bot.on('error', (err) => {
+        console.error(err);
+        process.exit(1);
+    });
 
     bot.on('message', async(message: Message) => {
         // check if the message is intended for the bot
