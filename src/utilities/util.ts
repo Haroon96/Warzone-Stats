@@ -63,7 +63,7 @@ export function parseArgs(args): CommandArgs {
         playerId: args.playerId ?? null,
         modeId: args.modeId ?? null,
         cron: args.cron ?? null,
-        duration: args.duration ? parseDuration(args.duration) : null,
+        duration: args.duration ? parseDuration(args.duration) : parseDuration('24h'),
         teamSize: args.teamSize ? parseInt(args.teamSize) : null
     };
 
