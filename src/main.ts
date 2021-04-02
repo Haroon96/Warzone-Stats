@@ -31,7 +31,11 @@ async function main() {
         console.log(moment().format(), message.author.username, message.content);
 
         // forward to controller
-        await controller(message);
+        try {
+            await controller(message);
+        } catch (e) {
+            console.error(e);
+        }
     });
 }
 
