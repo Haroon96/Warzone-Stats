@@ -32,7 +32,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - Example response from the bot on Discord
 
 <p align="center">
- <img src="https://github.com/Haroon96/warzone-stats/raw/gh-pages/img/response-example.png" style="max-width: 60%;" alt="Example bot response">
+ <img src="https://github.com/Haroon96/warzone-stats/raw/gh-pages/img/response-example.png" width="200" alt="Example bot response">
 </p>
 
 ## Issues
