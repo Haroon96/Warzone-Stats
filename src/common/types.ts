@@ -38,6 +38,7 @@ export type Stats = {
     'Matches': number,
     'Kills': number,
     'Deaths': number,
+    'Assists': number,
     'Time Played': string,
     'Avg. Game Time': string,
     'Avg. Team Placement': number,

@@ -81,6 +81,7 @@ function calculateStats(matches): Stats {
         'Matches': stats.length,
         'Kills': sum(stats, 'kills'),
         'Deaths': sum(stats, 'deaths'),
+        'Assists': sum(stats, 'assists'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
         'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(stats.length, 1)).toString()),
