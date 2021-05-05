@@ -40,6 +40,12 @@ function createStatsEmbed(player: Player, stats: Stats, duration: Duration, clie
     // proceed with formatting
     embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
 
+    // to get these stats on top 
+    embed.addField('Matches', stats['Matches']);
+    embed.addField('Kills', stats['Kills'], true);
+    embed.addField('Deaths', stats['Deaths'], true);
+    embed.addField('K/D', stats['K/D'], true);
+
     // add stats as embedded fields
     for (const stat in stats) {
         if (keepStat(stat, stats[stat])) {
