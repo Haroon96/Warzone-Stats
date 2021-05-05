@@ -39,12 +39,15 @@ function createStatsEmbed(player: Player, stats: Stats, duration: Duration, clie
 
     // proceed with formatting
     embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
+
+    // to get these stats on top 
     embed.addField('Matches', stats['Matches']);
     embed.addField('Kills', stats['Kills'], true);
     embed.addField('Deaths', stats['Deaths'], true);
     embed.addField('K/D', stats['K/D'], true);
 
-    for (let stat in stats) {
+    // add stats as embedded fields
+    for (const stat in stats) {
         if (keepStat(stat, stats[stat])) {
             embed.addField(stat, stats[stat], true);
         }
@@ -80,13 +83,14 @@ function sum(stats, field): number {
 
 function calculateStats(matches): Stats {
     let stats = matches.map(x => x.segments[0].stats);
-    let statValues:Stats = {
+    let statValues: Stats = {
         'Matches': stats.length,
         'Kills': sum(stats, 'kills'),
         'Deaths': sum(stats, 'deaths'),
+        'Assists': sum(stats, 'assists'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
-        'Avg. Team Placement': parseInt(`${sum(stats, 'teamPlacement') / Math.max(matches.length, 1)}`),
+        'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(stats.length, 1)).toString()),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
