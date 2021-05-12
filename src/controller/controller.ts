@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import { parseArgs, trimWhitespace } from "../utilities/util";
 import commandMap from "./mapping";
-import { updateAnalyticsSheet } from "../analytics"
+import { updateAnalyticsSheet } from "../utilities/analytics"
 
 export default async function(message: Message) {
 
