@@ -20,7 +20,9 @@ export default async function(message: Message) {
         return;
     }
 
-    await updateAnalyticsSheet(commandName, message.guild.id);
+    if (process.env.ENABLE_ANALYTICS) {
+        await updateAnalyticsSheet(commandName, message.guild.id);    
+    }
     
     // check if command regex matches
     for (const regex of command.regex) {
