@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { parseArgs, trimWhitespace } from "../utilities/util";
 import commandMap from "./mapping";
+import { updateAnalyticsSheet } from "../analytics"
 
 export default async function(message: Message) {
 
@@ -18,6 +19,8 @@ export default async function(message: Message) {
         postHelp(message);
         return;
     }
+
+    await updateAnalyticsSheet(commandName, message.guild.id);
     
     // check if command regex matches
     for (const regex of command.regex) {
