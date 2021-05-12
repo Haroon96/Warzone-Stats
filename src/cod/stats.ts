@@ -19,7 +19,7 @@ export async function sendPlayerStats(message: Message, player: Player, duration
         let embed = createStatsEmbed(player, playerStats, duration, message.client);
         await reply.edit(embed);
     } catch (e) {
-        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e))
+        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e.message));
     }
 }
 
