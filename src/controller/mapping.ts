@@ -4,15 +4,21 @@ import * as commands from './commands';
 export default new Map<string, Command>([
     ['stats', {
         method: commands.postStats,
-        usage: '!wz stats <modeId> [platformId] "[playerId]" [duration]',
+        usage: '!wz stats <modeId> <squadSize> [platformId] "[playerId]" [duration]',
         help: 'Display stats of a single player or all registered players',
         regex: [
             /^!wz stats (?<modeId>br|rmbl|plndr)$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4])$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4]) (?<duration>[0-9]+[h|d|w|m])$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4]) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+) (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4]) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+) (?<duration>[0-9]+[h|d|w|m])$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4]) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)" (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr) (?<squadSize>[1-4]) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)" (?<duration>[0-9]+[h|d|w|m])$/,
         ]
     }],
     ['players', {
