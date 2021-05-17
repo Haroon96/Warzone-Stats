@@ -9,6 +9,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
   - Battle Royale: `br`
   - Warzone Rumble: `rmbl`
   - Plunder: `plndr`
+  - Resurgence: `rsg`
 - Supports PlayStation Network (`psn`), Xbox Live (`xbl`) and Activision (`atvi`) platforms
 - Supports `[time]` parameter to only show stats from specific times, e.g., last 8 hours (`8h`) or past 3 days (`3d`). Default value: `24h`
   - Hours: `h`
