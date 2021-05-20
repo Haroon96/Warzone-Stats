@@ -1,7 +1,7 @@
 import moment = require("moment");
 import { Duration, GameMode, Player, Platform } from "../common/types";
 import { DAL } from "../dal/mongo-dal";
-import { request } from "../utilities/util";
+import { request, htmlRequest } from "../utilities/util";
 
 const modeIds = {};
 
@@ -56,4 +56,11 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
     }
 
     return recentMatches;
+}
+
+export async function getDetailedPlayerProfile(player: Player): Promise<string> {
+    let url = `https://cod.tracker.gg/warzone/profile/${player.platformId}/${encodeURIComponent(player.playerId)}/detailed`;
+    let res = await htmlRequest(url);
+
+    return res
 }

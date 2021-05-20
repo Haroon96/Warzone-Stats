@@ -18,6 +18,8 @@ export type Duration = {
     value: number
 };
 
+export type Lifetime = 'lt'
+
 export type Command = {
     method: Function;
     usage: string;
@@ -31,7 +33,8 @@ export type CommandArgs = {
     platformId: Platform,
     duration: Duration,
     cron: string,
-    teamSize: number
+    teamSize: number,
+    lifetime: Lifetime
 };
 
 export type Stats = {

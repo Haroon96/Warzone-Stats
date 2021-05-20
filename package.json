@@ -19,13 +19,22 @@
   },
   "dependencies": {
     "@types/node-schedule": "^1.3.1",
+    "call-of-duty-api": "^1.3.4",
+    "cheerio": "*",
     "cron-validator": "^1.2.1",
     "discord.js": "^12.5.1",
     "google-spreadsheet": "^3.1.15",
+    "jssoup": "^0.0.12",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongodb": "^3.6.4",
     "node-fetch": "^2.6.1",
-    "node-schedule": "^2.0.0"
+    "node-schedule": "^2.0.0",
+    "parse5": "^6.0.1",
+    "request": "^2.88.2",
+    "xmldom": "^0.6.0",
+    "xmlserializer": "^0.6.1",
+    "xpath": "^0.0.32",
+    "xpath-html": "^1.0.2"
   }
 }

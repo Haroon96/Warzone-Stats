@@ -35,6 +35,20 @@ export async function request(url: string): Promise<any> {
     return await response.json();
 }
 
+export async function htmlRequest(url: string): Promise<any> {
+    const response = await fetch(url, {
+        credentials: "include",
+        headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en",
+            "User-Agent": "haroon96/warzone-stats"
+        },
+        method: "GET",
+        mode: "cors"
+    });
+    return await response.text();
+}
+
 export function parseDuration(str: string): Duration {
     if (!str) {
         return { value: 1, code: 'd', unit: 'day' };
@@ -64,7 +78,8 @@ export function parseArgs(args): CommandArgs {
         modeId: args.modeId ?? null,
         cron: args.cron ?? null,
         duration: args.duration ? parseDuration(args.duration) : parseDuration('24h'),
-        teamSize: args.teamSize ? parseInt(args.teamSize) : null
+        teamSize: args.teamSize ? parseInt(args.teamSize) : null,
+        lifetime: args.lifetime ?? null
     };
 
     return parsedArgs;

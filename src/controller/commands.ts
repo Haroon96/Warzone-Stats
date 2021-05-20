@@ -9,7 +9,7 @@ import { Scheduler } from "../utilities/scheduler";
 
 export async function postStats(message: Message, args: CommandArgs) {
     
-    const { modeId, playerId, platformId, duration } = args;
+    const { modeId, playerId, platformId, duration, lifetime } = args;
 
     const players: Array<Player> = [];
 
@@ -37,7 +37,7 @@ export async function postStats(message: Message, args: CommandArgs) {
 
     // send stats for each player in the players array
     players.forEach(async player => {
-        await sendPlayerStats(message, player, duration, modeId);
+        await sendPlayerStats(message, player, duration, modeId, lifetime);
     });
     
 }

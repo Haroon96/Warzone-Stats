@@ -1,34 +1,40 @@
-import { Duration, GameMode, Player, Stats } from "../common/types";
-import { getRecentMatches } from "./api";
+import { Duration, GameMode, Player, Stats, Lifetime } from "../common/types";
+import { getRecentMatches, getDetailedPlayerProfile } from "./api";
 import { formatDuration, formatPlayername, getEmbedTemplate } from "../utilities/util";
 import { Client, Message, MessageEmbed } from "discord.js";
 import TaskRepeater from "../utilities/task-repeater";
 
-export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
+export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode, lifetime: Lifetime) {
 
     const reply = await message.reply(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Fetching stats...", player.avatarUrl));
 
     try {
         // create a taskrepeater instance
-        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode], 5000, 5);
+        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode, lifetime], 5000, 5);
 
         // run the repeater
         let playerStats: Stats = await taskRepeater.run();
 
         // create a stats embed and send
-        let embed = createStatsEmbed(player, playerStats, duration, message.client);
+        let embed = createStatsEmbed(player, playerStats, duration, message.client, lifetime);
         await reply.edit(embed);
     } catch (e) {
         await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e.message));
     }
 }
 
-async function fetchTask(player: Player, duration: Duration, mode: GameMode) {
-    let matches = await getRecentMatches(player, duration, mode);
-    return calculateStats(matches);
+async function fetchTask(player: Player, duration: Duration, mode: GameMode, lifetime: Lifetime) {
+    if (lifetime == null ) {
+        let matches = await getRecentMatches(player, duration, mode);
+        return calculateStats(matches);
+    }
+    else {
+        let playerProfile = await getDetailedPlayerProfile(player);
+        return calculateLifetimeStats(playerProfile, mode);
+    }
 }
 
-function createStatsEmbed(player: Player, stats: Stats, duration: Duration, client: Client): MessageEmbed {
+function createStatsEmbed(player: Player, stats: Stats, duration: Duration, client: Client, lifetime: Lifetime): MessageEmbed {
     let embed = getEmbedTemplate(`${formatPlayername(player, client)}`, `Stats for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
 
     // no matches played, early return
@@ -38,7 +44,10 @@ function createStatsEmbed(player: Player, stats: Stats, duration: Duration, clie
     }
 
     // proceed with formatting
-    embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
+    if (lifetime == null)
+        embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
+    else
+        embed.setDescription(`Lifetime stats`)
 
     // to get these stats on top 
     embed.addField('Matches', stats['Matches']);
@@ -102,3 +111,68 @@ function calculateStats(matches): Stats {
 
     return statValues;
 }
+
+function calculateLifetimeStats(playerProfile, mode): Stats {
+    if (mode == 'br')
+        return calculateBrStats(playerProfile)
+    else if (mode == 'plndr')
+        return calculatePlndrStats(playerProfile)
+    
+}
+
+function calculateBrStats(playerProfile): Stats {
+    var JSSoup = require('jssoup').default;
+    var soup = new JSSoup(playerProfile, false);
+    var brHeader = soup.findAll(['h2']);
+    
+    // Find top Div for BR
+    var div = brHeader[1].parent.parent.parent
+    var spans = div.findAll(['span'])
+    let statValues: Stats = {
+        'Time Played': spans[0].contents[1]._text.replace(' Play Time', '').trim(),
+        'Matches': spans[1].contents[0]._text.replace(' Matches', '').trim(),
+        'Kills': spans[15].contents[0]._text,
+        'Deaths': spans[18].contents[0]._text, 
+        'Assists': null,
+        'Avg. Game Time': null,
+        'Avg. Team Placement': null,
+        'Headshots': null,
+        'Executions': null,
+        'Vehicles Destroyed': null,
+        'Team Wipes': null    
+    }
+
+    statValues['Wins'] = spans[3].contents[0]._text
+    statValues['K/D'] = spans[21].contents[0]._text
+
+    return statValues;
+}
+
+function calculatePlndrStats(playerProfile): Stats {
+    var JSSoup = require('jssoup').default;
+    var soup = new JSSoup(playerProfile, false);
+    var plndrHeader = soup.findAll(['h2']);
+    
+    // Find top Div for Plunder
+    var div = plndrHeader[2].parent.parent.parent
+    var spans = div.findAll(['span'])
+    let statValues: Stats = {
+        'Time Played': spans[0].contents[1]._text.replace(' Play Time', '').trim(),
+        'Matches': spans[1].contents[0]._text.replace(' Matches', '').trim(),
+        'Kills': spans[5].contents[0]._text,
+        'Deaths': spans[8].contents[0]._text, 
+        'Assists': null,
+        'Avg. Game Time': null,
+        'Avg. Team Placement': null,
+        'Headshots': null,
+        'Executions': null,
+        'Vehicles Destroyed': null,
+        'Team Wipes': null    
+    }
+
+    statValues['Wins'] = spans[3].contents[0]._text
+    statValues['K/D'] = spans[11].contents[0]._text
+
+    return statValues;
+}
+

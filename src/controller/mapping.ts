@@ -13,6 +13,8 @@ export default new Map<string, Command>([
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+) (?<duration>[0-9]+[h|d|w|m])$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
             /^!wz stats (?<modeId>br|rmbl|plndr) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)" (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|plndr) (?<lifetime>lt)$/,
+            /^!wz stats (?<modeId>br|plndr) (?<lifetime>lt) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/
         ]
     }],
     ['players', {
