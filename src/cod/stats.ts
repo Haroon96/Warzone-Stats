@@ -9,8 +9,13 @@ export async function sendPlayerStats(message: Message, player: Player, duration
     const reply = await message.reply(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Fetching stats...", player.avatarUrl));
 
     try {
+        // create a onError callback
+        const onError = (e, retryNum, totalRetries) => {
+            reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, `Failed to fetch stats!\n${e.message}\nRetry ${retryNum} of ${totalRetries}`, player.avatarUrl));
+        }
+
         // create a taskrepeater instance
-        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode], 5000, 5);
+        const taskRepeater = new TaskRepeater(fetchTask, [player, duration, mode], 5000, 5, onError);
 
         // run the repeater
         let playerStats: Stats = await taskRepeater.run();
@@ -19,7 +24,7 @@ export async function sendPlayerStats(message: Message, player: Player, duration
         let embed = createStatsEmbed(player, playerStats, duration, message.client);
         await reply.edit(embed);
     } catch (e) {
-        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e.message));
+        await reply.edit(getEmbedTemplate(`${formatPlayername(player, message.client)}`, "Failed to fetch stats.\n" + e.message, player.avatarUrl));
     }
 }
 
