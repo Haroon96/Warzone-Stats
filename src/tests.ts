@@ -22,7 +22,7 @@ function test_taskRepeater() {
     }
 
     try {
-        const repeater = new TaskRepeater(task, 'arg0', 5000, 1);
+        const repeater = new TaskRepeater(task, ['arg0'], 5000, 1);
         repeater.run()
             .then(res => {
                 console.log('response', res);
