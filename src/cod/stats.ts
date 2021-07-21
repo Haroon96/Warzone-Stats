@@ -88,7 +88,6 @@ function sum(stats, field): number {
 
 function calculateStats(matches): Stats {
     const stats = matches.map(x => x.segments[0].stats);
-    
     const statValues: Stats = {
         'Matches': stats.length,
         'Kills': sum(stats, 'kills'),
