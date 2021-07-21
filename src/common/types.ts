@@ -45,7 +45,8 @@ export type Stats = {
     'Headshots': number,
     'Executions': number,
     'Vehicles Destroyed': number,
-    'Team Wipes': number
+    'Team Wipes': number,
+    'Longest Streak': number
 };
 
 export type Schedule = {

@@ -87,23 +87,31 @@ function sum(stats, field): number {
 }
 
 function calculateStats(matches): Stats {
-    let stats = matches.map(x => x.segments[0].stats);
-    let statValues: Stats = {
+    const stats = matches.map(x => x.segments[0].stats);
+    
+    const statValues: Stats = {
         'Matches': stats.length,
         'Kills': sum(stats, 'kills'),
         'Deaths': sum(stats, 'deaths'),
         'Assists': sum(stats, 'assists'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
-        'Avg. Team Placement': parseInt((sum(stats, 'teamPlacement') / Math.max(stats.length, 1)).toString()),
+        'Avg. Team Placement': Math.floor(sum(stats, 'teamPlacement') / stats.length),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
+        'Longest Streak': Math.max(...stats.map(x => x.longestStreak ? x.longestStreak.value : 0)),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
         'Team Wipes': sum(stats, 'objectiveTeamWiped')
     }
 
-    statValues['K/D'] = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
-    statValues['K/D'] = statValues['K/D'].toFixed(2);
+    // calculate K/D
+    const kd = statValues['Kills'] / Math.max(statValues['Deaths'], 1);
+    statValues['K/D'] = kd.toFixed(2);
+
+    // calculate lobby K/D
+    const lobbyKdMatches = matches.map(x => x.attributes.avgKd).filter(x => x);
+    const lobbyKd = lobbyKdMatches.reduce((total, x) => total + x.kd, 0) / lobbyKdMatches.length;
+    statValues['Avg. Lobby K/D'] = lobbyKd.toFixed(2);
 
     return statValues;
 }
