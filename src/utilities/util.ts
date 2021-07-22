@@ -77,6 +77,7 @@ export function formatDuration(s: number) {
 
 export function formatPlayername(player: Player, client: Client = null) {
 
+    let platformNames = { "psn" : "PlayStation" , "xbl" : "Xbox" , "atvi" : "Activision"};
     let { playerId, platformId } = player;
     
     // remove unique id from playerId
@@ -92,7 +93,7 @@ export function formatPlayername(player: Player, client: Client = null) {
         }
     }
     // else send platformId as text
-    return `**${playerId}** *(${platformId})*`
+    return `**${playerId}** *(${platformNames[platformId]})*`
 }
 
 function formatThumbnail(thumbnail: string) {
