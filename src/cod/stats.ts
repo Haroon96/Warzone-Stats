@@ -100,7 +100,8 @@ function calculateStats(matches): Stats {
         'Executions': sum(stats, 'executions'),
         'Longest Streak': Math.max(...stats.map(x => x.longestStreak ? x.longestStreak.value : 0)),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
-        'Team Wipes': sum(stats, 'objectiveTeamWiped')
+        'Team Wipes': sum(stats, 'objectiveTeamWiped'),
+        'Wins': stats.map(x => x.placement && x.placement.value == 1 ? 1 : 0).reduce((x, y) => x + y, 0)
     }
 
     // calculate K/D
@@ -111,6 +112,9 @@ function calculateStats(matches): Stats {
     const lobbyKdMatches = matches.map(x => x.attributes.avgKd).filter(x => x);
     const lobbyKd = lobbyKdMatches.reduce((total, x) => total + x.kd, 0) / lobbyKdMatches.length;
     statValues['Avg. Lobby K/D'] = lobbyKd.toFixed(2);
+
+    //calculate win percentage
+    statValues['Win Ratio'] = (100 * statValues['Wins'] / statValues['Matches']).toFixed(0) + '%'
 
     return statValues;
 }
