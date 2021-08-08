@@ -114,7 +114,7 @@ function calculateStats(matches): Stats {
     statValues['Avg. Lobby K/D'] = lobbyKd.toFixed(2);
 
     //calculate win percentage
-    statValues['Win Ratio'] = (100 * statValues['Wins'] / statValues['Matches']).toFixed(0) + '%'
+    statValues['Win Ratio'] = (100 * statValues['Wins'] / statValues['Matches']).toFixed(0) + '%';
 
     return statValues;
 }
