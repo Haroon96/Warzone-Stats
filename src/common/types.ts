@@ -41,12 +41,12 @@ export type Stats = {
     'Assists': number,
     'Time Played': string,
     'Avg. Game Time': string,
-    'Avg. Team Placement': number,
     'Headshots': number,
     'Executions': number,
     'Vehicles Destroyed': number,
     'Team Wipes': number,
-    'Longest Streak': number
+    'Longest Streak': number,
+    'Wins': number
 };
 
 export type Schedule = {

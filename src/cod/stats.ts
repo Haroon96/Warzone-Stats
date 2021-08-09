@@ -95,12 +95,12 @@ function calculateStats(matches): Stats {
         'Assists': sum(stats, 'assists'),
         'Time Played': formatDuration(sum(stats, 'timePlayed')),
         'Avg. Game Time': formatDuration(sum(stats, 'timePlayed') / stats.length),
-        'Avg. Team Placement': Math.floor(sum(stats, 'teamPlacement') / stats.length),
         'Headshots': sum(stats, 'headshots'),
         'Executions': sum(stats, 'executions'),
         'Longest Streak': Math.max(...stats.map(x => x.longestStreak ? x.longestStreak.value : 0)),
         'Vehicles Destroyed': sum(stats, 'objectiveDestroyedVehicleLight') + sum(stats, 'objectiveDestroyedVehicleMedium') + sum(stats, 'objectiveDestroyedVehicleHeavy'),
-        'Team Wipes': sum(stats, 'objectiveTeamWiped')
+        'Team Wipes': sum(stats, 'objectiveTeamWiped'),
+        'Wins': stats.map(x => x.placement && x.placement.value == 1 ? 1 : 0).reduce((x, y) => x + y, 0)
     }
 
     // calculate K/D
@@ -111,6 +111,17 @@ function calculateStats(matches): Stats {
     const lobbyKdMatches = matches.map(x => x.attributes.avgKd).filter(x => x);
     const lobbyKd = lobbyKdMatches.reduce((total, x) => total + x.kd, 0) / lobbyKdMatches.length;
     statValues['Avg. Lobby K/D'] = lobbyKd.toFixed(2);
+
+    //calculate win percentage
+    statValues['Win Ratio'] = (100 * statValues['Wins'] / statValues['Matches']).toFixed(0) + '%';
+
+    //calculate placement percentile
+    const matchesTotalTeams = matches.map(x => x.metadata.teamCount);
+    const matchesPlacements = stats.map(x => x.placement.value);
+    if(matchesTotalTeams.length == matchesPlacements.length) {
+        const percentile = 100 * (matchesPlacements.map((x, i) => x / matchesTotalTeams[i]).reduce((x, y) => x + y, 0)) / statValues['Matches']
+        statValues['Avg. Team Placement'] = 'Top ' + percentile.toFixed(1) + '%'
+    }
 
     return statValues;
 }
