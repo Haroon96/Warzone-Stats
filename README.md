@@ -43,7 +43,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - Feel free to open a GitHub issue if you face any problems.
 
 ## Credits
-- [COD Warzone Stats Tracker API](https://cod.tracker.gg/warzone)
+- Massive thanks to [COD Warzone Stats Tracker API](https://cod.tracker.gg/warzone)
 
 ## Donate
 We're a bunch of students who enjoy playing the game and worked on this bot in our spare time between classes and jobs. We won't ever restrict basic functionality for other players out there but if you find the bot useful, please considering [buying us a coffee](https://www.buymeacoffee.com/haroon96) :)
