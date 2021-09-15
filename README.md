@@ -29,7 +29,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 - For team splits, send `!wz teams <teamSize>` to get a random list of teams from registered users.
 
 ## Example
-- To fetch stats for the player _m_haroon2305_ playing with a PlayStation for the last two weeks, send `!wz stats br psn m_haroon2305 2w`.
+- To fetch stats for the player _botmun__ playing with a PlayStation for the past two weeks, send `!wz stats br psn botmun_ 2w`.
 - Example response from the bot on Discord
 
 <p align="center">
