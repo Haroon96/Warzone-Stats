@@ -1,6 +1,6 @@
 import { Client, MessageEmbed } from "discord.js";
 import { CommandArgs, Duration, Player } from "../common/types";
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch'
 import moment = require("moment");
 require("moment-duration-format");
 
@@ -22,7 +22,8 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const response = await fetch(url, {
+    const params: RequestInit = {
+        credentials: "include",
         headers: {
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "en",
@@ -30,7 +31,8 @@ export async function request(url: string): Promise<any> {
         },
         method: "GET",
         mode: "cors"
-    });
+    };
+    const response = await fetch(url, params);
     return await response.json();
 }
 
