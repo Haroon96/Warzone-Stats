@@ -23,7 +23,6 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 
 export async function request(url: string): Promise<any> {
     const response = await fetch(url, {
-        credentials: "include",
         headers: {
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "en",
