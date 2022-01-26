@@ -23,14 +23,12 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 
 export async function request(url: string): Promise<any> {
     const params: RequestInit = {
-        credentials: "include",
         headers: {
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "en",
             "User-Agent": "haroon96/warzone-stats"
         },
-        method: "GET",
-        mode: "cors"
+        method: "GET"
     };
     const response = await fetch(url, params);
     return await response.json();
