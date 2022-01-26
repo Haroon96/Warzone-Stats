@@ -1,7 +1,7 @@
-import moment = require("moment");
-import { Duration, GameMode, Player, Platform } from "../common/types";
-import { DAL } from "../dal/mongo-dal";
-import { request } from "../utilities/util";
+import moment from 'moment';
+import { Duration, GameMode, Player, Platform } from "../common/types.js";
+import { DAL } from "../dal/mongo-dal.js";
+import { request } from "../utilities/util.js";
 
 const modeIds = {};
 

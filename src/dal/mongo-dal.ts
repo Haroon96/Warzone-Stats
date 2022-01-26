@@ -1,5 +1,5 @@
 import { Db, MongoClient } from "mongodb";
-import { Player, Guild, GameMode, Schedule, Platform } from "../common/types";
+import { Player, Guild, GameMode, Schedule, Platform } from "../common/types.js";
 
 
 class MongoDAL {

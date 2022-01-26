@@ -1,8 +1,8 @@
 import { Client, Message } from 'discord.js';
-import controller from './controller/controller';
-import * as moment from 'moment';
-import { Scheduler } from './utilities/scheduler';
-import { DAL } from './dal/mongo-dal';
+import { controller } from './controller/controller.js';
+import moment from 'moment';
+import { Scheduler } from './utilities/scheduler.js';
+import { DAL } from './dal/mongo-dal.js';
 
 async function main() {
 

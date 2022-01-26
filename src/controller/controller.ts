@@ -1,9 +1,9 @@
 import { Message } from "discord.js";
-import { parseArgs, trimWhitespace } from "../utilities/util";
-import commandMap from "./mapping";
-import { updateAnalyticsSheet } from "../utilities/analytics"
+import { parseArgs, trimWhitespace } from "../utilities/util.js";
+import commandMap from "./mapping.js";
+import { updateAnalyticsSheet } from "../utilities/analytics.js"
 
-export default async function(message: Message) {
+export async function controller(message: Message) {
 
     // sanitize the message body
     message.content = trimWhitespace(message.content).toLowerCase();

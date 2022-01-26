@@ -1,7 +1,7 @@
 import { Client } from 'discord.js';
 import { Job, scheduleJob } from 'node-schedule';
-import { Schedule } from '../common/types';
-import { DAL } from "../dal/mongo-dal";
+import { Schedule } from '../common/types.js';
+import { DAL } from "../dal/mongo-dal.js";
 
 class StatsScheduler {
 

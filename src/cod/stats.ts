@@ -1,8 +1,8 @@
-import { Duration, GameMode, Player, Stats } from "../common/types";
-import { getRecentMatches } from "./api";
-import { formatDuration, formatPlayername, getEmbedTemplate } from "../utilities/util";
+import { Duration, GameMode, Player, Stats } from "../common/types.js";
+import { getRecentMatches } from "./api.js";
+import { formatDuration, formatPlayername, getEmbedTemplate } from "../utilities/util.js";
 import { Client, Message, MessageEmbed } from "discord.js";
-import TaskRepeater from "../utilities/task-repeater";
+import TaskRepeater from "../utilities/task-repeater.js";
 
 export async function sendPlayerStats(message: Message, player: Player, duration: Duration, mode: GameMode) {
 

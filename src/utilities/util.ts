@@ -1,8 +1,8 @@
 import { Client, MessageEmbed } from "discord.js";
 import { CommandArgs, Duration, Player } from "../common/types";
 import fetch from 'node-fetch'
-import moment = require("moment");
-require("moment-duration-format");
+import moment from 'moment';
+import 'moment-duration-format';
 
 export function trimWhitespace(str: string): string {
     // remove extra, leading, and trailing whitespace
