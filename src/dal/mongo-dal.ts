@@ -1,5 +1,6 @@
-import { Db, MongoClient } from "mongodb";
-import { Player, Guild, GameMode, Schedule, Platform } from "../common/types";
+import mongodb from "mongodb";
+const { MongoClient } = mongodb;
+import { Player, Guild, GameMode, Schedule, Platform } from "../common/types.js";
 
 
 class MongoDAL {
@@ -91,7 +92,7 @@ class MongoDAL {
         console.info("DB connected!");
     }
 
-    db: Db = null;
+    db = null;
 }
 
 export const DAL = new MongoDAL();

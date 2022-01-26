@@ -2,7 +2,12 @@
     "compilerOptions": {
       "outDir": "./dist",
       "sourceMap": true,
-      "downlevelIteration": true
+      "downlevelIteration": true,
+      "lib": ["es2020", "DOM"],
+      "target": "ES2020",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "esModuleInterop": true
     },
     "include": [
       "src/**/*"

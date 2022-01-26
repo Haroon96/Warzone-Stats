@@ -1,11 +1,11 @@
 import { Message } from "discord.js";
-import { sendPlayerStats } from "../cod/stats";
-import { getPlayerProfile } from "../cod/api";
-import { CommandArgs, Player, Schedule } from "../common/types";
-import { DAL } from "../dal/mongo-dal";
-import { formatPlayername, shuffle } from "../utilities/util";
+import { sendPlayerStats } from "../cod/stats.js";
+import { getPlayerProfile } from "../cod/api.js";
+import { CommandArgs, Player, Schedule } from "../common/types.js";
+import { DAL } from "../dal/mongo-dal.js";
+import { formatPlayername, shuffle } from "../utilities/util.js";
 import { isValidCron } from "cron-validator";
-import { Scheduler } from "../utilities/scheduler";
+import { Scheduler } from "../utilities/scheduler.js";
 
 export async function postStats(message: Message, args: CommandArgs) {
     

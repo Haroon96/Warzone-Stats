@@ -1,5 +1,5 @@
-import { Command } from '../common/types';
-import * as commands from './commands';
+import { Command } from '../common/types.js';
+import * as commands from './commands.js';
 
 export default new Map<string, Command>([
     ['stats', {
