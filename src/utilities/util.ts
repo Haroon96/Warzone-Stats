@@ -1,6 +1,6 @@
 import { Client, MessageEmbed } from "discord.js";
 import { CommandArgs, Duration, Player } from "../common/types";
-import fetch from 'node-fetch'
+import { curly } from "node-libcurl"
 import moment from 'moment';
 import 'moment-duration-format';
 
@@ -22,16 +22,8 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const params = {
-        headers: {
-            "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en",
-            "User-Agent": "haroon96/warzone-stats"
-        },
-        method: "GET"
-    };
-    const response = await fetch(url, params);
-    return await response.json();
+    const response = await curly.get(url)
+    return response.data
 }
 
 export function parseDuration(str: string): Duration {
