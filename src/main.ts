@@ -1,47 +1,70 @@
-import { Client, Message } from 'discord.js';
-import { controller } from './controller/controller.js';
-import moment from 'moment';
-import { Scheduler } from './utilities/scheduler.js';
-import { DAL } from './dal/mongo-dal.js';
+import { Client, Intents, Interaction } from 'discord.js'
+import { ActivityTypes } from 'discord.js/typings/enums'
+
+import { Command } from './common/types.js'
+import { Scheduler } from './utilities/scheduler.js'
+import { DAL } from './dal/mongo-dal.js'
+
+import players from './commands/players.js'
+import stats from './commands/stats.js'
+import schedule from './commands/schedule.js'
+import teams from './commands/teams.js'
 
 async function main() {
 
     // init bot
-    const bot = new Client();
-    bot.login(process.env.TOKEN);
+    const bot = new Client({ intents: [Intents.FLAGS.GUILDS] })
+    bot.login(process.env.TOKEN)
 
     // init pre-reqs
-    await DAL.init();
-    await Scheduler.init(bot);
+    await DAL.init()
+    await Scheduler.init(bot)
 
+    // code migrations
+    await DAL.migrate()
 
-    bot.on('ready', () => {
+    // register commands
+    const commands = new Map<string, Command>([
+        [players.name, players],
+        [stats.name, stats],
+        [schedule.name, schedule],
+        [teams.name, teams],
+    ])
+
+    bot.once('ready', () => {
         // set bot status
-        bot.user.setActivity({name: "for '!wz' commands", type: "WATCHING"});
-        console.info(`Logged in as ${bot.user.tag}`);
-    });
-    
+        bot.user.setActivity({ name: "for slash (/) commands", type: ActivityTypes.WATCHING })
+        console.info(`Logged in as ${bot.user.tag}`)
+    })
+
     bot.on('error', (err) => {
-        console.error(err);
-        process.exit(1);
-    });
+        console.error(err)
+        process.exit(1)
+    })
 
-    bot.on('message', async(message: Message) => {
-        // check if the message is intended for the bot
-        if (!message.content.startsWith('!wz')) {
-            return;
-        } 
-        
-        // log the message
-        console.log(moment().format(), message.author.username, message.content);
+    bot.on('interactionCreate', async interaction => {
+        if (interaction.isCommand() || interaction.isAutocomplete()) {
+            // get command
+            const command = commands.get(interaction.commandName)
+            if (!command) return
 
-        // forward to controller
-        try {
-            await controller(message);
-        } catch (e) {
-            console.error(e);
+            // handle request
+            if (interaction.isAutocomplete()) {
+                try {
+                    await command.autocomplete(interaction)
+                } catch (error) {
+                    console.error(error)
+                }
+            } else if (interaction.isCommand()) {
+                try {
+                    await command.execute(interaction)
+                } catch (error) {
+                    console.error(error)
+                    await interaction.followUp({ content: 'There was an error while executing this command!' })
+                }
+            }
         }
-    });
+    })
 }
 
-main();
+main()
