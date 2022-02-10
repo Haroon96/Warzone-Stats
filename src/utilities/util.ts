@@ -3,6 +3,10 @@ import { CommandArgs, Duration, Player } from "../common/types";
 import { curly } from "node-libcurl"
 import moment from 'moment';
 import 'moment-duration-format';
+import tls from 'tls';
+
+// Prepare tls
+const tlsData = tls.rootCertificates.join('\n')
 
 export function trimWhitespace(str: string): string {
     // remove extra, leading, and trailing whitespace
@@ -22,7 +26,7 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const response = await curly.get(url)
+    const response = await curly.get(url, { caInfoBlob: tlsData })
     return response.data
 }
 
