@@ -8,6 +8,7 @@ const modeIds = {};
 export async function getPlayerProfile(platformId: Platform, playerId: string): Promise<Player> {
     let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platformId}/${encodeURIComponent(playerId)}`;
     let res = await request(url);
+    console.log(res);
     return res.errors ? null : {
         playerId: res.data.platformInfo.platformUserIdentifier,
         platformId: res.data.platformInfo.platformSlug,
