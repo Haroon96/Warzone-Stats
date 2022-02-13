@@ -23,6 +23,9 @@ export async function controller(message: Message) {
     if (process.env.ENABLE_ANALYTICS) {
         await updateAnalyticsSheet(commandName, message.guild.id);    
     }
+
+    await message.reply("The bot is under maintenance, sorry for the inconvenience! You can get in touch with us on github: https://github.com/Haroon96/warzone-stats");
+    return;
     
     // check if command regex matches
     for (const regex of command.regex) {
