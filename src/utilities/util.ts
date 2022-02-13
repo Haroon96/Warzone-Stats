@@ -27,6 +27,7 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 
 export async function request(url: string): Promise<any> {
     const response = await curly.get(url, { caInfoBlob: tlsData })
+    console.log(response);
     return response.data
 }
 
