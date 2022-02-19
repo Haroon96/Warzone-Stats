@@ -100,6 +100,8 @@ function calculateStats(matches): Stats {
     const lobbyKdMatches = matches.map(x => x.attributes.avgKd).filter(x => x)
     const lobbyKd = lobbyKdMatches.reduce((total, x) => total + x.kd, 0) / lobbyKdMatches.length
 
+    const highestKillRound = stats.sort((a, b) => b.kills.value - a.kills.value)[0]
+
     var timeWaiting = 0
     if (matches.length > 1) {
         const timestamps = matches
@@ -157,6 +159,7 @@ function calculateStats(matches): Stats {
         'Win Ratio': winRatio.toFixed(0) + '%',
         'Avg. Team Placement': 'Top ' + placementPercentile.toFixed(1) + '%',
         'Longest Streak': Math.max(...stats.map(x => x.longestStreak ? x.longestStreak.value : 0)),
+        'High Kill Round': `${highestKillRound.kills.value} kills / ${highestKillRound.deaths.value} deaths`,
         'Damage done / Kill': dmgPerKill.toFixed(0),
         'Damage taken / Death': dmgPerDeath.toFixed(0),
         'Avg. Damage done': Math.floor(damageDone / stats.length),

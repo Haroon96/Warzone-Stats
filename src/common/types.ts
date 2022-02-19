@@ -41,6 +41,7 @@ export type Stats = {
     'Executions': number,
     'Vehicles Destroyed': number,
     'Longest Streak': number,
+    'High Kill Round': string,
     '1./2./3. Place': string,
     'Win Ratio': string,
     'Avg. Team Placement': string,
