@@ -57,6 +57,7 @@ export type Stats = {
 }
 
 export type Schedule = {
+    guildId: string,
     channelId: string,
     cron: string,
     duration: Duration,

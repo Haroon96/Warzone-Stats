@@ -135,28 +135,24 @@ class MongoDAL {
 
     // scheduling related
 
-    async unschedule(schedule: Schedule) {
-        const { channelId } = schedule
+    async unschedule(channelId: string) {
         await this.db.collection('schedules').deleteOne({ channelId })
     }
 
     async schedule(schedule: Schedule) {
-        const { channelId, cron, duration, modeId } = schedule
+        const { channelId, guildId, cron, duration, modeId } = schedule
         await this.db.collection('schedules').updateOne({ channelId }, {
-            $set: { cron, duration, modeId }
+            $set: { cron, duration, modeId, guildId }
         }, {
             upsert: true
         })
     }
 
-    async getSchedule(channelId: string): Promise<Schedule | null> {
-        const doc = await this.db.collection('schedules').findOne({ channelId })
-        console.log(doc)
-
-        return { channelId: channelId, cron: "blub", duration: parseDuration(null, '24h')!, modeId: 'br' }
+    getSchedules(channelId: string): Promise<Schedule[]> {
+        return this.db.collection('schedules').find<Schedule>({ channelId }).toArray()
     }
 
-    async getAllSchedules(): Promise<Array<Schedule>> {
+    getAllSchedules(): Promise<Schedule[]> {
         return this.db.collection('schedules').find<Schedule>({}).toArray()
     }
 

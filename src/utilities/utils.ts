@@ -1,9 +1,10 @@
 import { Client, MessageEmbed } from "discord.js"
-import { Duration, Player } from "../common/types"
+import { Duration, Player, Schedule } from "../common/types"
 import { curly } from "node-libcurl"
 import moment from 'moment'
 import 'moment-duration-format'
 import tls from 'tls';
+import cronstrue from "cronstrue"
 
 // Prepare tls
 const tlsData = tls.rootCertificates.join('\n')
@@ -55,6 +56,10 @@ export function parseDuration(str: string | null, orElse: string = '24h'): Durat
 export function formatDuration(seconds: number) {
     // @ts-ignore
     return moment.duration(seconds, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", { trim: "both mid" })
+}
+
+export function formatSchedule(schedule: Schedule) {
+    return `${cronstrue.toString(schedule.cron, { use24HourTimeFormat: true })}: Stats for the last ${schedule.duration.value} ${schedule.duration.unit}(s)`
 }
 
 export function formatPlayername(player: Player, client: Client | null = null) {

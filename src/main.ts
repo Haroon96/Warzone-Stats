@@ -1,4 +1,4 @@
-import { Client, Intents, Interaction } from 'discord.js'
+import { Client, Intents, Interaction, TextChannel } from 'discord.js'
 import { ActivityTypes } from 'discord.js/typings/enums'
 
 import { Command } from './common/types.js'

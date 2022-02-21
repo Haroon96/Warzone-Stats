@@ -108,13 +108,13 @@ export async function getRecentMatches(player: Player, duration: Duration, modeI
         }
 
         let matches = res.data.matches
-
+        
         // filter out matches of other types
         matches = matches.filter(x => modeIds[modeId].includes(x.attributes.modeId))
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value)
-
+        
         // append filtered matches to todays list
         recentMatches.push(...filteredMatches)
 

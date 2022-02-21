@@ -39,12 +39,12 @@ export async function sendPlayerStats(interaction: CommandInteraction, players: 
     })
 }
 
-async function fetchTask(player: Player, duration: Duration, modeId: GameMode): Promise<Stats | null> {
+export async function fetchTask(player: Player, duration: Duration, modeId: GameMode): Promise<Stats | null> {
     let matches = await getRecentMatches(player, duration, modeId)
     return calculateStats(matches)
 }
 
-function generateStatsEmbed(player: Player, stats: Stats | null, duration: Duration, client: Client): MessageEmbed {
+export function generateStatsEmbed(player: Player, stats: Stats | null, duration: Duration, client: Client): MessageEmbed {
     let embed = generateEmbed(`${formatPlayername(player, client)}`, `Stats for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
 
     // no matches played, early return
