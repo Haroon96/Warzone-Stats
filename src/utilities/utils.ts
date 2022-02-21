@@ -35,8 +35,12 @@ export function parseDuration(str: string | null, orElse: string = '24h'): Durat
     const parsable = str ?? orElse
 
     const rx = /(?<num>[0-9]+)(?<code>[h|d|w|mo])/
-    const { num, code } = parsable.match(rx)?.groups!
+    const groups = parsable.match(rx)?.groups
 
+    if (!groups)
+        return null
+
+    const { num, code } = groups
     const value = parseInt(num)
 
     switch (code) {
@@ -44,7 +48,7 @@ export function parseDuration(str: string | null, orElse: string = '24h'): Durat
         case 'd': return { value, code, unit: 'day' }
         case 'w': return { value, code, unit: 'week' }
         case 'm': return { value, code, unit: 'month' }
-        default: return null
+        default: throw 'Not reachable'
     }
 }
 
