@@ -4,7 +4,6 @@ import { sendPlayerStats } from "../api/stats.js"
 import { GameMode, Platform, Player, Command } from "../common/types.js"
 import { DAL } from "../dal/mongo-dal.js"
 import { parseDuration } from "../utilities/utils.js"
-import { codeBlock } from '@discordjs/builders';
 
 const command: Command = { name: 'stats', execute, autocomplete }
 export default command
@@ -18,7 +17,7 @@ async function execute(interaction: CommandInteraction) {
     const duration = parseDuration(interaction.options.getString('duration', false), '24h')
 
     if (!duration) {
-        interaction.reply(codeBlock('fix', `Invalid duration entered: ${interaction.options.getString('duration')}!\nUse h (hours), d (days), w (weeks) or m (months).`))
+        interaction.reply(`\`\`\`fix\nInvalid duration entered: ${interaction.options.getString('duration')}! Use h (hours), d (days), w (weeks) or m (months).\n\`\`\``)
         return
     }
 
@@ -50,7 +49,7 @@ async function execute(interaction: CommandInteraction) {
 async function autocomplete(interaction: AutocompleteInteraction) {
     const focus = interaction.options.getFocused(true)
     let options: ApplicationCommandOptionChoice[] = []
-    
+
     if (focus.name == 'player') {
         const platform = interaction.options.getString('platform') as Platform
         let players = (await DAL.getFilteredPlayers(interaction.guildId!, platform, true))

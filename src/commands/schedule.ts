@@ -4,7 +4,6 @@ import { Command, GameMode, Schedule } from "../common/types.js"
 import { DAL } from "../dal/mongo-dal.js"
 import { Scheduler } from "../utilities/scheduler.js"
 import { parseDuration } from "../utilities/utils.js"
-import { codeBlock } from '@discordjs/builders';
 
 const command: Command = { name: 'schedule', execute, autocomplete }
 export default command
@@ -40,7 +39,7 @@ async function scheduleStats(interaction: CommandInteraction) {
     const duration = parseDuration(interaction.options.getString('duration'))
 
     if (!duration) {
-        interaction.reply(codeBlock('fix', `Invalid duration entered: ${interaction.options.getString('duration')}!\nUse h (hours), d (days), w (weeks) or m (months).`))
+        interaction.reply(`\`\`\`fix\nInvalid duration entered: ${interaction.options.getString('duration')}! Use h (hours), d (days), w (weeks) or m (months).\n\`\`\``)
         return
     }
 

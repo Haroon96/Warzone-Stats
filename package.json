@@ -15,7 +15,6 @@
   "author": "Muhammad Haroon",
   "license": "ISC",
   "devDependencies": {
-    "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
     "@types/node-schedule": "^1.3.2",
     "discord-api-types": "^0.26.1",
