@@ -87,7 +87,7 @@ const commands = [
 ]
     .map(cmd => cmd.toJSON())
 
-const rest = new REST({ version: '9' }).setToken(process.env.TOKEN)
+const rest = new REST({ version: '9' }).setToken(process.env.TOKEN!)
 
 rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))

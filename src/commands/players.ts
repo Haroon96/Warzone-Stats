@@ -25,12 +25,12 @@ async function autocomplete(interaction: AutocompleteInteraction) {
     const cmd = interaction.options.getSubcommand(true)
     const platform = interaction.options.getString('platform', true) as Platform
 
-    let players: Player[]
+    let players: Player[] = []
 
     if (cmd == 'register') {
-        players = await DAL.getFilteredPlayers(interaction.guildId, platform, false)
+        players = await DAL.getFilteredPlayers(interaction.guildId!, platform, false)
     } else if (cmd == 'remove') {
-        players = await DAL.getFilteredPlayers(interaction.guildId, platform, true)
+        players = await DAL.getFilteredPlayers(interaction.guildId!, platform, true)
     }
 
     const options: ApplicationCommandOptionChoice[] = players.map((player) => ({ name: player.playerId, value: player.playerId }))
@@ -39,7 +39,7 @@ async function autocomplete(interaction: AutocompleteInteraction) {
 
 export async function listPlayers(interaction: CommandInteraction) {
     // fetch active players
-    const players = await DAL.getFilteredPlayers(interaction.guildId, null, true)
+    const players = await DAL.getFilteredPlayers(interaction.guildId!, null, true)
 
     // check if any players are registered
     if (!players || !players.length) {
@@ -62,8 +62,8 @@ export async function registerPlayer(interaction: CommandInteraction) {
 
     if (player) {
         // check if player is not already registered
-        if (!await DAL.isPlayerRegisteredInGuild(player, interaction.guildId)) {
-            await DAL.activatePlayerInGuild(player, interaction.guildId)
+        if (!await DAL.isPlayerRegisteredInGuild(player, interaction.guildId!)) {
+            await DAL.activatePlayerInGuild(player, interaction.guildId!)
             await interaction.reply(`${formatPlayername(player, interaction.client)} has been registered!`)
         } else {
             await interaction.reply(`${formatPlayername(player, interaction.client)} is already registered!`)
@@ -82,11 +82,11 @@ export async function removePlayer(interaction: CommandInteraction) {
     const playerId = interaction.options.getString('id', true)
 
     // get player from db
-    const player = await DAL.getPlayer(interaction.guildId, platform, playerId)
+    const player = await DAL.getPlayer(interaction.guildId!, platform, playerId)
 
     // check if the player is registered in db
     if (player) {
-        await DAL.deactivatePlayerInGuild(player, interaction.guildId)
+        await DAL.deactivatePlayerInGuild(player, interaction.guildId!)
         await interaction.reply(`${formatPlayername(player, interaction.client)} was unregistered!`)
     } else {
         await interaction.reply(`${formatPlayername(player, interaction.client)} is not registered!`)

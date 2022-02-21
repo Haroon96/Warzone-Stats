@@ -70,7 +70,7 @@ class MongoDAL {
     }
 
     // Get a filtered view onto the guilds players
-    async getFilteredPlayers(guildId: string, platform: Platform = null, active: boolean = true): Promise<Array<Player>> {
+    async getFilteredPlayers(guildId: string, platform: Platform | null = null, active: boolean = true): Promise<Array<Player>> {
         // always filter players for 'active' (true/false)
         var filterCondition: Object = { $eq: ["$$this.active", active] }
 
@@ -129,7 +129,7 @@ class MongoDAL {
     // helpers
 
     async getModeIds(mode: GameMode): Promise<Array<string>> {
-        const { modeIds } = await this.db.collection('modes').findOne({ mode })
+        const { modeIds } = await this.db.collection('modes').findOne({ mode }) as any
         return modeIds
     }
 
@@ -153,7 +153,7 @@ class MongoDAL {
         const doc = await this.db.collection('schedules').findOne({ channelId })
         console.log(doc)
 
-        return { channelId: channelId, cron: "blub", duration: parseDuration(null, '24h'), modeId: 'br' }
+        return { channelId: channelId, cron: "blub", duration: parseDuration(null, '24h')!, modeId: 'br' }
     }
 
     async getAllSchedules(): Promise<Array<Schedule>> {
@@ -161,12 +161,12 @@ class MongoDAL {
     }
 
     async init() {
-        const client = await MongoClient.connect(process.env.MONGO_URI)
+        const client = await MongoClient.connect(process.env.MONGO_URI!)
         this.db = client.db(process.env.MONGO_DBNAME)
         console.info("DB connected!")
     }
 
-    db: mongodb.Db = null
+    db: mongodb.Db
 }
 
 export const DAL = new MongoDAL()

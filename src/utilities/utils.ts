@@ -31,13 +31,12 @@ export async function request(url: string): Promise<any> {
     return response.data
 }
 
-export function parseDuration(str: string | null, orElse: string = '24h'): Duration {
+export function parseDuration(str: string | null, orElse: string = '24h'): Duration | null {
     const parsable = str ?? orElse
 
     const rx = /(?<num>[0-9]+)(?<code>[h|d|w|mo])/
-    const match = parsable.match(rx)
+    const { num, code } = parsable.match(rx)?.groups!
 
-    const { num, code } = match.groups
     const value = parseInt(num)
 
     switch (code) {
@@ -45,15 +44,16 @@ export function parseDuration(str: string | null, orElse: string = '24h'): Durat
         case 'd': return { value, code, unit: 'day' }
         case 'w': return { value, code, unit: 'week' }
         case 'm': return { value, code, unit: 'month' }
+        default: return null
     }
 }
 
-export function formatDuration(s: number) {
+export function formatDuration(seconds: number) {
     // @ts-ignore
-    return moment.duration(s, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", { trim: "both mid" })
+    return moment.duration(seconds, 'seconds').format("w[w] d[d] h[h] m[m] s[s]", { trim: "both mid" })
 }
 
-export function formatPlayername(player: Player, client: Client = null) {
+export function formatPlayername(player: Player, client: Client | null = null) {
 
     let platformNames = { psn: "PlayStation", xbl: "Xbox", atvi: "Activision" }
     let { playerId, platformId } = player

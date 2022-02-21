@@ -70,7 +70,7 @@ const modeIds = {
     ]
 }
 
-export async function getPlayerProfile(platformId: Platform, playerId: string): Promise<Player> {
+export async function getPlayerProfile(platformId: Platform, playerId: string): Promise<Player | null> {
     let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platformId}/${encodeURIComponent(playerId)}`
     let res = await request(url)
     return res.errors ? null : {
@@ -89,7 +89,7 @@ export async function getMatchDetails(matchId: string): Promise<Array<Object>> {
 
 export async function getRecentMatches(player: Player, duration: Duration, modeId: GameMode) {
     let now = moment()
-    let recentMatches = []
+    let recentMatches: any[] = []
 
     let next = 'null'
 

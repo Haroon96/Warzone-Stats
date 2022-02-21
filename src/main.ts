@@ -33,8 +33,8 @@ async function main() {
 
     bot.once('ready', () => {
         // set bot status
-        bot.user.setActivity({ name: "for slash (/) commands", type: ActivityTypes.WATCHING })
-        console.info(`Logged in as ${bot.user.tag}`)
+        bot.user!.setActivity({ name: "for slash (/) commands", type: ActivityTypes.WATCHING })
+        console.info(`Logged in as ${bot.user!.tag}`)
     })
 
     bot.on('error', (err) => {

@@ -16,6 +16,11 @@ async function execute(interaction: CommandInteraction) {
     const playerId = interaction.options.getString('id', false)
     const duration = parseDuration(interaction.options.getString('duration', false), '24h')
 
+    if (!duration) {
+        interaction.reply(`Invalid duration (${interaction.options.getString('duration')})! Use h (hours), d (days), w (weeks) or m (months).`)
+        return
+    }
+
     // check if called for a specific player
     if (platform && playerId) {
         // check if the specified player exists
@@ -30,7 +35,7 @@ async function execute(interaction: CommandInteraction) {
     } else {
         // if requesting for all registered players
         // fetch list of players registered in guild
-        players.push(...await DAL.getFilteredPlayers(interaction.guildId, null, true))
+        players.push(...await DAL.getFilteredPlayers(interaction.guildId!, null, true))
 
         // check if there are players registered in the guild
         if (!players.length) {
@@ -43,11 +48,11 @@ async function execute(interaction: CommandInteraction) {
 
 async function autocomplete(interaction: AutocompleteInteraction) {
     const focus = interaction.options.getFocused(true)
-    let options: ApplicationCommandOptionChoice[]
+    let options: ApplicationCommandOptionChoice[] = []
 
     if (focus.name == 'id') {
         const platform = interaction.options.getString('platform') as Platform
-        let players = (await DAL.getFilteredPlayers(interaction.guildId, platform, true))
+        let players = (await DAL.getFilteredPlayers(interaction.guildId!, platform, true))
 
         options = players.map((player) => ({ name: player.playerId, value: player.playerId }))
     } else if (focus.name == 'duration') {

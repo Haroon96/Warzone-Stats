@@ -1,6 +1,6 @@
-export default class TaskRepeater {
+export default class TaskRepeater<Result> {
 
-    constructor(taskFn: Function, args: Array<any>, delay: number, retries: number, onError: Function = null) {
+    constructor(taskFn: (...args: any) => Result, args: Array<any>, delay: number, retries: number, onError: Function | null = null) {
         this.taskFn = taskFn
         this.args = args
         this.delay = delay
@@ -8,7 +8,7 @@ export default class TaskRepeater {
         this.onError = onError
     }
 
-    async run() {
+    async run(): Promise<Result> {
         let error = null
         for (let i = 1; i <= this.retries; ++i) {
             try {
@@ -36,9 +36,9 @@ export default class TaskRepeater {
         })
     }
 
-    taskFn: Function
+    taskFn: (...args: any) => Result
     args: Array<any>
     delay: number
     retries: number
-    onError: Function
+    onError: Function | null
 }

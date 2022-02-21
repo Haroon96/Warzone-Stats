@@ -18,7 +18,7 @@ export async function sendPlayerStats(interaction: CommandInteraction, players: 
         try {
             // `onError` callback is called after each failed attempt
             const onError = (e, retryNum, totalRetries) => {
-                embeds.get(player.playerId).setDescription(`Failed to fetch stats!\n${e.message}\nRetry ${retryNum} of ${totalRetries}`)
+                embeds.get(player.playerId)!.setDescription(`Failed to fetch stats!\n${e.message}\nRetry ${retryNum} of ${totalRetries}`)
                 interaction.editReply({ embeds: [...embeds.values()] })
             }
 
@@ -26,38 +26,35 @@ export async function sendPlayerStats(interaction: CommandInteraction, players: 
             const taskRepeater = new TaskRepeater(fetchTask, [player, duration, modeId], 5000, 5, onError)
 
             // run the repeater
-            let playerStats: Stats = await taskRepeater.run()
+            let playerStats = await taskRepeater.run()
 
             // create a stats embed and send
             embeds.set(player.playerId, generateStatsEmbed(player, playerStats, duration, interaction.client))
             await interaction.editReply({ embeds: [...embeds.values()] })
         } catch (e) {
             console.error(e)
-            embeds.get(player.playerId).setDescription("Failed to fetch stats.\n")
+            embeds.get(player.playerId)!.setDescription("Failed to fetch stats.\n")
             interaction.editReply({ embeds: [...embeds.values()] })
         }
     })
 }
 
-async function fetchTask(player: Player, duration: Duration, modeId: GameMode) {
+async function fetchTask(player: Player, duration: Duration, modeId: GameMode): Promise<Stats | null> {
     let matches = await getRecentMatches(player, duration, modeId)
     return calculateStats(matches)
 }
 
-function generateStatsEmbed(player: Player, stats: Stats, duration: Duration, client: Client): MessageEmbed {
+function generateStatsEmbed(player: Player, stats: Stats | null, duration: Duration, client: Client): MessageEmbed {
     let embed = generateEmbed(`${formatPlayername(player, client)}`, `Stats for the past ${duration.value} ${duration.unit}(s)`, player.avatarUrl)
 
     // no matches played, early return
-    if (stats['Matches'] == 0) {
+    if (!stats) {
         embed.setDescription(`No matches played over the past ${duration.value} ${duration.unit}(s)!`)
         return embed
     }
 
     // proceed with formatting
     embed.setDescription(`over the past ${duration.value} ${duration.unit}(s)`)
-
-    // to get matches on top 
-    embed.addField('Matches', stats.Matches.toString())
 
     // add stats as embedded fields
     for (const stat in stats) {
@@ -69,22 +66,16 @@ function generateStatsEmbed(player: Player, stats: Stats, duration: Duration, cl
     return embed
 }
 
-function filterStats(key, value) {
-    // skip default stats
-    if (['Matches', 'Kills', 'Deaths', 'K/D'].includes(key)) return false
-
-    // skip some unimportant stats
-    if (['Executions', 'Vehicles Destroyed'].includes(key)) return false
-
+function filterStats(key: any, value: any) {
     if (value === undefined || value === NaN) return false
-    // if (value == 0) return false
-    // if (value == "0.00") return false
-    // if (value == "0s") return false
     return true
 }
 
-function calculateStats(matches): Stats {
+function calculateStats(matches): Stats | null {
     const stats = matches.map(x => x.segments[0].stats)
+
+    if (stats.length == 0)
+        return null
 
     const kills = sumStat(stats, 'kills')
     const deaths = sumStat(stats, 'deaths')
@@ -100,7 +91,7 @@ function calculateStats(matches): Stats {
     const lobbyKdMatches = matches.map(x => x.attributes.avgKd).filter(x => x)
     const lobbyKd = lobbyKdMatches.reduce((total, x) => total + x.kd, 0) / lobbyKdMatches.length
 
-    const highestKillRound = stats.sort((a, b) => b.kills.value - a.kills.value)[0]
+    const highestKillRound = stats.sort((a, b) => b.kills.value - a.kills.value)
 
     var timeWaiting = 0
     if (matches.length > 1) {
@@ -152,14 +143,14 @@ function calculateStats(matches): Stats {
         'Time Played': formatDuration(timePlayed),
         'Time Waiting': formatDuration(timeWaiting),
         'Avg. Game Time': formatDuration(timePlayed / stats.length),
-        'Executions': sumStat(stats, 'executions'),
-        'Vehicles Destroyed': sumStat(stats, 'objectiveDestroyedVehicleLight') + sumStat(stats, 'objectiveDestroyedVehicleMedium') + sumStat(stats, 'objectiveDestroyedVehicleHeavy'),
+        // 'Executions': sumStat(stats, 'executions'),
+        // 'Vehicles Destroyed': sumStat(stats, 'objectiveDestroyedVehicleLight') + sumStat(stats, 'objectiveDestroyedVehicleMedium') + sumStat(stats, 'objectiveDestroyedVehicleHeavy'),
         // 'Team Wipes': sumStat(stats, 'objectiveTeamWiped'),
         '1./2./3. Place': (placementHistogram[1] ?? 0) + "/" + (placementHistogram[2] ?? 0) + "/" + (placementHistogram[3] ?? 0),
         'Win Ratio': winRatio.toFixed(0) + '%',
         'Avg. Team Placement': 'Top ' + placementPercentile.toFixed(1) + '%',
         'Longest Streak': Math.max(...stats.map(x => x.longestStreak ? x.longestStreak.value : 0)),
-        'High Kill Round': `${highestKillRound.kills.value} kills / ${highestKillRound.deaths.value} deaths`,
+        'High Kill Round': `${highestKillRound[0].kills.value} kills / ${highestKillRound[0].deaths.value} deaths`,
         'Damage done / Kill': dmgPerKill.toFixed(0),
         'Damage taken / Death': dmgPerDeath.toFixed(0),
         'Avg. Damage done': Math.floor(damageDone / stats.length),

@@ -23,7 +23,7 @@ async function execute(interaction: CommandInteraction) {
 }
 
 async function autocomplete(interaction: AutocompleteInteraction) {
-    
+
 }
 
 async function listSchedule(interaction: CommandInteraction) {
@@ -38,6 +38,11 @@ async function scheduleStats(interaction: CommandInteraction) {
     const modeId = interaction.options.getString('mode', true) as GameMode
     const duration = parseDuration(interaction.options.getString('duration'))
 
+    if (!duration) {
+        interaction.reply(`Invalid duration (${interaction.options.getString('duration')})! Use h (hours), d (days), w (weeks) or m (months).`)
+        return
+    }
+
     // check if cron is valid
     if (!isValidCron(cron)) {
         interaction.reply("Invalid cron syntax! See https://crontab.guru/ for help.")
@@ -45,7 +50,7 @@ async function scheduleStats(interaction: CommandInteraction) {
     }
 
     // schedule stats
-    const schedule: Schedule = { cron, modeId, duration, channelId: interaction.channelId }
+    const schedule: Schedule = { cron, modeId, duration: duration!, channelId: interaction.channelId }
     await Scheduler.schedule(schedule)
 
     await interaction.reply("Stats scheduled!")

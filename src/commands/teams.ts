@@ -10,7 +10,7 @@ async function execute(interaction: CommandInteraction) {
     const teamSize = interaction.options.getInteger('size', true)
 
     // get list of registered players
-    const players = await DAL.getFilteredPlayers(interaction.guildId, null, true)
+    const players = await DAL.getFilteredPlayers(interaction.guildId!, null, true)
     
     shuffle(players)
     
