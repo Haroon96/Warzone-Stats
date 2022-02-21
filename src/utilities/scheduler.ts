@@ -1,5 +1,5 @@
 import { Embed } from '@discordjs/builders'
-import { Client, TextBasedChannel, TextChannel } from 'discord.js'
+import { Client, MessageEmbed, TextBasedChannel, TextChannel } from 'discord.js'
 import { Job, scheduleJob } from 'node-schedule'
 import { fetchTask, generateStatsEmbed } from '../api/stats.js'
 import { Schedule } from '../common/types.js'
@@ -57,23 +57,29 @@ class StatsScheduler {
             return
         }
 
-        const embeds = await Promise.all(players.map(async (player) => {
+        const guildStats: ({
+            matchPlayed: boolean | undefined;
+            embed: MessageEmbed;
+        })[] = await Promise.all(players.map(async (player) => {
             try {
                 // create a `TaskRepeater` instance
                 const taskRepeater = new TaskRepeater(fetchTask, [player, schedule.duration, schedule.modeId], 5000, 5)
 
                 // run the repeater
-                let playerStats = await taskRepeater.run()
-                
-                // create a stats embed and send
-                return generateStatsEmbed(player, playerStats, schedule.duration, channel.client)
+                const playerStats = await taskRepeater.run()
+
+                return { matchPlayed: playerStats !== null, embed: generateStatsEmbed(player, playerStats, schedule.duration, channel.client) }
             } catch (e) {
                 console.error(e)
-                return generateEmbed(`${formatPlayername(player, channel.client)}`, "Failed to fetch stats.\n", player.avatarUrl)
+                return { matchPlayed: true, embed: generateEmbed(`${formatPlayername(player, channel.client)}`, "Failed to fetch stats.\n", player.avatarUrl) }
             }
         }))
 
-        channel.send({ content: message, embeds: embeds })
+        if (guildStats.every(g => g.matchPlayed)) {
+            channel.send({ content: message, embeds: guildStats.map(g => g.embed) })
+        } else {
+            channel.send(message + `No matches played during the last ${schedule.duration.value} ${schedule.duration.unit}(s)! Skipping...`)
+        }
     }
 
     jobs: Map<string, Job>
