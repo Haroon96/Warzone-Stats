@@ -1,12 +1,8 @@
 import { Client, MessageEmbed } from "discord.js";
 import { CommandArgs, Duration, Player } from "../common/types";
-import { curly } from "node-libcurl"
+import fetch from 'node-fetch'
 import moment from 'moment';
 import 'moment-duration-format';
-import tls from 'tls';
-
-// Prepare tls
-const tlsData = tls.rootCertificates.join('\n')
 
 export function trimWhitespace(str: string): string {
     // remove extra, leading, and trailing whitespace
@@ -26,8 +22,16 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const response = await curly.get(url, { caInfoBlob: tlsData })
-    return response.data
+    const params = {
+        headers: {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "en",
+            "User-Agent": "haroon96/warzone-stats"
+        },
+        method: "GET"
+    };
+    const response = await fetch(url, params);
+    return await response.json();
 }
 
 export function parseDuration(str: string): Duration {
