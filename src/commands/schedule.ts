@@ -45,13 +45,13 @@ async function scheduleStats(interaction: CommandInteraction) {
     const duration = parseDuration(interaction.options.getString('duration'))
 
     if (!duration) {
-        interaction.reply(`\`\`\`fix\nInvalid duration entered: ${interaction.options.getString('duration')}! Use h (hours), d (days), w (weeks) or m (months).\n\`\`\``)
+        interaction.reply("\`\`\`fix\nInvalid duration entered: ${interaction.options.getString('duration')}! Use h (hours), d (days), w (weeks) or m (months).\n\`\`\`")
         return
     }
 
     // check if cron is valid
     if (!isValidCron(cron)) {
-        interaction.reply("`\`\`\`fix\nInvalid cron syntax! See https://crontab.guru/ for help.\n`\`\`\`")
+        interaction.reply("\`\`\`fix\nInvalid cron syntax! See https://crontab.guru/ for help.\n\`\`\`")
         return
     }
 
