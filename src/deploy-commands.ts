@@ -64,6 +64,7 @@ const schedule = new SlashCommandBuilder()
         .addStringOption(modeOption(true))
         .addStringOption(option => option.setName('cronjob')
             .setDescription('The cronjob for repeated postings')
+            .setAutocomplete(true)
             .setRequired(true))
         .addStringOption(option =>
             option.setName('duration')

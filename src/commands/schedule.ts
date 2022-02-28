@@ -1,5 +1,5 @@
 import { isValidCron } from "cron-validator"
-import { AutocompleteInteraction, CommandInteraction } from "discord.js"
+import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction } from "discord.js"
 import { Command, GameMode, Schedule } from "../common/types.js"
 import { DAL } from "../dal/mongo-dal.js"
 import { Scheduler } from "../utilities/scheduler.js"
@@ -24,7 +24,34 @@ async function execute(interaction: CommandInteraction) {
 }
 
 async function autocomplete(interaction: AutocompleteInteraction) {
+    const cmd = interaction.options.getSubcommand(true)
+    const cron = interaction.options.getString('cronjob', false)
 
+    let options: ApplicationCommandOptionChoice[] = []
+
+    if (cmd == 'set') {
+        if (cron) {
+            if (isValidCron(cron)) {
+                options = [{ name: `${cronstrue.toString(cron, { use24HourTimeFormat: true })}`, value: cron }]
+            } else {
+                const parts = cron.split(" ")
+                while (5 - parts.length > 0) {
+                    parts.push("*")
+                }
+                const fullCron = parts.join(" ")
+                if (isValidCron(fullCron)) {
+                    options = [{ name: `${cronstrue.toString(fullCron, { use24HourTimeFormat: true })}`, value: fullCron }]
+                }
+            }
+        } else {
+            options = [
+                { name: `${cronstrue.toString("0 9 * * *", { use24HourTimeFormat: true })}`, value: "0 9 * * *" },
+                { name: `${cronstrue.toString("0 9 * * 6,0", { use24HourTimeFormat: true })}`, value: "0 10 * * 6,0" },
+            ]
+        }
+    }
+
+    interaction.respond(options)
 }
 
 async function listSchedule(interaction: CommandInteraction) {

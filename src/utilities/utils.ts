@@ -59,7 +59,7 @@ export function formatDuration(seconds: number) {
 }
 
 export function formatSchedule(schedule: Schedule) {
-    return `${cronstrue.toString(schedule.cron, { use24HourTimeFormat: true })}: Stats for the last ${schedule.duration.value} ${schedule.duration.unit}(s)`
+    return `${cronstrue.toString(schedule.cron, { use24HourTimeFormat: true })}: Stats for the last ${schedule.duration.value} ${schedule.duration.unit}(s) on ${schedule.modeId} games`
 }
 
 export function formatPlayername(player: Player, client: Client | null = null) {
