@@ -75,7 +75,7 @@ class StatsScheduler {
             }
         }))
 
-        if (guildStats.every(g => g.matchPlayed)) {
+        if (guildStats.some(g => g.matchPlayed)) {
             channel.send({ content: message, embeds: guildStats.map(g => g.embed) })
         } else {
             channel.send(message + `No matches played during the last ${schedule.duration.value} ${schedule.duration.unit}(s)! Skipping...`)
