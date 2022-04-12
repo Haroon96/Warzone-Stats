@@ -1,15 +1,11 @@
 FROM fedora:latest
 
-RUN dnf -y update && dnf -y install nodejs && dnf clean all
+RUN dnf -y update && dnf -y install nodejs libcurl-devel make g++ && dnf clean all
 
 WORKDIR /bot
 
-COPY package.json tsconfig.json ./
-
-RUN npm i
-
 COPY . .
 
-RUN npm run build && rm -r src/ && npm prune --production
+RUN npm i && npm run build && rm -r src/ && npm prune --production && dnf remove -y libcurl-devel make g++
 
 CMD node dist/main.js

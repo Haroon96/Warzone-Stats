@@ -6,8 +6,8 @@
   "type": "module",
   "exports": "./dist/main.js",
   "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
+    "build": "npx tsc --build",
+    "clean": "npx tsc --build --clean",
     "start": "node dist/main.js",
     "deploy-commands": "node dist/deploy-commands.js",
     "test": "node dist/tests.js"
