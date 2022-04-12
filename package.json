@@ -31,7 +31,6 @@
     "moment-duration-format": "^2.3.2",
     "mongodb": "^4.4.0",
     "node-libcurl": "^2.3.4",
-    "node-schedule": "^2.1.0",
-    "utf-8-validate": "^5.0.8"
+    "node-schedule": "^2.1.0"
   }
 }
