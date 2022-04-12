@@ -1,14 +1,15 @@
-FROM node:16 as builder
-WORKDIR /build
-COPY package.json tsconfig.json ./
-RUN npm i
-COPY . .
-RUN npm run build && rm -r src/
+FROM fedora:latest
 
-FROM node:16-alpine
-RUN apk update && apk upgrade && apk add libcurl git
-USER node
+RUN dnf -y update && dnf -y install nodejs && dnf clean all
+
 WORKDIR /bot
-COPY --from=builder --chown=node:node /build/ .
-RUN npm prune --production
+
+COPY package.json tsconfig.json ./
+
+RUN npm i
+
+COPY . .
+
+RUN npm run build && rm -r src/ && npm prune --production
+
 CMD node dist/main.js
