@@ -1,5 +1,5 @@
 export type GameMode = 'br' | 'rmbl' | 'plndr' | 'rsg';
-export type Platform = 'psn' | 'xbl' | 'atvi';
+export type Platform = 'psn' | 'xbl' | 'battlenet';
 
 export type Player = {
     playerId: string;
