@@ -124,7 +124,7 @@ export async function getRecentMatches(player: Player, duration: Duration, modeI
         }
 
         // setup for next query
-        next = res.data.metadata.next
+        next = encodeURIComponent(res.data.metadata.next)
     }
 
     return recentMatches
