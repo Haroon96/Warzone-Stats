@@ -28,7 +28,7 @@ export function generateEmbed(title: string, desc: string, thumbnail: string = '
 
 export async function request(url: string): Promise<any> {
     console.log(url)
-    const response = await curly.get(url, { caInfoBlob: tlsData })
+    const response = await curly.get(url, { caInfoBlob: tlsData, httpHeader: ["User-Agent: Unicorn"] })
     return response.data
 }
 
