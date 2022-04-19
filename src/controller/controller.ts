@@ -54,7 +54,7 @@ async function postHelp(message: Message) {
     str.push(...[
         'Parameters: `<required>`, `[optional]`',
         'modeId: `br` Battle Royale, `rmbl` Rumble, `plndr` Plunder, `rsg` Resurgence',
-        'platformId: `psn` PlayStation, `xbl` Xbox, `atvi` Activision',
+        'platformId: `psn` PlayStation, `xbl` Xbox, `battlenet` Battlenet',
         'duration: `h` hours, `d` days, `w` weeks, `m` months. Defaults to `24h`.'
     ]);
     

@@ -9,10 +9,10 @@ export default new Map<string, Command>([
         regex: [
             /^!wz stats (?<modeId>br|rmbl|plndr|rsg)$/,
             /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<duration>[0-9]+[h|d|w|m])$/,
-            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/,
-            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+) (?<duration>[0-9]+[h|d|w|m])$/,
-            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
-            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)" (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|battlenet) (?<playerId>[0-9A-Za-z#_\-]+)$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|battlenet) (?<playerId>[0-9A-Za-z#_\-]+) (?<duration>[0-9]+[h|d|w|m])$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|battlenet) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
+            /^!wz stats (?<modeId>br|rmbl|plndr|rsg) (?<platformId>psn|xbl|battlenet) "(?<playerId>[0-9A-Za-z#_\- ]+)" (?<duration>[0-9]+[h|d|w|m])$/,
         ]
     }],
     ['players', {
@@ -26,8 +26,8 @@ export default new Map<string, Command>([
         usage: '!wz register <platformId> "<playerId>"' ,
         help: 'Register a new player',
         regex: [
-            /^!wz register (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/,
-            /^!wz register (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
+            /^!wz register (?<platformId>psn|xbl|battlenet) (?<playerId>[0-9A-Za-z#_\-]+)$/,
+            /^!wz register (?<platformId>psn|xbl|battlenet) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
         ]
     }],
     ['unregister', {
@@ -35,8 +35,8 @@ export default new Map<string, Command>([
         usage: '!wz unregister <platformId> "<playerId>"', 
         help: 'Unregister a player',
         regex: [
-            /^!wz unregister (?<platformId>psn|xbl|atvi) (?<playerId>[0-9A-Za-z#_\-]+)$/,
-            /^!wz unregister (?<platformId>psn|xbl|atvi) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
+            /^!wz unregister (?<platformId>psn|xbl|battlenet) (?<playerId>[0-9A-Za-z#_\-]+)$/,
+            /^!wz unregister (?<platformId>psn|xbl|battlenet) "(?<playerId>[0-9A-Za-z#_\- ]+)"$/,
         ] 
     }],
     ['schedule', {

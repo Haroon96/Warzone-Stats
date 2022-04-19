@@ -10,7 +10,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
   - Warzone Rumble: `rmbl`
   - Plunder: `plndr`
   - Resurgence: `rsg`
-- Supports PlayStation Network (`psn`), Xbox Live (`xbl`) and Activision (`atvi`) platforms
+- Supports PlayStation Network (`psn`), Xbox Live (`xbl`) and Battlenet (`battlenet`) platforms
 - Supports `[time]` parameter to only show stats from specific times, e.g., last 8 hours (`8h`) or past 3 days (`3d`). Default value: `24h`
   - Hours: `h`
   - Days: `d`
@@ -39,7 +39,7 @@ Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 ## Issues
 - If you encounter issues with your profile not loading, check if you can access it on the [COD Warzone Stats Tracker Site](https://cod.tracker.gg/warzone) whose awesome API is used by the bot. Yours might be set to private.
 - Allow the bot permission to use external emojis so it can use icons for platforms instead.
-- For Activision, it may be necessary to suffix the hash for your profile when requesting stats (e.g., `username#12345`).
+- For Battlenet, it may be necessary to suffix the hash for your profile when requesting stats (e.g., `username#12345`).
 - Feel free to open a GitHub issue if you face any problems.
 
 ## Credits
