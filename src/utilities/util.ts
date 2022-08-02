@@ -30,7 +30,7 @@ export async function request(url: string): Promise<any> {
     await driver.get('view-source:' + url);
     const el = await driver.findElement(By.tagName('pre'));
     const response = JSON.parse(await el.getText());
-    await driver.quit();
+    driver.quit();
     return response;
 }
 

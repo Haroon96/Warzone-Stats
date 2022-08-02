@@ -3,7 +3,7 @@ import { Duration, GameMode, Player, Platform } from "../common/types.js";
 import { DAL } from "../dal/mongo-dal.js";
 import { request } from "../utilities/util.js";
 
-const modeIds = {};
+const modeIds = await DAL.getModeIds();
 
 export async function getPlayerProfile(platformId: Platform, playerId: string): Promise<Player> {
     let url = `https://api.tracker.gg/api/v2/warzone/standard/profile/${platformId}/${encodeURIComponent(playerId)}`;
@@ -21,14 +21,10 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
 
     let next = 'null';
 
-    // check if modeIds loaded, else load from db
-    if (!modeIds[mode]) modeIds[mode] = await DAL.getModeIds(mode);
-
     // fetch all matches during specified duration
     while (true) {
 
         // get matches from tracker.gg api
-        // https://api.tracker.gg/api/v2/warzone/standard/matches/psn/m_haroon2305?type=wz
         let url = `https://api.tracker.gg/api/v2/warzone/standard/matches/${player.platformId}/${encodeURIComponent(player.playerId)}?type=wz&next=${next}`;
         let res = await request(url);
 
@@ -39,10 +35,12 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
         let matches = res.data.matches;
 
         // filter out matches of other types
-        matches = matches.filter(x => modeIds[mode].includes(x.attributes.modeId));
+        matches = matches.filter(x => modeIds[mode].includes(x.metadata.modeName));
 
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);
+
+        console.log(filteredMatches.length, matches[0]);
         
         // append filtered matches to todays list
         recentMatches.push(...filteredMatches);

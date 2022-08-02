@@ -1,7 +1,7 @@
 import mongodb from "mongodb";
 const { MongoClient } = mongodb;
 import { Player, Guild, GameMode, Schedule, Platform } from "../common/types.js";
-
+import fs from "fs/promises";
 
 class MongoDAL {
     
@@ -59,9 +59,9 @@ class MongoDAL {
 
     // helpers
 
-    async getModeIds(mode: GameMode): Promise<Array<string>> {
-        const { modeIds } = await this.db.collection('modes').findOne({ mode });
-        return modeIds;
+    async getModeIds(): Promise<Object> {
+        const buffer = await fs.readFile('res/mode_ids.json');
+        return JSON.parse(buffer.toString());
     }
 
     // scheduling related
