@@ -1,6 +1,9 @@
 # Warzone Stats
 Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 
+# NOTICE
+Due to changes to the tracker.gg API, this bot has issues fetching data at scale. Feel free to host a version of this bot yourself for your personal Discord server using the [selenium-requests](https://github.com/Haroon96/warzone-stats/tree/selenium-requests) branch which can get around the restrictions imposed by the API.
+
 ## Features
 - Register players for combined stats
 - Scheduled stats posting using cronjob syntax
