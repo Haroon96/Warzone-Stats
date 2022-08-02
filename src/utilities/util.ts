@@ -1,12 +1,9 @@
 import { Client, MessageEmbed } from "discord.js";
 import { CommandArgs, Duration, Player } from "../common/types";
-import { curly } from "node-libcurl"
 import moment from 'moment';
 import 'moment-duration-format';
-import tls from 'tls';
-
-// Prepare tls
-const tlsData = tls.rootCertificates.join('\n')
+import webdriver, { By } from "selenium-webdriver";
+import * as firefox from 'selenium-webdriver/firefox.js'
 
 export function trimWhitespace(str: string): string {
     // remove extra, leading, and trailing whitespace
@@ -26,8 +23,15 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const response = await curly.get(url, { caInfoBlob: tlsData })
-    return response.data
+    const driver = new webdriver.Builder()
+        .forBrowser('firefox')
+        .setFirefoxOptions(new firefox.Options().headless())
+        .build();
+    await driver.get('view-source:' + url);
+    const el = await driver.findElement(By.tagName('pre'));
+    const response = JSON.parse(await el.getText());
+    await driver.quit();
+    return response;
 }
 
 export function parseDuration(str: string): Duration {

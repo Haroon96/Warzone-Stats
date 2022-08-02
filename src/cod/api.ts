@@ -28,6 +28,7 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
     while (true) {
 
         // get matches from tracker.gg api
+        // https://api.tracker.gg/api/v2/warzone/standard/matches/psn/m_haroon2305?type=wz
         let url = `https://api.tracker.gg/api/v2/warzone/standard/matches/${player.platformId}/${encodeURIComponent(player.playerId)}?type=wz&next=${next}`;
         let res = await request(url);
 
