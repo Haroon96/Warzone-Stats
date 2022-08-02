@@ -2,7 +2,12 @@
 Discord bot for calculating aggregate player stats for Call of Duty Warzone.
 
 # NOTICE
-Due to changes to the tracker.gg API, this bot has issues fetching data at scale. Feel free to host a version of this bot yourself for your personal Discord server.
+Due to changes to the tracker.gg API, this bot has issues fetching data at scale. Feel free to host a version of this bot yourself for your personal Discord server using Docker.
+
+1. [Install Docker Engine](https://docs.docker.com/engine/install/).
+2. [Create a Discord bot and generate a token](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token).
+3. Clone this repository and add your generated token to the `Dockerfile` file.
+4. Run `docker compose up --build` to start the bot.
 
 ## Features
 - Register players for combined stats
