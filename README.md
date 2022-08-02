@@ -27,7 +27,7 @@ Due to changes to the tracker.gg API, this bot has issues fetching data at scale
 - Supports random team splits into groups
 
 ## Guide
-- [Invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=711383069160112128&permissions=346112&scope=bot).
+- ~[Invite the bot to your server](https://discord.com/api/oauth2/authorize?client_id=711383069160112128&permissions=346112&scope=bot).~ Setup your own local instance by following the Docker instructions above.
 - Send `!wz stats <modeId> [platformId] [playerId] [time]` to fetch stats for a specific player.
 - Send `!wz stats <mode> [time]` to get stats for all registered users.
   - Register users using `!wz register <platformId> <playerId>`
