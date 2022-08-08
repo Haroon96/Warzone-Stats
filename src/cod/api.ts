@@ -40,13 +40,11 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
         // filter to only today's matches
         let filteredMatches = matches.filter(x => now.diff(x.metadata.timestamp, duration.unit) < duration.value);
 
-        console.log(filteredMatches.length, matches[0]);
-        
         // append filtered matches to todays list
         recentMatches.push(...filteredMatches);
 
-        // stop if reached duration limit or all matches
-        if (filteredMatches.length < matches.length) {
+        // stop if reached duration limit or all matches or no next
+        if (filteredMatches.length < matches.length || next == res.data.metadata.next) {
             break;
         }
 

@@ -4,6 +4,14 @@ import moment from 'moment';
 import 'moment-duration-format';
 import webdriver, { By } from "selenium-webdriver";
 import * as firefox from 'selenium-webdriver/firefox.js'
+import promiseList from "promise-limit";
+
+const limit = promiseList(1);
+
+const driver = new webdriver.Builder()
+    .forBrowser('firefox')
+    .setFirefoxOptions(new firefox.Options().headless())
+    .build();
 
 export function trimWhitespace(str: string): string {
     // remove extra, leading, and trailing whitespace
@@ -23,15 +31,12 @@ export function getEmbedTemplate(title:string, desc: string, thumbnail: string='
 }
 
 export async function request(url: string): Promise<any> {
-    const driver = new webdriver.Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(new firefox.Options().headless())
-        .build();
-    await driver.get('view-source:' + url);
-    const el = await driver.findElement(By.tagName('pre'));
-    const response = JSON.parse(await el.getText());
-    driver.quit();
-    return response;
+    return limit(async() => {
+        await driver.get('view-source:' + url);
+        const el = await driver.findElement(By.tagName('pre'));
+        const response = JSON.parse(await el.getText());
+        return response;
+    });
 }
 
 export function parseDuration(str: string): Duration {

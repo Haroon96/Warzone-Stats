@@ -1,0 +1,24 @@
+{
+    "br": [
+        "BR Duos",
+        "BR Quads",
+        "BR Trios",
+        "BR Solos"
+    ],
+    "rmbl": [
+        "brtdm_rmbl",
+        "br_rumble_lua_menu_mp/clash",
+        "br_rumble_clash_caldera"
+    ],
+    "plndr": [
+        "Plunder Quads",
+        "Golden Plunder",
+        "BR Trios"
+    ],
+    "rsg": [
+        "Fortunes Keep Res Quads",
+        "Resurgence Quads",
+        "Fortunes Keep Res Solos",
+        "Fortunes Keep Res Trios"
+    ]
+}
