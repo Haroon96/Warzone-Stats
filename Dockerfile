@@ -1,7 +1,7 @@
 FROM node:latest
 
 # User configurable environment variables
-ENV TOKEN=<ADD_YOUR_DISCORD_BOT_TOKEN_HERE>
+ENV TOKEN=ADD_YOUR_DISCORD_BOT_TOKEN_HERE
 
 
 # Fixed environment variables
