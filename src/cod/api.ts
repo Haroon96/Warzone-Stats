@@ -19,7 +19,7 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
     let now = moment();
     let recentMatches = [];
 
-    let next = 'null';
+    let next = null;
 
     // fetch all matches during specified duration
     while (true) {
@@ -44,12 +44,13 @@ export async function getRecentMatches(player: Player, duration: Duration, mode:
         recentMatches.push(...filteredMatches);
 
         // stop if reached duration limit or all matches or no next
-        if (filteredMatches.length < matches.length || next == res.data.metadata.next) {
+        let nextDate = new Date(res.data.metadata.next).toISOString();
+        if (filteredMatches.length < matches.length || next == nextDate) {
             break;
         }
 
         // setup for next query
-        next = res.data.metadata.next;
+        next = nextDate;
     }
 
     return recentMatches;
